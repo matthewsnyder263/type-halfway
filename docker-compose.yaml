@@ -1,13 +1,18 @@
 volumes:
-  gamma-data:
+  project-gamma-data:
     external: true
   pg-admin:
     external: true
-
 services:
   fastapi:
+    depends_on:
+      - db
     environment:
-      DATABASE_URL: postgresql://user:password@postgres/gamma-data
+      # SIGNING_KEY:
+      WAIT_HOSTS: db:5432
+      WAIT_BEFORE: 5
+      WAIT_TIMEOUT: 60
+      DATABASE_URL: postgresql://user:password@db/data
       CORS_HOST: http://localhost:3000
     build:
       context: api
@@ -34,22 +39,22 @@ services:
 
   db:
     image: postgres:14.5-bullseye
-    volumes:
-      - gamma-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=user
-      - POSTGRES_DB=gama-data
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: data
     ports:
-      - 15432:5432
+      - "5432:5432"
+    volumes:
+      - project-gamma-data:/var/lib/postgresql/data
 
   pg-admin:
     image: dpage/pgadmin4
     volumes:
-      - pg-admin:/var/lib/pgadmin
+      - pg-admin:/var/lib/pgadmin4
     ports:
       - 8082:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: jay@jay.com
-      PGADMIN_DEFAULT_PASSWORD: jay
-      PGADMIN_DISABLE_POSTFIX: "1"
+      PGADMIN_DEFAULT_EMAIL: email@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DISABLE_POSTFIX: 1
