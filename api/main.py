@@ -27,4 +27,4 @@ def launch_details():
     }
 
 
-# @app.include_router(users.router)
+app.include_router(users.router)

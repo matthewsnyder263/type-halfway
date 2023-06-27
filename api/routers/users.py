@@ -1,8 +1,13 @@
-from db import UserQueries
-from fastapi import FASTApi, Depends, Response
+from fastapi import FastAPI, Depends, Response, APIRouter
 from pydantic import BaseModel
+from typing import List
 
 router = APIRouter()
+
+
+class Queries:
+    pass
+
 
 class UserIn(BaseModel):
     first: str
@@ -10,6 +15,7 @@ class UserIn(BaseModel):
     mbti: str
     email: str
     username: str
+
 
 class UserOut(BaseModel):
     id: int
@@ -19,8 +25,26 @@ class UserOut(BaseModel):
     email: str
     username: str
 
+
+class UserOutWithPassword(UserOut):
+    hashed_password: str
+
+
 class UsersOut(BaseModel):
-    users: list(UserOut)
+    users: List[UserOut]
+
+
+class UserQueries(Queries):
+    # region properties
+
+    def get(self, email: str) -> UserOutWithPassword:
+        pass
+
+    def create(
+        self, info: UserIn, hashed_password: str
+    ) -> UserOutWithPassword:
+        pass
+
 
 @router.get("/api/users", response_model=UsersOut)
 def users_list(queries: UserQueries = Depends()):
@@ -28,11 +52,12 @@ def users_list(queries: UserQueries = Depends()):
         "users": queries.get_all_users(),
     }
 
+
 @router.get("/api/users/{user_id}", response_model=UserOut)
 def get_user(
     user_id: int,
     response: Response,
-    queries: UserQueries = Depends (),
+    queries: UserQueries = Depends(),
 ):
     record = queries.get_user(user_id)
     if record is None:
@@ -40,9 +65,11 @@ def get_user(
     else:
         return record
 
+
 @router.post("api/users/", response_model=UserOut)
 def create_user(user_in: UserIn, queries: UserQueries = Depends()):
     return queries.create_user(user_in)
+
 
 @router.put("/api/users/{user_id}", response_model=UserOut)
 def update_user(
@@ -57,6 +84,7 @@ def update_user(
         response.status_code = 404
     else:
         return record
+
 
 @router.delete("/api/users/{user_id}", response_model=bool)
 def delete_user(user_id: int, queries: UserQueries = Depends()):
