@@ -7,10 +7,10 @@ services:
   fastapi:
     environment:
       # SIGNING_KEY:
-      WAIT_HOSTS: DB:5432
+      WAIT_HOSTS: db:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
-      DATABASE_URL: postgresql://user:password@db/project-gamma-data
+      DATABASE_URL: postgresql://user:password@db/data
       CORS_HOST: http://localhost:3000
     build:
       context: api
