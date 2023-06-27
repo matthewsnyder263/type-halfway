@@ -1,7 +1,16 @@
-# volumes:
+volumes:
+  project-gamma-data:
+    external: true
+  pg-admin:
+    external: true
 services:
   fastapi:
     environment:
+      # SIGNING_KEY:
+      WAIT_HOSTS: DB:5432
+      WAIT_BEFORE: 5
+      WAIT_TIMEOUT: 60
+      DATABASE_URL: postgresql://user:password@db/project-gamma-data
       CORS_HOST: http://localhost:3000
     build:
       context: api
@@ -25,3 +34,25 @@ services:
       HOST: "0.0.0.0"
       PUBLIC_URL: http://localhost:3000
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+
+  db:
+    image: postgres:14.5-bullseye
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: data
+    ports:
+      - "15432:5432"
+    volumes:
+      - project-gamma-data:/var/lib/postgresql/data
+
+  pg-admin:
+    image: dpage/pgadmin4
+    volumes:
+      - pg-admin:/var/lib/pgadmin4
+    ports:
+      - 8082:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: email@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DISABLE_POSTFIX: 1
