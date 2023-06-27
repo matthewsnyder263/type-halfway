@@ -1,7 +1,13 @@
-# volumes:
+volumes:
+  gamma-data:
+    external: true
+  pg-admin:
+    external: true
+
 services:
   fastapi:
     environment:
+      DATABASE_URL: postgresql://user:password@postgres/gamma-data
       CORS_HOST: http://localhost:3000
     build:
       context: api
@@ -25,3 +31,25 @@ services:
       HOST: "0.0.0.0"
       PUBLIC_URL: http://localhost:3000
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+
+  db:
+    image: postgres:14.5-bullseye
+    volumes:
+      - gamma-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=gama-data
+    ports:
+      - 15432:5432
+
+  pg-admin:
+    image: dpage/pgadmin4
+    volumes:
+      - pg-admin:/var/lib/pgadmin
+    ports:
+      - 8082:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: jay@jay.com
+      PGADMIN_DEFAULT_PASSWORD: jay
+      PGADMIN_DISABLE_POSTFIX: "1"
