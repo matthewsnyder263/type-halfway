@@ -5,6 +5,8 @@ volumes:
     external: true
 services:
   fastapi:
+    depends_on:
+      - db
     environment:
       # SIGNING_KEY:
       WAIT_HOSTS: db:5432
@@ -42,7 +44,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
