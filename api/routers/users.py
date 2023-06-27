@@ -1,49 +1,13 @@
 from fastapi import FastAPI, Depends, Response, APIRouter
 from pydantic import BaseModel
 from typing import List
+from jwtdown_fastapi.authentication import Token
+from authenticator import authenticator
+from queries.users import UserIn, UserOut, UserQueries
+
 
 router = APIRouter()
 
-
-class Queries:
-    pass
-
-
-class UserIn(BaseModel):
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
-
-
-class UserOut(BaseModel):
-    id: int
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
-
-
-class UserOutWithPassword(UserOut):
-    hashed_password: str
-
-
-class UsersOut(BaseModel):
-    users: List[UserOut]
-
-
-class UserQueries(Queries):
-    # region properties
-
-    def get(self, email: str) -> UserOutWithPassword:
-        pass
-
-    def create(
-        self, info: UserIn, hashed_password: str
-    ) -> UserOutWithPassword:
-        pass
 
 
 @router.get("/api/users", response_model=UsersOut)

@@ -1,7 +1,7 @@
 import os
 from fastapi import Depends
 from jwtdown_fastapi.authentication import Authenticator
-from routers.users import UserOut, UserIn, UserOutWithPassword, UserQueries
+from queries.users import UserOut, UserQueries, UserOutWithPassword
 
 
 class MyAuthenticator(Authenticator):

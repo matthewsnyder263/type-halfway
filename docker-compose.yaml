@@ -3,12 +3,13 @@ volumes:
     external: true
   pg-admin:
     external: true
+
 services:
   fastapi:
     depends_on:
       - db
     environment:
-      # SIGNING_KEY:
+      SIGNING_KEY:
       WAIT_HOSTS: DB:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
