@@ -1,92 +1,80 @@
-from fastapi import FastAPI, Depends, Response, APIRouter
+# router.py
+from fastapi import (
+    Depends,
+    HTTPException,
+    status,
+    Response,
+    APIRouter,
+    Request,
+)
+from jwtdown_fastapi.authentication import Token
+from authenticator import authenticator
+
 from pydantic import BaseModel
-from typing import List
+
+from queries.users import (
+    UserIn,
+    UserOut,
+    UserOutWithPassword,
+    # UserQueries,
+    DuplicateUserError,
+)
+
+from db import UserQueries
+
+
+class AccountForm(BaseModel):
+    username: str
+    password: str
+
+
+class AccountToken(Token):
+    account: UserOut
+
+
+class HttpError(BaseModel):
+    detail: str
+
 
 router = APIRouter()
 
 
-class Queries:
-    pass
+# @router.post("/api/users", response_model=AccountToken | HttpError)
+# async def create_user(
+#     info: UserIn,
+#     request: Request,
+#     response: Response,
+#     users: UserQueries = Depends(),
+# ):
+#     hashed_password = authenticator.hash_password(info.password)
+#     try:
+#         account = users.create(info, hashed_password)
+#     except DuplicateUserError:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Cannot create an account with those credentials",
+#         )
+#     form = AccountForm(username=info.email, password=info.password)
+#     token = await authenticator.login(response, request, form, users)
+#     return AccountToken(account=account, **token.dict())
 
 
-class UserIn(BaseModel):
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
-
-
-class UserOut(BaseModel):
-    id: int
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
-
-
-class UserOutWithPassword(UserOut):
-    hashed_password: str
-
-
-class UsersOut(BaseModel):
-    users: List[UserOut]
-
-
-class UserQueries(Queries):
-    # region properties
-
-    def get(self, email: str) -> UserOutWithPassword:
-        pass
-
-    def create(
-        self, info: UserIn, hashed_password: str
-    ) -> UserOutWithPassword:
-        pass
-
-
-@router.get("/api/users", response_model=UsersOut)
-def users_list(queries: UserQueries = Depends()):
-    return {
-        "users": queries.get_all_users(),
-    }
-
-
-@router.get("/api/users/{user_id}", response_model=UserOut)
-def get_user(
-    user_id: int,
+@router.post("/api/users", response_model=AccountToken | HttpError)
+async def create_user(
+    info: UserIn,
+    request: Request,
     response: Response,
-    queries: UserQueries = Depends(),
+    users: UserQueries = Depends(),
 ):
-    record = queries.get_user(user_id)
-    if record is None:
-        response.status_code = 404
-    else:
-        return record
-
-
-@router.post("api/users/", response_model=UserOut)
-def create_user(user_in: UserIn, queries: UserQueries = Depends()):
-    return queries.create_user(user_in)
-
-
-@router.put("/api/users/{user_id}", response_model=UserOut)
-def update_user(
-    user_id: int,
-    user_in: UserIn,
-    # why are we adding user_in here?
-    response: Response,
-    queries: UserQueries = Depends(),
-):
-    record = queries.update_user(user_id, user_in)
-    if record is None:
-        response.status_code = 404
-    else:
-        return record
-
-
-@router.delete("/api/users/{user_id}", response_model=bool)
-def delete_user(user_id: int, queries: UserQueries = Depends()):
-    queries.delete_user(user_id)
-    return True
+    hashed_password = authenticator.hash_password(info.password)
+    try:
+        account_data = users.create_user(info.dict(), hashed_password)
+        account = UserOutWithPassword(**account_data)
+    except DuplicateUserError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot create an account with those credentials",
+        )
+    form = AccountForm(username=info.email, password=info.password)
+    token = await authenticator.login(response, request, form, users)
+    return AccountToken(account=account, **token.dict())

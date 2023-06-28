@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      # SIGNING_KEY:
+      SIGNING_KEY: e9cc4b982bfcc8f60016000a8c5e5572b8288c7d4143eb008622832cc1b658f8
       WAIT_HOSTS: DB:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
@@ -38,13 +38,16 @@ services:
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
 
   db:
-    image: postgres:14.5-bullseye
+    build:
+      context: data
+      dockerfile: Dockerfile.dev
+    # image: postgres:14.5-bullseye
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
