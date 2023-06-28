@@ -4,6 +4,8 @@ from typing import List
 
 router = APIRouter()
 
+class DuplicatedUserError(ValueError):
+    pass
 
 class Queries:
     pass
@@ -15,6 +17,7 @@ class UserIn(BaseModel):
     mbti: str
     email: str
     username: str
+    password: str
 
 
 class UserOut(BaseModel):
@@ -24,6 +27,7 @@ class UserOut(BaseModel):
     mbti: str
     email: str
     username: str
+    password: str
 
 
 class UserOutWithPassword(UserOut):
@@ -43,7 +47,13 @@ class UserQueries(Queries):
     def create(
         self, info: UserIn, hashed_password: str
     ) -> UserOutWithPassword:
-        pass
+        user = UserOutWithPassword(
+            email=info.email,
+            name=info.first,
+            hashed_password=hashed_password
+        )
+        self.users[info.email] = user
+        return user
 
 
 @router.get("/api/users", response_model=UsersOut)
