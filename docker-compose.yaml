@@ -1,5 +1,5 @@
 volumes:
-  project-gamma-data:
+  gamma:
     external: true
   pg-admin:
     external: true
@@ -39,15 +39,17 @@ services:
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
 
   db:
-    image: postgres:14.5-bullseye
+    build:
+      context: data
+      dockerfile: Dockerfile.dev
+    volumes:
+      - gamma:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
       - "5432:5432"
-    volumes:
-      - project-gamma-data:/var/lib/postgresql/data
 
   pg-admin:
     image: dpage/pgadmin4
