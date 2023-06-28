@@ -1,15 +1,15 @@
 volumes:
-  gamma:
+  project-gamma-data:
     external: true
   pg-admin:
     external: true
-
+    
 services:
   fastapi:
     depends_on:
       - db
     environment:
-      SIGNING_KEY:
+      SIGNING_KEY: e9cc4b982bfcc8f60016000a8c5e5572b8288c7d4143eb008622832cc1b658f8
       WAIT_HOSTS: DB:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
@@ -42,14 +42,15 @@ services:
     build:
       context: data
       dockerfile: Dockerfile.dev
-    volumes:
-      - gamma:/var/lib/postgresql/data
+    # image: postgres:14.5-bullseye
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "5432:5432"
+      - "15432:5432"
+    volumes:
+      - project-gamma-data:/var/lib/postgresql/data
 
   pg-admin:
     image: dpage/pgadmin4
