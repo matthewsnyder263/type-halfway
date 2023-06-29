@@ -59,7 +59,8 @@ class UserQueries(BaseModel):
             with conn.cursor() as db:
                 result = db.execute(
                     """
-                    SELECT id, full_name, mbti, hashed_password, email, username
+                    SELECT id, full_name, mbti, hashed_password,
+                    email, username
                     FROM users
                     WHERE email = %s
                     """,

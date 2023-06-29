@@ -12,7 +12,7 @@ from authenticator import authenticator  # type:ignore
 from pydantic import BaseModel  # type:ignore
 from typing import List
 from db.users import (  # type:ignore
-    UserDB,
+    # UserDB,
     UserIn,
     UserOut,
     UserQueries,
