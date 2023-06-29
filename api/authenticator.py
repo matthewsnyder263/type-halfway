@@ -1,6 +1,6 @@
 import os
-from fastapi import Depends
-from jwtdown_fastapi.authentication import Authenticator
+from fastapi import Depends  # type:ignore
+from jwtdown_fastapi.authentication import Authenticator  # type:ignore
 from db.users import (
     UserOut,
     UserIn,
