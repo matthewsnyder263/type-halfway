@@ -18,11 +18,12 @@ class DuplicateAccountError(ValueError):
 
 
 class UserDB(BaseModel):
-    username: str
-    email: str
-    hashed_password: str
+    id: int
     full_name: str
     mbti: str
+    email: str
+    hashed_password: str
+    username: str
 
 
 class UserIn(BaseModel):
@@ -42,30 +43,41 @@ class UserOut(BaseModel):
 
 
 class UserQueries(BaseModel):
-    def get_user(self, email):
+    def delete_user(self, user_id: int):
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, full_name, mbti, email, username
+                    DELETE FROM users
+                    WHERE id = %s
+                    """,
+                    [user_id],
+                )
+
+    def get_user(self, user_id: int) -> UserOut:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    SELECT id, full_name, mbti, hashed_password, email, username
                     FROM users
                     WHERE email = %s
                     """,
-                    [email],
+                    [user_id],
                 )
                 record = None
-                row = db.fetchone()
+                row = result.fetchone()
                 if row is not None:
                     record = {}
-                    for value, key in enumerate(db.description):
+                    for value, key in enumerate(result.description):
                         record[key.name] = row[value]
                         return record
-                    else:
-                        raise ValueError(
-                            f"User not found with this email: {email}"
-                        )
+                else:
+                    raise ValueError(
+                        f"User not found with this email: {user_id}"
+                    )
 
-    def update(self, user_id: int, user: UserIn) -> Union[Error, UserOut]:
+    def update_user(self, user_id: int, user: UserDB) -> Union[Error, UserOut]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -83,7 +95,7 @@ class UserQueries(BaseModel):
                             user.full_name,
                             user.mbti,
                             user.email,
-                            user.password,
+                            user.hashed_password,
                             user.username,
                             user_id,
                         ),
@@ -106,23 +118,23 @@ class UserQueries(BaseModel):
                         UserOut(
                             id=record[0],
                             full_name=record[1],
-                            mbti=record[3],
-                            email=record[4],
-                            username=record[5],
+                            mbti=record[2],
+                            email=record[3],
+                            username=record[4],
                         )
                         for record in db
                     ]
         except Exception:
             return {"Message": "Could not get all users"}
 
-    def create(self, user: UserDB) -> UserOut:
+    def create(self, user: UserIn, hashed_password: str):
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     db.execute(
                         """
                         INSERT INTO users
-                            (full_name, mbti, email, hashed_password, username)
+                            (full_name, mbti, email, password, username)
                         VALUES
                             (%s, %s, %s, %s, %s)
                         RETURNING id
@@ -131,15 +143,23 @@ class UserQueries(BaseModel):
                             user.full_name,
                             user.mbti,
                             user.email,
-                            user.hashed_password,
+                            hashed_password,
                             user.username,
                         ],
                     )
                     id = db.fetchone()[0]
-                    return self.user_in_to_out(id, user)
+                    return UserDB(
+                        id=id,
+                        username=user.username,
+                        email=user.email,
+                        hashed_password=hashed_password,
+                        full_name=user.full_name,
+                        mbti=user.mbti,
+                    )
+
         except Exception:
             return {"Message": "Could not create new user"}
 
-    def user_in_to_out(self, id: int, user: UserIn):
-        old_data = user.dict()
-        return UserOut(id=id, **old_data)
+    # def user_in_to_out(self, id: int, user: UserIn):
+    #     old_data = user.dict()
+    #     return UserOut(id=id, **old_data)
