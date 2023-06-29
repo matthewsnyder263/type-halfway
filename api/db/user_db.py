@@ -69,23 +69,92 @@ class UserQueries:
                     mbti=record[5],
                 )
 
-    def get_users(self):
-        with pool.connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    SELECT id, full_name, mbti, email
-                    FROM users
-                """
-                )
+    # def get_user(self):
+    #     with pool.connection() as conn:
+    #         with conn.cursor() as cur:
+    #             cur.execute(
+    #                 """
+    #                 SELECT id, full_name, mbti, email
+    #                 FROM users
+    #             """
+    #             )
+    #             results = []
+    #             for row in cur.fetchall():
+    #                 record = {}
+    #                 for i, column in enumerate(cur.description):
+    #                     record[column.name] = row[i]
+    #                 results.append(record)
+    #             return results
 
-                results = []
-                for row in cur.fetchall():
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
-                    results.append(record)
-                return results
+    # def get_user(self, user_id: int) -> UserOut:
+    #     with pool.connection() as conn:
+    #         with conn.cursor() as db:
+    #             db.execute(
+    #                 """
+    #                 SELECT id, username, full_name, mbti, email
+    #                 FROM users
+    #                 WHERE id = %s;
+    #                 """,
+    #                 [user_id],
+    #             )
+    #             record = db.fetchone()
+    #             if record is None:
+    #                 return None
+
+    #             user = UserOut(
+    #                 id=record[0],
+    #                 username=record[1],
+    #                 email=record[3],
+    #                 full_name=record[2],
+    #                 mbti=record[4],
+    #             )
+    #             return user
+
+    def get_users(self) -> UsersOut:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id, username, full_name, mbti, email
+                    FROM users;
+                    """
+                )
+                records = db.fetchall()
+                users = [
+                    UserOut(
+                        id=record[0],
+                        username=record[1],
+                        full_name=record[2],
+                        mbti=record[3],
+                        email=record[4],
+                    )
+                    for record in records
+                ]
+                return users
+
+    def get_user_by_id(self, user_id: int) -> UserOut:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id, username, full_name, mbti, email
+                    FROM users
+                    WHERE id = %s;
+                    """,
+                    [user_id],
+                )
+                record = db.fetchone()
+                if record is None:
+                    return None
+
+                user = UserOut(
+                    id=record[0],
+                    username=record[1],
+                    full_name=record[2],
+                    mbti=record[3],
+                    email=record[4],
+                )
+                return user
 
     def create_user(self, info: UserIn, hashed_password: str):
         with pool.connection() as conn:
@@ -114,7 +183,7 @@ class UserQueries:
                     mbti=info.mbti,
                 )
 
-    def delete_user(self, user_id: str):
+    def delete_user(self, user_id: int):
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
@@ -125,7 +194,34 @@ class UserQueries:
                     [user_id],
                 )
 
-    # def get_user(self, user_id: str):
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as db:
-    #             db.execute
+    def update_user(self, user_id, data):
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                params = [
+                    data.username,
+                    data.email,
+                    data.hashed_password,
+                    data.full_name,
+                    data.mbti,
+                    user_id,
+                ]
+                cur.execute(
+                    """
+                    UPDATE users
+                    SET username = %s
+                    , email = %s
+                    , hashed_password = %s
+                    , full_name = %s
+                    , mbti = %s
+                    WHERE id = %s
+                    RETURNING id, username, email, hashed_password, full_name, mbti
+                    """,
+                    params,
+                )
+                record = None
+                row = cur.fetchone()
+                if row is not None:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                return record
