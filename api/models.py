@@ -31,9 +31,5 @@ class UserOut(BaseModel):
     mbti: str
 
 
-# class UserOutWithPassword(UserOut):
-#     hashed_password: str
-
-
 class UsersOut(BaseModel):
     users: List[UserOut]
