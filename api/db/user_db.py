@@ -1,8 +1,43 @@
 import os
 from psycopg_pool import ConnectionPool
-from models import User, UserIn
+# from models import User, UserIn
+from pydantic import BaseModel
+from typing import List
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
+
+class DuplicateUserError(ValueError):
+    pass
+
+
+class User(BaseModel):
+    id: int
+    username: str
+    email: str
+    hashed_password: str
+    full_name: str
+    mbti: str
+
+
+class UserIn(BaseModel):
+    username: str
+    email: str
+    password: str
+    full_name: str
+    mbti: str
+
+
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: str
+    full_name: str
+    mbti: str
+
+
+class UsersOut(BaseModel):
+    users: List[UserOut]
 
 
 class UserQueries:
@@ -79,3 +114,18 @@ class UserQueries:
                     mbti=info.mbti,
                 )
 
+    def delete_user(self, user_id: str):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    DELETE FROM users
+                    WHERE id = %s;
+                    """,
+                    [user_id],
+                )
+
+    # def get_user(self, user_id: str):
+    #     with pool.connection() as conn:
+    #         with conn.cursor() as db:
+    #             db.execute
