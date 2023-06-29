@@ -8,3 +8,4 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     hashed_password TEXT NOT NULL
 );
+
