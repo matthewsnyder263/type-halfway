@@ -79,7 +79,7 @@ class UserQueries:
                     mbti=info.mbti,
                 )
 
-    def delete_user(self, user_id: str):
+    def delete_user(self, user_id: int):
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
