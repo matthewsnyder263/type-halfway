@@ -1,12 +1,10 @@
 DROP TABLE IF EXISTS users;
 
-
 CREATE TABLE users (
-    id SERIAL NOT NULL UNIQUE,
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
     full_name TEXT NOT NULL,
-    mbti TEXT NULL,
-    email TEXT NOT NULL,
-    hashed_password TEXT NOT NULL UNIQUE,
-    username TEXT NOT NULL UNIQUE,
-    placeholder2 TEXT NULL
+    mbti TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    hashed_password TEXT NOT NULL
 );

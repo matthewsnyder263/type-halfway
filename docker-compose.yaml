@@ -3,6 +3,7 @@ volumes:
     external: true
   pg-admin:
     external: true
+
 services:
   fastapi:
     depends_on:
