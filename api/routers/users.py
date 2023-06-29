@@ -1,33 +1,13 @@
 from fastapi import APIRouter, Depends, Response
 from pydantic import BaseModel
-from typing import Optional, List
 from datetime import date
 from passlib.context import CryptContext
 from db import UserQueries
+from models import UserIn, UserOut, UsersOut
 
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-class UserIn(BaseModel):
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
-    password: str
-
-
-class UserOut(BaseModel):
-    first: str
-    last: str
-    mbti: str
-    email: str
-
-
-class UsersOut(BaseModel):
-    users: List[UserOut]
 
 
 @router.get("/api/users", response_model=UsersOut)
