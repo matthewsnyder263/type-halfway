@@ -1,12 +1,13 @@
-from fastapi import FastAPI, Depends, Response, APIRouter
+from fastapi import APIRouter, Depends, Response
 from pydantic import BaseModel
-from typing import List
+from typing import Optional, List
+from datetime import date
+from passlib.context import CryptContext
+from db import UserQueries
 
 router = APIRouter()
 
-
-class Queries:
-    pass
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UserIn(BaseModel):
@@ -15,35 +16,18 @@ class UserIn(BaseModel):
     mbti: str
     email: str
     username: str
+    password: str
 
 
 class UserOut(BaseModel):
-    id: int
     first: str
     last: str
     mbti: str
     email: str
-    username: str
-
-
-class UserOutWithPassword(UserOut):
-    hashed_password: str
 
 
 class UsersOut(BaseModel):
     users: List[UserOut]
-
-
-class UserQueries(Queries):
-    # region properties
-
-    def get(self, email: str) -> UserOutWithPassword:
-        pass
-
-    def create(
-        self, info: UserIn, hashed_password: str
-    ) -> UserOutWithPassword:
-        pass
 
 
 @router.get("/api/users", response_model=UsersOut)
@@ -66,16 +50,19 @@ def get_user(
         return record
 
 
-@router.post("api/users/", response_model=UserOut)
+@router.post("/api/users/", response_model=UserOut)
 def create_user(user_in: UserIn, queries: UserQueries = Depends()):
-    return queries.create_user(user_in)
+    hashed_password = pwd_context.hash(user_in.password)
+    user_in.password = hashed_password
+    created_user = queries.create_user(user_in)
+
+    return created_user
 
 
 @router.put("/api/users/{user_id}", response_model=UserOut)
 def update_user(
     user_id: int,
     user_in: UserIn,
-    # why are we adding user_in here?
     response: Response,
     queries: UserQueries = Depends(),
 ):

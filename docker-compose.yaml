@@ -1,19 +1,11 @@
-volumes:
-  project-gamma-data:
-    external: true
-  pg-admin:
-    external: true
+version: "3.8"
 services:
   fastapi:
     depends_on:
       - db
     environment:
-      # SIGNING_KEY:
-      WAIT_HOSTS: db:5432
-      WAIT_BEFORE: 5
-      WAIT_TIMEOUT: 60
-      DATABASE_URL: postgresql://user:password@db/data
-      CORS_HOST: http://localhost:3000
+      - DATABASE_URL=postgresql://user:password@db/data
+      - CORS_HOST=http://localhost:3000
     build:
       context: api
       dockerfile: Dockerfile.dev
@@ -31,18 +23,18 @@ services:
     ports:
       - "3000:3000"
     environment:
-      HOST_OS: ${OS}
-      NODE_ENV: development
-      HOST: "0.0.0.0"
-      PUBLIC_URL: http://localhost:3000
-      REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+      - HOST_OS=${OS}
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PUBLIC_URL=http://localhost:3000
+      - REACT_APP_API_HOST=${REACT_APP_API_HOST}
 
   db:
     image: postgres:14.5-bullseye
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: data
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=data
     ports:
       - "5432:5432"
     volumes:
@@ -55,6 +47,12 @@ services:
     ports:
       - 8082:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: email@email.com
-      PGADMIN_DEFAULT_PASSWORD: password
-      PGADMIN_DISABLE_POSTFIX: 1
+      - PGADMIN_DEFAULT_EMAIL=your-email@example.com
+      - PGADMIN_DEFAULT_PASSWORD=your-password
+      - PGADMIN_DISABLE_POSTFIX=1
+
+volumes:
+  project-gamma-data:
+    external: true
+  pg-admin:
+    external: true
