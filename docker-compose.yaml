@@ -11,8 +11,6 @@ services:
     environment:
       SIGNING_KEY: e9cc4b982bfcc8f60016000a8c5e5572b8288c7d4143eb008622832cc1b658f8
       WAIT_HOSTS: db:5432
-      SIGNING_KEY: e9cc4b982bfcc8f60016000a8c5e5572b8288c7d4143eb008622832cc1b658f8
-      WAIT_HOSTS: DB:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
       DATABASE_URL: postgresql://user:password@db/data
