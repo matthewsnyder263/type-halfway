@@ -1,6 +1,9 @@
 from pydantic import BaseModel  # type: ignore
-from typing import Optional, List, Union
-from datetime import date
+from typing import List, Union
+
+# from typing import Optional
+
+# from datetime import date
 from db.pool import pool
 
 # from .client import Queries

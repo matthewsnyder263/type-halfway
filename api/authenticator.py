@@ -3,7 +3,7 @@ from fastapi import Depends  # type:ignore
 from jwtdown_fastapi.authentication import Authenticator  # type:ignore
 from db.users import (
     UserOut,
-    UserIn,
+    # UserIn,
     UserDB,
     # UserOutWithPassword,
     UserQueries,
