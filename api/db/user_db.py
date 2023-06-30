@@ -1,7 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
 
-# from models import User, UserIn
 from typing import List
 from pydantic import BaseModel
 
@@ -19,6 +18,10 @@ class User(BaseModel):
     hashed_password: str
     full_name: str
     mbti: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
 
 
 class UserIn(BaseModel):
@@ -27,6 +30,10 @@ class UserIn(BaseModel):
     password: str
     full_name: str
     mbti: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
 
 
 class UserOut(BaseModel):
@@ -35,6 +42,10 @@ class UserOut(BaseModel):
     email: str
     full_name: str
     mbti: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
 
 
 class UsersOut(BaseModel):
@@ -53,6 +64,10 @@ class UserQueries:
                         , hashed_password
                         , full_name
                         , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
                     FROM users
                     WHERE email = %s;
                     """,
@@ -68,55 +83,27 @@ class UserQueries:
                     hashed_password=record[3],
                     full_name=record[4],
                     mbti=record[5],
+                    age=record[6],
+                    bio=record[7],
+                    interest=record[8],
+                    picture=record[9],
                 )
-
-    # def get_user(self):
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as cur:
-    #             cur.execute(
-    #                 """
-    #                 SELECT id, full_name, mbti, email
-    #                 FROM users
-    #             """
-    #             )
-    #             results = []
-    #             for row in cur.fetchall():
-    #                 record = {}
-    #                 for i, column in enumerate(cur.description):
-    #                     record[column.name] = row[i]
-    #                 results.append(record)
-    #             return results
-
-    # def get_user(self, user_id: int) -> UserOut:
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as db:
-    #             db.execute(
-    #                 """
-    #                 SELECT id, username, full_name, mbti, email
-    #                 FROM users
-    #                 WHERE id = %s;
-    #                 """,
-    #                 [user_id],
-    #             )
-    #             record = db.fetchone()
-    #             if record is None:
-    #                 return None
-
-    #             user = UserOut(
-    #                 id=record[0],
-    #                 username=record[1],
-    #                 email=record[3],
-    #                 full_name=record[2],
-    #                 mbti=record[4],
-    #             )
-    #             return user
 
     def get_users(self) -> UsersOut:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, username, full_name, mbti, email
+                    SELECT id
+                        , username
+                        , email
+                        , hashed_password
+                        , full_name
+                        , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
                     FROM users;
                     """
                 )
@@ -125,9 +112,14 @@ class UserQueries:
                     UserOut(
                         id=record[0],
                         username=record[1],
-                        full_name=record[2],
-                        mbti=record[3],
-                        email=record[4],
+                        email=record[2],
+                        hashed_password=record[3],
+                        full_name=record[4],
+                        mbti=record[5],
+                        age=record[6],
+                        bio=record[7],
+                        interest=record[8],
+                        picture=record[9],
                     )
                     for record in records
                 ]
@@ -138,7 +130,16 @@ class UserQueries:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, username, full_name, mbti, email
+                    SELECT id
+                        , username
+                        , email
+                        , hashed_password
+                        , full_name
+                        , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
                     FROM users
                     WHERE id = %s;
                     """,
@@ -151,9 +152,14 @@ class UserQueries:
                 user = UserOut(
                     id=record[0],
                     username=record[1],
-                    full_name=record[2],
-                    mbti=record[3],
-                    email=record[4],
+                    email=record[2],
+                    hashed_password=record[3],
+                    full_name=record[4],
+                    mbti=record[5],
+                    age=record[6],
+                    bio=record[7],
+                    interest=record[8],
+                    picture=record[9],
                 )
                 return user
 
@@ -162,8 +168,18 @@ class UserQueries:
             with conn.cursor() as db:
                 result = db.execute(
                     """
-                    INSERT INTO users (username, email, hashed_password, full_name, mbti)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO users (
+                        username,
+                        email,
+                        hashed_password,
+                        full_name,
+                        mbti,
+                        age,
+                        bio,
+                        interest,
+                        picture
+                        )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING id;
                     """,
                     [
@@ -172,6 +188,10 @@ class UserQueries:
                         hashed_password,
                         info.full_name,
                         info.mbti,
+                        info.age,
+                        info.bio,
+                        info.interest,
+                        info.picture,
                     ],
                 )
                 id = result.fetchone()[0]
@@ -182,6 +202,10 @@ class UserQueries:
                     hashed_password=hashed_password,
                     full_name=info.full_name,
                     mbti=info.mbti,
+                    age=info.age,
+                    bio=info.bio,
+                    interest=info.interest,
+                    picture=info.picture,
                 )
 
     def delete_user(self, user_id: int):
@@ -204,6 +228,10 @@ class UserQueries:
                     data.hashed_password,
                     data.full_name,
                     data.mbti,
+                    data.age,
+                    data.bio,
+                    data.interest,
+                    data.picture,
                     user_id,
                 ]
                 cur.execute(
@@ -214,8 +242,12 @@ class UserQueries:
                     , hashed_password = %s
                     , full_name = %s
                     , mbti = %s
+                    , age = %s
+                    , bio = %s
+                    , interest = %s
+                    , picture = %s
                     WHERE id = %s
-                    RETURNING id, username, email, hashed_password, full_name, mbti
+                    RETURNING id, username, email, hashed_password, full_name, mbti, age, bio, interest, picture
                     """,
                     params,
                 )

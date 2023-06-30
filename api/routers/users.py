@@ -93,26 +93,6 @@ def delete_user(
     return True
 
 
-# @router.get("/api/users", response_model=UserOut)
-# def get_user(queries: UserQueries = Depends()):
-#     return {
-#         "users": queries.get_user(),
-#     }
-
-
-# @router.get("/api/users/{user_id}", response_model=UserOut)
-# def get_user_by_id(
-#     user_id: int,
-#     queries: UserQueries = Depends(),
-# ):
-#     user = queries.get_user(user_id)
-#     if user is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     return user
-
 @router.get("/api/users", response_model=UsersOut)
 def get_users(queries: UserQueries = Depends()):
     users = queries.get_users()
