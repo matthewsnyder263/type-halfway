@@ -1,8 +1,9 @@
 import os
 from psycopg_pool import ConnectionPool
+
 # from models import User, UserIn
-from pydantic import BaseModel
 from typing import List
+from pydantic import BaseModel
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
