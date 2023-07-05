@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./GoogleMaps/Maps.js";
 
 function App() {
   const [launchInfo, setLaunchInfo] = useState([]);
@@ -29,7 +31,12 @@ function App() {
   return (
     <div>
       <ErrorNotification error={error} />
-      <Construct info={launchInfo} />
+      {/* <Construct info={launchInfo} /> */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

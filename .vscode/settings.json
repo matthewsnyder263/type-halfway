@@ -6,7 +6,31 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "cSpell.words": ["fullname", "jwtdown", "pydantic"],
+  "cSpell.words": [
+    "conninfo",
+    "dotenv",
+    "ENFJ",
+    "ENFP",
+    "ENTP",
+    "ESFJ",
+    "ESFP",
+    "ESTJ",
+    "ESTP",
+    "fullname",
+    "INFJ",
+    "INFP",
+    "INTJ",
+    "INTP",
+    "ISFJ",
+    "ISFP",
+    "ISTJ",
+    "ISTP",
+    "jwtdown",
+    "melo",
+    "psycopg",
+    "pydantic",
+    "setdestination"
+  ],
   "sqltools.connections": [
     {
       "previewLimit": 50,
@@ -17,5 +41,8 @@
       "database": "data",
       "username": "user"
     }
-  ]
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
