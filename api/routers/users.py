@@ -17,10 +17,11 @@ from db.user_db import (
     UserOut,
     UsersOut,
     DuplicateUserError,
-    UserQueries
+    UserQueries,
 )
 
 router = APIRouter()
+
 
 class AccountForm(BaseModel):
     username: str
@@ -33,7 +34,6 @@ class AccountToken(Token):
 
 class HttpError(BaseModel):
     detail: str
-
 
 
 @router.get("/api/protected", response_model=bool)

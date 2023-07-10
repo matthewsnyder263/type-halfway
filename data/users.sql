@@ -21,3 +21,5 @@ CREATE TABLE compatibility (
     user_id_2 INT REFERENCES users(id) ON DELETE CASCADE,
     strength FLOAT NOT NULL
 );
+
+

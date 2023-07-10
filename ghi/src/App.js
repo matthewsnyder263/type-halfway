@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
+import CompatibilityCalculator from "./mbti/Compatibility.js"
+import { Route } from 'react-router-dom'
+
 
 function App() {
   const [launchInfo, setLaunchInfo] = useState([]);
@@ -30,6 +33,7 @@ function App() {
     <div>
       <ErrorNotification error={error} />
       <Construct info={launchInfo} />
+      {/* <Route path="/compatibility" element={<CompatibilityCalculator />} /> */}
     </div>
   );
 }
