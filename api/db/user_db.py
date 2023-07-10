@@ -2,6 +2,7 @@ import os
 from psycopg_pool import ConnectionPool
 
 from typing import List
+from typing import ByteString
 from pydantic import BaseModel
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
@@ -46,6 +47,7 @@ class UserOut(BaseModel):
     bio: str
     interest: str
     picture: str
+    hashed_password: bytes
 
 
 class UsersOut(BaseModel):

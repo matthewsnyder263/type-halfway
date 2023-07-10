@@ -43,17 +43,36 @@ async def get_protected(
     return True
 
 
+# @router.get("/token", response_model=AccountToken | None)
+# async def get_token(
+#     request: Request,
+#     account: UserOut = Depends(authenticator.try_get_current_account_data),
+# ) -> AccountToken | None:
+#     if account and authenticator.cookie_name in request.cookies:
+#         return {
+#             "access_token": request.cookies[authenticator.cookie_name],
+#             "type": "Bearer",
+#             "account": account,
+#         }
+
+# implemented users:
+# return user data 
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
     account: UserOut = Depends(authenticator.try_get_current_account_data),
+    users: UserQueries = Depends(),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
-        return {
-            "access_token": request.cookies[authenticator.cookie_name],
-            "type": "Bearer",
-            "account": account,
-        }
+        user = users.get_user_by_id(account.id)
+        if user is not None:
+            return {
+                "access_token": request.cookies[authenticator.cookie_name],
+                "type": "Bearer",
+                "account": account,
+                "user": user,
+            }
+    return None
 
 
 @router.post("/api/users", response_model=AccountToken | HttpError)

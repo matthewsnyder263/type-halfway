@@ -5,7 +5,7 @@ from authenticator import authenticator
 from routers import users, compatibility
 import os
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 app.include_router(authenticator.router)
 app.include_router(users.router)

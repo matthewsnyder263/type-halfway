@@ -91,8 +91,13 @@ def Calculate_Compatibility(user_id_1, user_id_2):
     else:
         return "Please enter a valid user ID."
 
-
-
+# {
+# "poor": 1,
+# "bad": 2,
+# "average": 3,
+# "good": 4,
+# "perfect": 5
+# }
 """
 CREATE OR REPLACE FUNCTION calculate_compatibility(
     user_id_1 integer,
