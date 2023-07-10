@@ -5,6 +5,7 @@ import ErrorNotification from "./ErrorNotification";
 import "./App.css";
 import LoginForm from "./LoginForm";
 import LogOut from "./LogOut";
+import InterestsForm from "./InterestsForm";
 
 function App() {
   const [launchInfo, setLaunchInfo] = useState([]);
@@ -32,9 +33,10 @@ function App() {
   return (
     <div>
       {/* <ErrorNotification error={error} /> */}
-      <SignupForm />
+      {/* <SignupForm />
       <LoginForm />
-      <LogOut />
+      <LogOut /> */}
+      <InterestsForm />
       {/* <Construct info={launchInfo} /> */}
     </div>
   );
