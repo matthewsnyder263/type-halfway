@@ -1,7 +1,11 @@
 // import { useEffect, useState } from "react";
+import SignupForm from "./SignupForm";
 // import Construct from "./Construct.js";
 // import ErrorNotification from "./ErrorNotification";
 import "./App.css";
+import LoginForm from "./LoginForm";
+import LogOut from "./LogOut";
+import InterestsForm from "./InterestsForm";
 import PotentialMatches from "./PotentialMatches/PotentialMatches.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignupForm from "./SignUpForm.js";
@@ -33,8 +37,12 @@ function App() {
   return (
     <BrowserRouter>
       <div>
-        {/* <ErrorNotification error={error} />
-        <Construct info={launchInfo} /> */}
+      {/*   {/* <ErrorNotification error={error} /> */}
+      {/* <SignupForm />
+      <LoginForm />
+      <LogOut /> */}
+        <InterestsForm />
+      {/* <Construct info={launchInfo} /> */} */}
         <Routes>
           <Route path="/potentialmatches" element={<PotentialMatches />} />
           <Route path="signup" element={<SignupForm />} />

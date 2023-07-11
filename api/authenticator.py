@@ -1,19 +1,18 @@
 import os
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from jwtdown_fastapi.authentication import Authenticator
-from db.user_db import UserOut, User
-from db.user_db import UserQueries
+from db.user_db import UserOut, User, UserQueries
 
 
 class MyAuthenticator(Authenticator):
     async def get_account_data(
         self,
-        email: str,
+        username: str,
         accounts: UserQueries,
     ):
         # Use your repo to get the account based on the
         # username (which could be an email)
-        return accounts.get(email)
+        return accounts.get(username)
 
     def get_account_getter(
         self,
@@ -30,8 +29,7 @@ class MyAuthenticator(Authenticator):
     def get_account_data_for_cookie(self, account: UserOut):
         # Return the username and the data for the cookie.
         # You must return TWO values from this method.
-        return account.email, UserOut(**account.dict())
-        # return account["email"], UserOut(**account)
+        return account.username, UserOut(**account.dict())
 
 
 authenticator = MyAuthenticator(os.environ["SIGNING_KEY"])
