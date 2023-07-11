@@ -13,7 +13,7 @@ from routers import users
 # load_dotenv()
 # api_key = os.environ.get("GOOGLE_API_KEY")
 
-app = FastAPI()
+app = FastAPI(debug=True)
 app.include_router(authenticator.router)
 
 app.add_middleware(

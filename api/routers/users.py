@@ -8,9 +8,16 @@ from fastapi import (
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-
+from models import (
+    User,
+    MBTI,
+    Interests,
+    UserInterests,
+    UserMBTI,
+    UserMatches,
+)
+from db.deps import get_db
 from pydantic import BaseModel
-
 from db.user_db import (
     UserIn,
     UserOut,
@@ -60,18 +67,19 @@ async def create_user(
     info: UserIn,
     request: Request,
     response: Response,
-    users: UserQueries = Depends(),
+    db=Depends(get_db),
 ):
+    queries = UserQueries(db)
     hashed_password = authenticator.hash_password(info.password)
     try:
-        account = users.create_user(info, hashed_password)
+        account = queries.create_user(info, hashed_password)
     except DuplicateUserError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot create an account with those credentials",
         )
     form = AccountForm(username=info.email, password=info.password)
-    token = await authenticator.login(response, request, form, users)
+    token = await authenticator.login(response, request, form, users=queries)
     return AccountToken(account=account, **token.dict())
 
 
@@ -79,9 +87,10 @@ async def create_user(
 def delete_user(
     user_id: int,
     response: Response,
-    queries: UserQueries = Depends(),
+    db=Depends(get_db),
 ):
-    user = queries.get_user(user_id)
+    queries = UserQueries(db)
+    user = queries.get_user_by_id(user_id)
     if user is None:
         response.status_code = 404
     queries.delete_user(user_id)
@@ -89,7 +98,8 @@ def delete_user(
 
 
 @router.get("/api/users", response_model=UsersOut)
-def get_users(queries: UserQueries = Depends()):
+def get_users(db=Depends(get_db)):
+    queries = UserQueries(db)
     users = queries.get_users()
     return {"users": users}
 
@@ -97,8 +107,9 @@ def get_users(queries: UserQueries = Depends()):
 @router.get("/api/users/{user_id}", response_model=UserOut)
 def get_user_by_id(
     user_id: int,
-    queries: UserQueries = Depends(),
+    db=Depends(get_db),
 ):
+    queries = UserQueries(db)
     user = queries.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(
@@ -113,8 +124,9 @@ def update_user(
     user_id: int,
     user_in: UserIn,
     response: Response,
-    queries: UserQueries = Depends(),
+    db=Depends(get_db),
 ):
+    queries = UserQueries(db)
     user = queries.get_user_by_id(user_id)
     if user is None:
         response.status_code = 404

@@ -39,9 +39,7 @@ services:
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
 
   db:
-    build:
-      context: data
-      dockerfile: Dockerfile.dev
+    image: postgres:14.2-bullseye
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
