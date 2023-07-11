@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignupForm from "./SignupForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
@@ -31,14 +32,20 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {/* <ErrorNotification error={error} /> */}
-      {/* <SignupForm />
+    <BrowserRouter>
+      <div>
+        <Routes>
+          {/* <ErrorNotification error={error} /> */}
+          {/* <SignupForm />
       <LoginForm />
       <LogOut /> */}
-      <InterestsForm />
-      {/* <Construct info={launchInfo} /> */}
-    </div>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
+          {/* <InterestsForm /> */}
+          {/* <Construct info={launchInfo} /> */}
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
