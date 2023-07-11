@@ -4,6 +4,7 @@
 import "./App.css";
 import PotentialMatches from "./PotentialMatches/PotentialMatches.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignupForm from "./SignUpForm.js";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Construct info={launchInfo} /> */}
         <Routes>
           <Route path="/potentialmatches" element={<PotentialMatches />} />
+          <Route path="signup" element={<SignupForm />} />
         </Routes>
       </div>
     </BrowserRouter>
