@@ -6,11 +6,12 @@ from sqlalchemy import (
     ForeignKey,
     MetaData,
 )
+from sqlalchemy.orm import Session
 
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base
 
-engine = create_engine("postgresql://user:password@localhost:15432/data")
+engine = create_engine("postgresql://user:password@db:5432/data")
 
 Base = declarative_base()
 

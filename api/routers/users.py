@@ -25,6 +25,7 @@ from db.user_db import (
     DuplicateUserError,
     UserQueries,
 )
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -67,7 +68,7 @@ async def create_user(
     info: UserIn,
     request: Request,
     response: Response,
-    db=Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     queries = UserQueries(db)
     hashed_password = authenticator.hash_password(info.password)
@@ -87,7 +88,7 @@ async def create_user(
 def delete_user(
     user_id: int,
     response: Response,
-    db=Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     queries = UserQueries(db)
     user = queries.get_user_by_id(user_id)
@@ -98,7 +99,7 @@ def delete_user(
 
 
 @router.get("/api/users", response_model=UsersOut)
-def get_users(db=Depends(get_db)):
+def get_users(db: Session = Depends(get_db)):
     queries = UserQueries(db)
     users = queries.get_users()
     return {"users": users}
@@ -107,7 +108,7 @@ def get_users(db=Depends(get_db)):
 @router.get("/api/users/{user_id}", response_model=UserOut)
 def get_user_by_id(
     user_id: int,
-    db=Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     queries = UserQueries(db)
     user = queries.get_user_by_id(user_id)
@@ -124,7 +125,7 @@ def update_user(
     user_id: int,
     user_in: UserIn,
     response: Response,
-    db=Depends(get_db),
+    db: Session = Depends(get_db),
 ):
     queries = UserQueries(db)
     user = queries.get_user_by_id(user_id)
