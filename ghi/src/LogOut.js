@@ -24,7 +24,7 @@ import { logout } from "./auth";
 function LogOut() {
   const handleLogOut = () => {
     logout();
-    alert("You have logged out using the logout feature, Nice Work.");
+    alert("You have logged out.");
   };
 
   return (
