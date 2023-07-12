@@ -1,17 +1,17 @@
 // import { useEffect, useState } from "react";
-import SignupForm from "./SignupForm";
-// import Construct from "./Construct.js";
-// import ErrorNotification from "./ErrorNotification";
+import SignupForm from "./Account/SignUpForm";
 import "./App.css";
-import LoginForm from "./LoginForm";
-import LogOut from "./LogOut";
-import InterestsForm from "./InterestsForm";
+import LoginForm from "./Account/LoginForm";
+// import LogOut from "./Account/LogOut";
+// import InterestsForm from "./InterestsForm";
 import PotentialMatches from "./PotentialMatches/PotentialMatches.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignupForm from "./SignUpForm.js";
-
+import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 
 function App() {
+  // const baseURL = `${process.env.REACT_APP_API_HOST}/api/users`;
+  const baseUrl = process.env.REACT_APP_API_HOST || "";
+
   // const [launchInfo, setLaunchInfo] = useState([]);
   // const [error, setError] = useState(null);
 
@@ -35,20 +35,19 @@ function App() {
   // }, []);
 
   return (
-    <BrowserRouter>
+    <AuthProvider baseUrl={baseUrl}>
       <div>
-      {/*   {/* <ErrorNotification error={error} /> */}
-      {/* <SignupForm />
-      <LoginForm />
-      <LogOut /> */}
-        <InterestsForm />
-      {/* <Construct info={launchInfo} /> */} */}
-        <Routes>
-          <Route path="/potentialmatches" element={<PotentialMatches />} />
-          <Route path="signup" element={<SignupForm />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+          { <LoginForm />}
+          {/* <LogOut /> */}
+          {/* <InterestsForm /> */}
+          {/* <Routes>
+            <Route path="potentialmatches" element={<PotentialMatches />} />
+            <Route path="signup" element={<SignupForm />} />
+            <Route path="login" element={<LoginForm />} />
+          </Routes> */}
+        </div>
+      {/* </BrowserRouter> */}
+    </AuthProvider>
   );
 }
 

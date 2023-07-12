@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BootstrapInput from "./BootstrapInput.js";
+import BootstrapInput from "../BootstrapInput.js";
 // import axios from "axios";
 
 const SignupForm = () => {
@@ -27,7 +27,7 @@ const SignupForm = () => {
             full_name: formData.full_name,
             mbti: formData.mbti,
         };
-        const usersUrl = "http://localhost:8000/api/users/";
+        const usersUrl = "http://localhost:8000/api/users";
         const fetchConfig = {
             method: "POST",
             body: JSON.stringify(data),

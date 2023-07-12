@@ -15,8 +15,6 @@ class DuplicateUserError(ValueError):
 class User(BaseModel):
     id: int
     username: str
-    full_name: str
-    mbti_id: int
     email: str
     hashed_password: str
     full_name: str
@@ -29,8 +27,6 @@ class User(BaseModel):
 
 class UserIn(BaseModel):
     username: str
-    full_name: str
-    mbti_id: int
     email: str
     password: str
     full_name: str
@@ -44,13 +40,15 @@ class UserIn(BaseModel):
 class UserOut(BaseModel):
     id: int
     username: str
+    email: str
     full_name: str
     mbti: str
     age: int
     bio: str
     interest: str
     picture: str
-    hashed_password: bytes
+    # hashed_password: bytes
+    hashed_password: str
 
 
 class UsersOut(BaseModel):
@@ -58,15 +56,13 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def get(self, username: int) -> User:
+    def get(self, email: str) -> User:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
                     """
                     SELECT id
                         , username
-                        , full_name
-                        , mbti_id
                         , email
                         , hashed_password
                         , full_name
@@ -76,9 +72,9 @@ class UserQueries:
                         , interest
                         , picture
                     FROM users
-                    WHERE username = %s;
+                    WHERE email = %s;
                     """,
-                    [username],
+                    [email],
                 )
                 record = result.fetchone()
                 if record is None:
@@ -151,13 +147,7 @@ class UserQueries:
                     WHERE id = %s;
                     """,
                     [user_id],
-                    WHERE id = %s;
-                    """,
-                    [user_id],
                 )
-                record = db.fetchone()
-                if record is None:
-                    return None
                 record = db.fetchone()
                 if record is None:
                     return None
@@ -197,8 +187,6 @@ class UserQueries:
                     """,
                     [
                         info.username,
-                        info.full_name,
-                        info.mbti_id,
                         info.email,
                         hashed_password,
                         info.full_name,
@@ -213,8 +201,6 @@ class UserQueries:
                 return User(
                     id=id,
                     username=info.username,
-                    full_name=info.full_name,
-                    mbti_id=info.mbti_id,
                     email=info.email,
                     hashed_password=hashed_password,
                     full_name=info.full_name,
@@ -225,7 +211,6 @@ class UserQueries:
                     picture=info.picture,
                 )
 
-    def delete_user(self, user_id: int):
     def delete_user(self, user_id: int):
         with pool.connection() as conn:
             with conn.cursor() as db:
