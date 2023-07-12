@@ -19,10 +19,11 @@
 // export default Logout;
 
 import React from "react";
+import { logout } from "./auth";
 
 function LogOut() {
   const handleLogOut = () => {
-    localStorage.clear();
+    logout();
     alert("You have logged out using the logout feature, Nice Work.");
   };
 
@@ -35,3 +36,21 @@ function LogOut() {
 }
 
 export default LogOut;
+
+// import React from "react";
+
+// function LogOut() {
+//   const handleLogOut = () => {
+//     localStorage.clear();
+//     alert("You have logged out using the logout feature, Nice Work.");
+//   };
+
+//   return (
+//     <div>
+//       <h2>You are logged in</h2>
+//       <button onClick={handleLogOut}>Log Out</button>
+//     </div>
+//   );
+// }
+
+// export default LogOut;

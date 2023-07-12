@@ -7,6 +7,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -57,15 +58,17 @@ async def get_token(
         }
 
 
-@router.post("/api/login", response_model=AccountToken | HttpError)
+@router.post("/token", response_model=AccountToken | HttpError)
 async def login(
     request: Request,
     response: Response,
     form: AccountForm = Body(...),
     users: UserQueries = Depends(),
 ):
-    # print(await request.body)
+    # print(await request.body())
     print(form)
+    logger.info(request.body())
+    logger.info(form)
     account = users.get(form.username)
     if not account:
         raise HTTPException(
