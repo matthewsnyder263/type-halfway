@@ -8,14 +8,15 @@ from fastapi import (
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-from models import (
-    User,
-    MBTI,
-    Interests,
-    UserInterests,
-    UserMBTI,
-    UserMatches,
-)
+
+# from models import (
+#     User,
+#     MBTI,
+#     Interests,
+#     UserInterests,
+#     UserMBTI,
+#     UserMatches,
+# )
 from db.deps import get_db
 from pydantic import BaseModel
 from db.user_db import (

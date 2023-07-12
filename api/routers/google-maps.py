@@ -1,8 +1,10 @@
 from googlemaps import Client
-import googlemaps
+
+# import googlemaps
 import os
-import sys
-from googlemaps.places import places_nearby
+
+# import sys
+# from googlemaps.places import places_nearby
 from dotenv import load_dotenv
 
 load_dotenv()

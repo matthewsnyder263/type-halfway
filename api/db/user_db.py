@@ -1,14 +1,6 @@
-import os
 from pydantic import BaseModel
 from typing import List
-from models import (
-    User,
-    # MBTI,
-    # Interests,
-    # UserInterests,
-    # UserMBTI,
-    # UserMatches,
-)
+from models import User
 from .deps import get_db
 from sqlalchemy.orm import Session
 from fastapi import Depends
