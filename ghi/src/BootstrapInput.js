@@ -1,3 +1,6 @@
+import React from 'react';
+
+
 function BootstrapInput(props) {
   const { id, placeholder, labelText, value, onChange, type, name } = props;
 
