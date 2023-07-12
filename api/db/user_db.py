@@ -57,8 +57,8 @@ class UserQueries:
     def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
-    def get_user_by_email(self, email: str) -> UserDB:
-        user = self.db.query(User).filter(User.email == email).first()
+    def get_user(self, username: str) -> UserDB:
+        user = self.db.query(User).filter(User.username == username).first()
         if user is None:
             return None
         return UserDB(**user.__dict__)

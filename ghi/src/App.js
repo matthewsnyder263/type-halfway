@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignupForm from "./SignupForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
+import LoginForm from "./LoginForm";
+import LogOut from "./LogOut";
+import InterestsForm from "./InterestsForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./GoogleMaps/Maps.js";
 
@@ -29,15 +34,21 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <ErrorNotification error={error} />
-      {/* <Construct info={launchInfo} /> */}
-      <BrowserRouter>
+    <BrowserRouter>
+      <div>
         <Routes>
+          {/* <ErrorNotification error={error} /> */}
+          {/* <SignupForm />
+          <LoginForm />
+          <LogOut /> */}
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
+          {/* <InterestsForm /> */}
+          {/* {/* <Construct info={launchInfo} /> */}
           <Route path="/" element={<Home />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
 

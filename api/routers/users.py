@@ -1,4 +1,5 @@
 from fastapi import (
+    Body,
     Depends,
     HTTPException,
     status,
@@ -6,8 +7,15 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from jwtdown_fastapi.authentication import Token
-from authenticator import authenticator
+from db.user_db import (
+    UserIn,
+    UserOut,
+    UsersOut,
+    UsersOut,
+    DuplicateUserError,
+    UserQueries,
+    UserQueries,
+)
 
 # from models import (
 #     User,
@@ -17,15 +25,10 @@ from authenticator import authenticator
 #     UserMBTI,
 #     UserMatches,
 # )
+from jwtdown_fastapi.authentication import Token
+from authenticator import authenticator
 from db.deps import get_db
 from pydantic import BaseModel
-from db.user_db import (
-    UserIn,
-    UserOut,
-    UsersOut,
-    DuplicateUserError,
-    UserQueries,
-)
 
 
 router = APIRouter()
@@ -64,6 +67,25 @@ async def get_token(
         }
 
 
+@router.post("/api/login", response_model=AccountToken | HttpError)
+async def login(
+    request: Request,
+    response: Response,
+    form: AccountForm = Body(...),
+    users: UserQueries = Depends(),
+):
+    # print(await request.body)
+    print(form)
+    account = users.get(form.username)
+    if not account:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    token = await authenticator.login(response, request, form, users)
+    return AccountToken(account=account, **token.dict())
+
+
 @router.post("/api/users", response_model=AccountToken | HttpError)
 async def create_user(
     info: UserIn,
@@ -80,7 +102,7 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot create an account with those credentials",
         )
-    form = AccountForm(username=info.email, password=info.password)
+    form = AccountForm(username=info.username, password=info.password)
     token = await authenticator.login(response, request, form, users=queries)
     return AccountToken(account=account, **token.dict())
 
@@ -129,8 +151,12 @@ def update_user(
     db=Depends(get_db),
 ):
     queries = UserQueries(db)
-    user = queries.get_user_by_id(user_id)
+    user = queries.get_user_by_id_by_id(user_id)
     if user is None:
-        response.status_code = 404
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
     updated_user = queries.update_user(user_id, user_in)
     return updated_user
