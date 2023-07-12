@@ -8,8 +8,10 @@ from models import (
     # UserInterests,
     # UserMBTI,
     # UserMatches,
-    SessionLocal,
 )
+from .deps import get_db
+from sqlalchemy.orm import Session
+from fastapi import Depends
 
 
 class Error(BaseModel):
@@ -60,7 +62,7 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def __init__(self, db: SessionLocal):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def get_user_by_email(self, email: str) -> UserDB:

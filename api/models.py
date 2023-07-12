@@ -1,24 +1,11 @@
 from sqlalchemy import (
-    create_engine,
     Column,
     Integer,
     String,
     ForeignKey,
-    MetaData,
 )
-from sqlalchemy.orm import Session
-
-# from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, declarative_base
-
-engine = create_engine("postgresql://user:password@db:5432/data")
-
-Base = declarative_base()
-
-Base.metadata.create_all(engine)
-
-SessionLocal = sessionmaker(bind=engine)
-# session = SessionLocal()
+from db.deps import Base
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
