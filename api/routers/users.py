@@ -6,6 +6,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    logger,
 )
 from db.user_db import (
     UserIn,
@@ -16,19 +17,6 @@ from db.user_db import (
     UserQueries,
     UserQueries,
 )
-
-# from models import (
-#     User,
-#     MBTI,
-#     Interests,
-#     UserInterests,
-#     UserMBTI,
-#     UserMatches,
-# )
-from jwtdown_fastapi.authentication import Token
-from authenticator import authenticator
-from db.db_config import get_db
-from pydantic import BaseModel
 
 
 router = APIRouter()
@@ -65,9 +53,27 @@ async def get_token(
             "type": "Bearer",
             "account": account,
         }
+return user data
 
 
-@router.post("/api/login", response_model=AccountToken | HttpError)
+@router.get("/token", response_model=AccountToken | None)
+async def get_token(
+    request: Request,
+    account: UserOut = Depends(authenticator.try_get_current_account_data),
+    users: UserQueries = Depends(),
+) -> AccountToken | None:
+    if account and authenticator.cookie_name in request.cookies:
+        user = users.get_user_by_id(account.id)
+        if user is not None:
+            return {
+                "access_token": request.cookies[authenticator.cookie_name],
+                "type": "Bearer",
+                "account": account,
+                "user": user,
+            }
+    return None
+
+@router.post("/token", response_model=AccountToken | HttpError)
 async def login(
     request: Request,
     response: Response,
@@ -86,77 +92,96 @@ async def login(
     return AccountToken(account=account, **token.dict())
 
 
-@router.post("/api/users", response_model=AccountToken | HttpError)
-async def create_user(
-    info: UserIn,
+@router.get("/token", response_model=AccountToken | None)
+async def get_token(
     request: Request,
-    response: Response,
-    db=Depends(get_db),
-):
-    queries = UserQueries(db)
-    hashed_password = authenticator.hash_password(info.password)
-    try:
-        account = queries.create_user(info, hashed_password)
-    except DuplicateUserError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cannot create an account with those credentials",
-        )
-    form = AccountForm(username=info.username, password=info.password)
-    token = await authenticator.login(response, request, form, users=queries)
-    return AccountToken(account=account, **token.dict())
+    account: UserOut = Depends(authenticator.try_get_current_account_data),
+    users: UserQueries = Depends(),
+) -> AccountToken | None:
+    if account and authenticator.cookie_name in request.cookies:
+        user = users.get_user_by_id(account.id)
+        if user is not None:
+            token = await authenticator.login(
+                response, request, AccountForm(username=user.username, password=user.password), users
+            )
+            return {
+                "access_token": request.cookies[authenticator.cookie_name],
+                "type": "Bearer",
+                "account": account,
+                "user": user,
+            }
+    return None
 
 
-@router.delete("/api/users/{user_id}", response_model=bool)
-def delete_user(
-    user_id: int,
-    response: Response,
-    db=Depends(get_db),
-):
-    queries = UserQueries(db)
-    user = queries.get_user_by_id(user_id)
-    if user is None:
-        response.status_code = 404
-    queries.delete_user(user_id)
-    return True
+# @router.post("/api/users", response_model=AccountToken | HttpError)
+# async def create_user(
+#     info: UserIn,
+#     request: Request,
+#     response: Response,
+#     db=Depends(get_db),
+# ):
+#     queries = UserQueries(db)
+#     hashed_password = authenticator.hash_password(info.password)
+#     try:
+#         account = queries.create_user(info, hashed_password)
+#     except DuplicateUserError:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Cannot create an account with those credentials",
+#         )
+#     form = AccountForm(username=info.username, password=info.password)
+#     token = await authenticator.login(response, request, form, users=queries)
+#     return AccountToken(account=account, **token.dict())
 
 
-@router.get("/api/users", response_model=UsersOut)
-def get_users(db=Depends(get_db)):
-    queries = UserQueries(db)
-    users = queries.get_users()
-    return {"users": users}
+# @router.delete("/api/users/{user_id}", response_model=bool)
+# def delete_user(
+#     user_id: int,
+#     response: Response,
+#     db=Depends(get_db),
+# ):
+#     user = queries.get_user(user_id)
+#     if user is None:
+#         response.status_code = 404
+#     queries.delete_user(user_id)
+#     return True
 
 
-@router.get("/api/users/{user_id}", response_model=UserOut)
-def get_user_by_id(
-    user_id: int,
-    db=Depends(get_db),
-):
-    queries = UserQueries(db)
-    user = queries.get_user_by_id(user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    return user
+# @router.get("/api/users", response_model=UsersOut)
+# def get_users(queries: UserQueries = Depends()):
+#     users = queries.get_users()
+#     return {"users": users}
 
 
-@router.put("/api/users/{user_id}", response_model=UserOut)
-def update_user(
-    user_id: int,
-    user_in: UserIn,
-    response: Response,
-    db=Depends(get_db),
-):
-    queries = UserQueries(db)
-    user = queries.get_user_by_id_by_id(user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
+# >>>>>>>>> Temporary merge branch 2
+# @router.get("/api/users/{user_id}", response_model=UserOut)
+# def get_user_by_id(
+#     user_id: int,
+#     db=Depends(get_db),
+# ):
+#     queries = UserQueries(db)
+#     user = queries.get_user_by_id(user_id)
+#     if user is None:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     return user
 
-    updated_user = queries.update_user(user_id, user_in)
-    return updated_user
+
+# @router.put("/api/users/{user_id}", response_model=UserOut)
+# def update_user(
+#     user_id: int,
+#     user_in: UserIn,
+#     response: Response,
+#     db=Depends(get_db),
+# ):
+#     queries = UserQueries(db)
+#     user = queries.get_user_by_id_by_id(user_id)
+#     if user is None:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     updated_user = queries.update_user(user_id, user_in)
+#     return updated_user

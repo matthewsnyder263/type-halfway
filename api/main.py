@@ -4,11 +4,14 @@ import os
 
 # import requests
 from authenticator import authenticator
-from routers import users, interests
+from routers import users, interests, mbti, compatibility
 import os
 
 app = FastAPI(debug=True)
 app.include_router(authenticator.router)
+app.include_router(users.router)
+app.include_router(compatibility.router)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,27 +42,4 @@ def launch_details():
 
 app.include_router(users.router)
 app.include_router(interests.router)
-
-
-@app.get("/api/mbti")
-def get_mbti():
-    return {
-        "mbti": [
-            "ISTJ",
-            "ISFJ",
-            "INFJ",
-            "INTJ",
-            "ISTP",
-            "ISFP",
-            "INFP",
-            "INTP",
-            "ESTP",
-            "ESFP",
-            "ENFP",
-            "ENTP",
-            "ESTJ",
-            "ESFJ",
-            "ENFJ",
-            "ENTJ",
-        ]
-    }
+# app.include_router(mbti.router)

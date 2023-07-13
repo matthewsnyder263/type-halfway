@@ -1,9 +1,9 @@
-from pydantic import BaseModel  # , constr, validator,  EmailStr
+import os
+from psycopg_pool import ConnectionPool
+
 from typing import List
-from .models import User
-from .db_config import get_db
-from sqlalchemy.orm import Session
-from fastapi import Depends
+from typing import ByteString
+from pydantic import BaseModel
 
 
 class Error(BaseModel):
@@ -17,36 +17,40 @@ class DuplicateUserError(ValueError):
 class UserDB(BaseModel):
     id: int
     username: str
-    fullname: str
     email: str
     hashed_password: str
+    full_name: str
     mbti: str
-    city: str
-    state: str
-    zip_code: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
 
 
 class UserIn(BaseModel):
     username: str
-    fullname: str
     email: str
     password: str
+    full_name: str
     mbti: str
-    city: str
-    state: str
-    zip_code: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
 
 
 class UserOut(BaseModel):
     id: int
     username: str
-    fullname: str
     email: str
-    password: str
+    full_name: str
     mbti: str
-    city: str
-    state: str
-    zip_code: str
+    age: int
+    bio: str
+    interest: str
+    picture: str
+    # hashed_password: bytes
+    hashed_password: str
 
 
 class UsersOut(BaseModel):
@@ -54,33 +58,160 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def __init__(self, db: Session = Depends(get_db)):
-        self.db = db
+    def get(self, email: str) -> User:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    SELECT id
+                        , username
+                        , email
+                        , hashed_password
+                        , full_name
+                        , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
+                    FROM users
+                    WHERE email = %s;
+                    """,
+                    [email],
+                )
+                record = result.fetchone()
+                if record is None:
+                    return None
+                return User(
+                    id=record[0],
+                    username=record[1],
+                    email=record[2],
+                    hashed_password=record[3],
+                    full_name=record[4],
+                    mbti=record[5],
+                    age=record[6],
+                    bio=record[7],
+                    interest=record[8],
+                    picture=record[9],
+                )
 
-    def get_user(self, username: str) -> UserDB:
-        user = self.db.query(User).filter(User.username == username).first()
-        if user is None:
-            return None
-        return UserDB(**user.__dict__)
-
-    def get_users(
-        self,
-    ) -> UsersOut:
-        users = self.db.query(User).all()
-        return UsersOut(users=[UserOut(**user.__dict__) for user in users])
+    def get_users(self) -> UsersOut:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id
+                        , username
+                        , email
+                        , hashed_password
+                        , full_name
+                        , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
+                    FROM users;
+                    """
+                )
+                records = db.fetchall()
+                users = [
+                    UserOut(
+                        id=record[0],
+                        username=record[1],
+                        email=record[2],
+                        hashed_password=record[3],
+                        full_name=record[4],
+                        mbti=record[5],
+                        age=record[6],
+                        bio=record[7],
+                        interest=record[8],
+                        picture=record[9],
+                    )
+                    for record in records
+                ]
+                return users
 
     def get_user_by_id(self, user_id: int) -> UserOut:
-        user = self.db.query(User).filter(User.id == user_id).first()
-        if user is None:
-            return None
-        return UserOut(**user.__dict__)
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id
+                        , username
+                        , email
+                        , hashed_password
+                        , full_name
+                        , mbti
+                        , age
+                        , bio
+                        , interest
+                        , picture
+                    FROM users
+                    WHERE id = %s;
+                    """,
+                    [user_id],
+                )
+                record = db.fetchone()
+                if record is None:
+                    return None
+
+                user = UserOut(
+                    id=record[0],
+                    username=record[1],
+                    email=record[2],
+                    hashed_password=record[3],
+                    full_name=record[4],
+                    mbti=record[5],
+                    age=record[6],
+                    bio=record[7],
+                    interest=record[8],
+                    picture=record[9],
+                )
+                return user
 
     def create_user(self, info: UserIn, hashed_password: str):
-        new_user = User(**info.dict(), hashed_password=hashed_password)
-        self.db.add(new_user)
-        self.db.commit()
-        self.db.refresh(new_user)
-        return UserOut(**new_user.__dict__)
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    INSERT INTO users (
+                        username,
+                        email,
+                        hashed_password,
+                        full_name,
+                        mbti,
+                        age,
+                        bio,
+                        interest,
+                        picture
+                        )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id;
+                    """,
+                    [
+                        info.username,
+                        info.email,
+                        hashed_password,
+                        info.full_name,
+                        info.mbti,
+                        info.age,
+                        info.bio,
+                        info.interest,
+                        info.picture,
+                    ],
+                )
+                id = result.fetchone()[0]
+                return User(
+                    id=id,
+                    username=info.username,
+                    email=info.email,
+                    hashed_password=hashed_password,
+                    full_name=info.full_name,
+                    mbti=info.mbti,
+                    age=info.age,
+                    bio=info.bio,
+                    interest=info.interest,
+                    picture=info.picture,
+                )
 
     def delete_user(self, user_id: int):
         user = self.db.query(User).filter(User.id == user_id).first()
@@ -91,11 +222,269 @@ class UserQueries:
         return True
 
     def update_user(self, user_id, data):
-        user = self.db.query(User).filter(User.id == user_id).first()
-        if user is None:
-            return None
-        for key, value in data.items():
-            setattr(user, key, value)
-        self.db.commit()
-        self.db.refresh(user)
-        return UserOut(**user.__dict__)
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                params = [
+                    data.username,
+                    data.email,
+                    data.hashed_password,
+                    data.full_name,
+                    data.mbti,
+                    data.age,
+                    data.bio,
+                    data.interest,
+                    data.picture,
+                    user_id,
+                ]
+                cur.execute(
+                    """
+                    UPDATE users
+                    SET username = %s
+                    , email = %s
+                    , hashed_password = %s
+                    , full_name = %s
+                    , mbti = %s
+                    , age = %s
+                    , bio = %s
+                    , interest = %s
+                    , picture = %s
+                    WHERE id = %s
+                    RETURNING id, username, email, hashed_password, full_name, mbti, age, bio, interest, picture
+                    """,
+                    params,
+                )
+                record = None
+                row = cur.fetchone()
+                if row is not None:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                return record
+
+
+# import os
+# from psycopg_pool import ConnectionPool
+
+# # from models import User, UserIn
+# from pydantic import BaseModel
+# from typing import List
+
+# pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
+
+# class DuplicateUserError(ValueError):
+#     pass
+
+
+# class User(BaseModel):
+#     id: int
+#     username: str
+#     full_name: str
+#     mbti_id: int
+#     email: str
+#     hashed_password: str
+#     city: str
+#     state: str
+
+
+# class UserIn(BaseModel):
+#     username: str
+#     full_name: str
+#     mbti_id: int
+#     email: str
+#     password: str
+#     city: str
+#     state: str
+
+
+# class UserOut(BaseModel):
+#     id: int
+#     username: str
+#     full_name: str
+#     mbti_id: int
+#     email: str
+#     city: str
+#     state: str
+
+
+# class UsersOut(BaseModel):
+#     users: List[UserOut]
+
+
+# class UserQueries:
+#     def get(self, username: int) -> User:
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 result = db.execute(
+#                     """
+#                     SELECT id
+#                         , username
+#                         , full_name
+#                         , mbti_id
+#                         , email
+#                         , hashed_password
+#                         , city
+#                         , state
+#                     FROM users
+#                     WHERE username = %s;
+#                     """,
+#                     [username],
+#                 )
+#                 record = result.fetchone()
+#                 if record is None:
+#                     return None
+#                 return User(
+#                     id=record[0],
+#                     username=record[1],
+#                     full_name=record[2],
+#                     mbti_id=record[3],
+#                     email=record[4],
+#                     hashed_password=record[5],
+#                     city=record[6],
+#                     state=record[7],
+#                 )
+
+
+#     def get_users(self) -> UsersOut:
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 db.execute(
+#                     """
+#                     SELECT id
+#                         , username
+#                         , full_name
+#                         , mbti_id
+#                         , email
+#                         , hashed_password
+#                         , city
+#                         , state
+#                     FROM users;
+#                     """
+#                 )
+#                 records = db.fetchall()
+#                 users = [
+#                     UserOut(
+#                         id=record[0],
+#                         username=record[1],
+#                         full_name=record[2],
+#                         mbti_id=record[3],
+#                         email=record[4],
+#                         hashed_password=record[5],
+#                         city=record[6],
+#                         state=record[7],
+#                     )
+#                     for record in records
+#                 ]
+#                 print(users)
+#                 return users
+
+#     def get_user_by_id(self, user_id: int) -> UserOut:
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 db.execute(
+#                     """
+#                     SELECT id
+#                         , username
+#                         , full_name
+#                         , mbti_id
+#                         , email
+#                         , hashed_password
+#                         , city
+#                         , state
+#                     FROM users
+#                     WHERE id = %s;
+#                     """,
+#                     [user_id],
+#                 )
+#                 record = db.fetchone()
+#                 if record is None:
+#                     return None
+
+#                 user = UserOut(
+#                     id=record[0],
+#                     username=record[1],
+#                     full_name=record[2],
+#                     mbti_id=record[3],
+#                     email=record[4],
+#                     hashed_password=record[5],
+#                     city=record[6],
+#                     state=record[7],
+#                 )
+#                 return user
+
+#     def create_user(self, info: UserIn, hashed_password: str):
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 result = db.execute(
+#                     """
+#                     INSERT INTO users (
+#                         username
+#                         , full_name
+#                         , mbti_id
+#                         , email
+#                         , hashed_password
+#                         , city
+#                         , state
+#                         )
+#                     VALUES (%s, %s, %s, %s, %s, %s, %s)
+#                     RETURNING id;
+#                     """,
+#                     [
+#                         info.username,
+#                         info.full_name,
+#                         info.mbti_id,
+#                         info.email,
+#                         hashed_password,
+#                         info.city,
+#                         info.state,
+#                     ],
+#                 )
+#                 id = result.fetchone()[0]
+#                 return User(
+#                     id=id,
+#                     username=info.username,
+#                     full_name=info.full_name,
+#                     mbti_id=info.mbti_id,
+#                     email=info.email,
+#                     hashed_password=hashed_password,
+#                     city=info.city,
+#                     state=info.state,
+#                 )
+
+#     def delete_user(self, user_id: int):
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 db.execute(
+#                     """
+#                     DELETE FROM users
+#                     WHERE id = %s;
+#                     """,
+#                     [user_id],
+#                 )
+
+#     def update_user(self, user_id: int, info: UserIn):
+#         with pool.connection() as conn:
+#             with conn.cursor() as db:
+#                 db.execute(
+#                     """
+#                     UPDATE users
+#                     SET username = %s,
+#                         full_name = %s,
+#                         mbti_id = %s
+#                         email = %s,
+#                         hashed_password = %s,
+#                         city = %s,
+#                         state = %s
+#                     WHERE id = %s;
+#                     """,
+#                     [
+#                         info.username,
+#                         info.full_name,
+#                         info.mbti_id,
+#                         info.email,
+#                         info.password,
+#                         info.city,
+#                         info.state,
+#                     ],
+#                 )
+#                 return self.get_user_by_id(user_id)
