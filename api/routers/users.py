@@ -79,23 +79,23 @@ async def get_token(
 #             }
 #     return None
 
-@router.post("/token", response_model=AccountToken | HttpError)
-async def login(
-    request: Request,
-    response: Response,
-    form: AccountForm = Body(...),
-    users: UserQueries = Depends(),
-):
-    # print(await request.body)
-    print(form)
-    account = users.get(form.username)
-    if not account:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    token = await authenticator.login(response, request, form, users)
-    return AccountToken(account=account, **token.dict())
+# @router.post("/token", response_model=AccountToken | HttpError)
+# async def login(
+#     request: Request,
+#     response: Response,
+#     form: AccountForm = Body(...),
+#     users: UserQueries = Depends(),
+# ):
+#     # print(await request.body)
+#     print(form)
+#     account = users.get(form.username)
+#     if not account:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     token = await authenticator.login(response, request, form, users)
+#     return AccountToken(account=account, **token.dict())
 
 
 # @router.get("/token", response_model=AccountToken | None)
@@ -174,24 +174,6 @@ def get_user_by_id(
             detail="User not found",
         )
     return user
-
-
-# @router.put("/api/users/{user_id}", response_model=UserOut)
-# def update_user(
-#     user_id: int,
-#     user_in: UserIn,
-#     response: Response,
-#     queries: UserQueries = Depends(),
-# ):
-#     user = queries.get_user_by_id(user_id)
-#     if user is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-
-#     queries.delete_user(user_id)
-#     return True
 
 
 @router.put("/api/users/{user_id}", response_model=UserOut)

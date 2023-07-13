@@ -1,4 +1,14 @@
+// const { fetchWithCookie, fetchWithCookie } = useToken();
+// useEffect(() => {
+//     const fetchConfig = {};
+//     (async () => {
+//         const response = await fetch("http://localhost:8000/token", fetchConfig);
+//         const response2 = await fetchWithToken("http://localhost:8000/api/users", "GET", fetchConfig)
+//     })
+// }, []);
+
 import React, { useEffect, useState, useCallback } from "react";
+import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const PotentialMatches = () => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -6,32 +16,80 @@ const PotentialMatches = () => {
     const [compatibilityData, setCompatibilityData] = useState([]);
     const [lastCalculationDate, setLastCalculationDate] = useState(null);
 
+    // const { token } = useToken();
+    const { fetchWithToken } = useToken();
+
     useEffect(() => {
-        // Fetch the user API to get the current user's data
-        // fetch("/api/current-user")
-        //     .then((response) => response.json())
-        //     .then((data) => setCurrentUser(data))
-        //     .catch((error) => console.log(error));
+        const fetchData = async () => {
+            try {
+                const usersResponse = await fetchWithToken("http://localhost:8000/api/users", "GET");
+                const currentUserResponse = await fetchWithToken("http://localhost:8000/token", "GET");
 
-        // use token for the currently logged in user
-        fetch("http://localhost:8000/token")
-            .then((response) => response.json())
-            .then((data) => {
-                if (data && data.account && data.user) {
-                    setCurrentUser(data.user);
+                if (usersResponse.ok && currentUserResponse.ok) {
+                    const usersData = await usersResponse.json();
+                    const currentUserData = await currentUserResponse.json();
+
+                    // map mbti
+                    if (usersData && usersData.allUsers && currentUserData) {
+                        setAllUsers(usersData.allUsers);
+                        setCurrentUser(currentUserData);
+                    }
+                } else {
+                    console.error('Failed to fetch data');
                 }
-            })
-            .catch((error) => console.log(error));
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-        // fetching all users
+        fetchData();
+    }, [fetchWithToken]);
 
-        //need to add a logic to delete the logged in user
-        fetch("http://localhost:8000/api/users")
-            .then((response) => response.json())
-            .then((data) => setAllUsers(data.allUsers))
-            .catch((error) => console.log(error));
-    }, []);
 
+    // useEffect(() => {
+    //     // Fetch the current user's data
+    //     const fetchCurrentUser = async () => {
+    //         try {
+    //             const response = await fetch("http://localhost:8000/token", {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 setCurrentUser(data);
+    //             } else {
+    //                 console.error('Failed to fetch current user');
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching current user:', error);
+    //         }
+    //     };
+
+    //     // Fetch all users
+    //     const fetchAllUsers = async () => {
+    //         try {
+    //             const response = await fetch("http://localhost:8000/api/users", {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 setAllUsers(data.allUsers);
+    //             } else {
+    //                 console.error('Failed to fetch all users');
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching all users:', error);
+    //         }
+    //     };
+
+    //     if (token) {
+    //         fetchCurrentUser();
+    //         fetchAllUsers();
+    //     }
+    // }, [token]);
 
     // using useCallback so the site does not re-render unless 7 days have passed
     // and it's giving me a error...
