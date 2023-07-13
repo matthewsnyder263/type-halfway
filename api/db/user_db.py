@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel  # , constr, validator,  EmailStr
 from typing import List
-from models import User
-from .deps import get_db
+from .models import User
+from .db_config import get_db
 from sqlalchemy.orm import Session
 from fastapi import Depends
 

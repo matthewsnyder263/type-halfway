@@ -4,7 +4,7 @@ from sqlalchemy import (
     String,
     ForeignKey,
 )
-from db.deps import Base
+from .db_config import Base, engine
 from sqlalchemy.orm import relationship
 
 
@@ -15,9 +15,9 @@ class User(Base):
     username = Column(String, unique=True)
     fullname = Column(String)
     email = Column(String, unique=True)
-    hashed_password = Column(String)
+    password = Column(String)
     mbti = relationship("MBTI", backref="user")
-    # mbti_id = Column(Integer, ForeignKey("mbti.id", ondelete="CASCADE"))
+    mbti_id = Column(Integer, ForeignKey("mbti.id"))
     city = Column(String)
     state = Column(String)
     zip_code = Column(String)
@@ -59,22 +59,22 @@ class MBTI(Base):
 
     id = Column(Integer, primary_key=True)
     mbti_type = Column(String, unique=True)
-    users = relationship("User", backref="mbti")
+    users_mbti = relationship("User", backref="user")
 
     def __str__(self):
-        return f"MBTI(mbti_type={self.mbti_type} users={self.users})"
+        return f"MBTI(mbti_type={self.mbti_type})"  # users={self.users})"
 
 
-class UserMBTI(Base):
-    __tablename__ = "user_mbti"
+# class UserMBTI(Base):
+#     __tablename__ = "user_mbti"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
-    mbti_id = Column(Integer, ForeignKey("mbti.id"))
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey("user.id"))
+#     mbti_id = Column(Integer, ForeignKey("mbti.id"))
 
-    def __str__(self):
-        return f"UserMBTI(user_id={self.user_id},\
-                mbti_id={self.mbti_id})"
+#     def __str__(self):
+#         return f"UserMBTI(user_id={self.user_id},\
+#                 mbti_id={self.mbti_id})"
 
 
 class UserMatches(Base):
@@ -90,7 +90,7 @@ class UserMatches(Base):
                 match_id={self.match_id})"
 
 
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 # new_user = User(
 #     username="AA",
 #     fullname="AA",

@@ -7,7 +7,6 @@ import "./App.css";
 import LoginForm from "./LoginForm";
 import LogOut from "./LogOut";
 import InterestsForm from "./InterestsForm";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./GoogleMaps/Maps.js";
 
 function App() {

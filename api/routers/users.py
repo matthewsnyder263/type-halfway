@@ -27,7 +27,7 @@ from db.user_db import (
 # )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-from db.deps import get_db
+from db.db_config import get_db
 from pydantic import BaseModel
 
 
