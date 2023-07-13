@@ -7,10 +7,18 @@ const InterestsForm = ({ user_id }) => {
   const [interests, setInterests] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState({});
 
-  //   useEffect(() => {
-  //     fetch("http://localhost:8000/api/interests")
-  //       .then((response) => response.json())
-  //       .then((data) => setInterests(data.interests));
+//   useEffect(() => {
+//     fetch("http://localhost:8000/api/interests")
+//       .then((response) => {
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//         return response.json();
+//       })
+//       .then((data) => setInterests(data.interests))
+//       .catch((error) => {
+//         console.error("Error fetching interests:", error);
+//       });
 
   //     fetch(`http://localhost:8000/api/users/${user_id}`)
   //       .then((response) => response.json())

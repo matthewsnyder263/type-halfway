@@ -22,6 +22,7 @@ from db.user_db import (
     UserQueries,
 )
 
+
 router = APIRouter()
 
 
@@ -56,6 +57,46 @@ async def get_token(
             "type": "Bearer",
             "account": account,
         }
+
+
+# implemented users:
+# return user data
+
+
+# @router.get("/token", response_model=AccountToken | None)
+# async def get_token(
+#     request: Request,
+#     account: UserOut = Depends(authenticator.try_get_current_account_data),
+#     users: UserQueries = Depends(),
+# ) -> AccountToken | None:
+#     if account and authenticator.cookie_name in request.cookies:
+#         user = users.get_user_by_id(account.id)
+#         if user is not None:
+#             return {
+#                 "access_token": request.cookies[authenticator.cookie_name],
+#                 "type": "Bearer",
+#                 "account": account,
+#                 "user": user,
+#             }
+#     return None
+
+# @router.post("/token", response_model=AccountToken | HttpError)
+# async def login(
+#     request: Request,
+#     response: Response,
+#     form: AccountForm = Body(...),
+#     users: UserQueries = Depends(),
+# ):
+#     # print(await request.body)
+#     print(form)
+#     account = users.get(form.username)
+#     if not account:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     token = await authenticator.login(response, request, form, users)
+#     return AccountToken(account=account, **token.dict())
 
 
 # @router.post("/token", response_model=AccountToken | HttpError)
@@ -105,7 +146,7 @@ def delete_user(
     response: Response,
     queries: UserQueries = Depends(),
 ):
-    user = queries.get_user_by_id(user_id)
+    user = queries.get_user(user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -114,27 +155,6 @@ def delete_user(
 
     queries.delete_user(user_id)
     return True
-
-
-# @router.get("/api/users", response_model=UserOut)
-# def get_user(queries: UserQueries = Depends()):
-#     return {
-#         "users": queries.get_user(),
-#     }
-
-
-# @router.get("/api/users/{user_id}", response_model=UserOut)
-# def get_user_by_id(
-#     user_id: int,
-#     queries: UserQueries = Depends(),
-# ):
-#     user = queries.get_user(user_id)
-#     if user is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     return user
 
 
 @router.get("/api/users", response_model=UsersOut)
@@ -170,6 +190,5 @@ def update_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-
     updated_user = queries.update_user(user_id, user_in)
     return updated_user

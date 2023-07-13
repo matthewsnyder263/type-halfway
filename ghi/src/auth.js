@@ -1,15 +1,15 @@
 import React from 'react';
 
 
-export function login(user) {
-  // Store user data in local storage when user logs in
-  localStorage.setItem("user", JSON.stringify(user));
-}
+// export function login(user) {
+//   // Store user data in local storage when user logs in
+//   localStorage.setItem("user", JSON.stringify(user));
+// }
 
-export function logout() {
-  // Remove user data from local storage when user logs out
-  localStorage.removeItem("user");
-}
+// export function logout() {
+//   // Remove user data from local storage when user logs out
+//   localStorage.removeItem("user");
+// }
 
 export function getCurrentUserId() {
   const user = localStorage.getItem("user");
