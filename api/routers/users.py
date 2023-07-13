@@ -58,25 +58,25 @@ async def get_token(
         }
 
 
-@router.post("/token", response_model=AccountToken | HttpError)
-async def login(
-    request: Request,
-    response: Response,
-    form: AccountForm = Body(...),
-    users: UserQueries = Depends(),
-):
-    # print(await request.body())
-    print(form)
-    logger.info(request.body())
-    logger.info(form)
-    account = users.get(form.username)
-    if not account:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    token = await authenticator.login(response, request, form, users)
-    return AccountToken(account=account, **token.dict())
+# @router.post("/token", response_model=AccountToken | HttpError)
+# async def login(
+#     request: Request,
+#     response: Response,
+#     form: AccountForm = Body(...),
+#     users: UserQueries = Depends(),
+# ):
+#     # print(await request.body())
+#     print(form)
+#     logger.info(request.body())
+#     logger.info(form)
+#     account = users.get(form.username)
+#     if not account:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     token = await authenticator.login(response, request, form, users)
+#     return AccountToken(account=account, **token.dict())
 
 
 @router.post("/api/users", response_model=AccountToken | HttpError)

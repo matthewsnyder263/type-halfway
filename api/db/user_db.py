@@ -48,7 +48,8 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def get(self, username: int) -> User:
+    # note i changed username to a str from int, int was working for some reason, but i believe it should be str
+    def get(self, username: str) -> User:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(

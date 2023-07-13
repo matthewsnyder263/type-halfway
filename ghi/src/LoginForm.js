@@ -160,11 +160,27 @@ const LoginForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    login(formData.username, formData.password);
-    console.log(formData)
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await login(formData.username, formData.password);
+  //     console.log(formData)
+  //   } catch (error) {
+  //     console.error('Login failed', error);
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await login(formData.username, formData.password);
+    const user = { id: formData.username };  // replace this with actual user id when you have it
+    localStorage.setItem("user", JSON.stringify(user));
+    console.log(formData);
+  } catch (error) {
+    console.error('Login failed', error);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit}>

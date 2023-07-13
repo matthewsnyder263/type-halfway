@@ -11,20 +11,54 @@ import LogOut from "./LogOut";
 import InterestsForm from "./InterestsForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import useToken from '@galvanize-inc/jwtdown-for-react';
+// import { useNavigate } from 'react-router-dom';
 
 function App() {
+  const { token } = useToken();
+  // const navigate = useNavigate();
   const baseURL = process.env.REACT_APP_API_HOST;
   const [launchInfo, setLaunchInfo] = useState([]);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
 
 
-  useEffect(() => {
-    const id = getCurrentUserId();
-    setUserId(id);
+  // useEffect(() => {
+  //   if (localStorage.getItem('jwtToken')) {
+  //     const id = getCurrentUserId();
+  //     setUserId(id);
+  //     console.log("userId:", userId)
+  //   } else {
+  //     console.log('No user or user ID found in local storage');
+  //   }
+
+  //   async function getData() {
+  //     let url = `${baseURL}/api/launch-details`;
+  //     console.log("fastapi url: ", url);
+  //     let response = await fetch(url);
+  //     console.log("------- hello? -------");
+  //     let data = await response.json();
+
+  //     if (response.ok) {
+  //       console.log("got launch data!");
+  //       setLaunchInfo(data.launch_details);
+  //     } else {
+  //       console.log("drat! something happened");
+  //       setError(data.message);
+  //     }
+  //   }
+  //   getData();
+  // }, []);
+
+    useEffect(() => {
+    if (token) {
+      const id = getCurrentUserId();
+      setUserId(id);
+    } else {
+      console.log('No user or user ID found in local storage.')
+    }
 
     async function getData() {
-      // let url = `${process.env.REACT_APP_API_HOST}/api/launch-details`;
       let url = `${baseURL}/api/launch-details`;
       console.log("fastapi url: ", url);
       let response = await fetch(url);
@@ -40,11 +74,40 @@ function App() {
       }
     }
     getData();
-  }, []);
+  }, [token]);
+
+
+
+  // useEffect(() => {
+  //   const id = getCurrentUserId();
+  //   setUserId(id);
+  //   console.log("userId:", userId)
+
+  //   // if (!id) {
+  //   //   navigate('/login')
+  //   // }
+
+  //   async function getData() {
+  //     // let url = `${process.env.REACT_APP_API_HOST}/api/launch-details`;
+  //     let url = `${baseURL}/api/launch-details`;
+  //     console.log("fastapi url: ", url);
+  //     let response = await fetch(url);
+  //     console.log("------- hello? -------");
+  //     let data = await response.json();
+
+  //     if (response.ok) {
+  //       console.log("got launch data!");
+  //       setLaunchInfo(data.launch_details);
+  //     } else {
+  //       console.log("drat! something happened");
+  //       setError(data.message);
+  //     }
+  //   }
+  //   getData();
+  // }, []);
 
   return (
     <div className="container">
-      <BrowserRouter>
         <AuthProvider baseUrl={baseURL}>
           <Routes>
           {/* <ErrorNotification error={error} /> */}
@@ -56,7 +119,6 @@ function App() {
           {/* <Construct info={launchInfo} /> */}
           </Routes>
         </AuthProvider>
-      </BrowserRouter>
     </div>
   );
 }
