@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import SignupForm from "./Account/SignupForm";
+import SignupForm from "./Account/SignUpForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
@@ -12,7 +12,7 @@ import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
-
+import NavbarComponent from './NavBar';
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
 
@@ -47,6 +47,7 @@ function App() {
   return (
     <div className="container">
       <BrowserRouter>
+        <NavbarComponent />
         <AuthProvider baseUrl={baseURL}>
           <Routes>
             {/* <ErrorNotification error={error} /> */}

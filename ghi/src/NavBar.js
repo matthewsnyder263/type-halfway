@@ -1,48 +1,46 @@
-import { NavLink, Link } from 'react-router-dom';
+import React from 'react';
 
-
-export default function Nav () {
+export default function Navbar() {
     return (
-    <>
-    <div id="header-wrapper">
-        <header id="header" className="container">
-
-    {/* <!-- Logo --> */}
-            <div id="logo">
-                <h1><a href="index.html">Verti</a></h1>
-                <span>by HTML5 UP</span>
+        <nav className="navbar navbar-expand-lg bg-pink-500 flex justify-between items-center bg-success w-full">
+            <div className="container-fluid mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center">
+                    <div className="flex space-x-4">
+                        <a href="#" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                            Home
+                        </a>
+                        <a href="#" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            Matches
+                        </a>
+                        <a href="#" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 4H4a1 1 0 00-1 1v14a1 1 0 001 1h16a1 1 0 001-1V5a1 1 0 00-1-1h-6l-2-2m-4 0L5 4h14zm-9 6h4m0 4h4m-4-8h4m0 4h4m-4 4h4m0-8h4m0 12H5v-6h4v2zm6 0h4v-2h-4v2zm0-4v-2h4v2h-4zm0 4h4v-2h-4v2z" />
+                            </svg>
+                            Profile
+                        </a>
+                    </div>
+                    <div className="flex space-x-4">
+                        <a href="#" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                            Sign Up
+                        </a>
+                        <a href="#" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            Log In
+                        </a>
+                    </div>
+                </div>
             </div>
-
-    {/* <!-- Nav --> */}
-        <nav id="nav">
-            <ul>
-                <li className="current" style="white-space: nowrap;"><a href="index.html">Welcome</a></li>
-                <li className="opener" style="user-select: none; cursor: pointer; white-space: nowrap; opacity: 1;">
-                <a href="#">Dropdown</a>
-
-                <ul className="" style="user-select: none; display: none; position: absolute;">
-                    <li style="white-space: nowrap;"><a href="#" style="display: block;">Lorem ipsum dolor</a></li>
-                    <li style="white-space: nowrap;"><a href="#" style="display: block;">Magna phasellus</a></li>
-                    <li className="opener" style="user-select: none; cursor: pointer; white-space: nowrap;">
-                    <a href="#" style="display: block;">Phasellus consequat</a>
-                        <ul className="dropotron" style="user-select: none; display: none; position: absolute;">
-                            <li style="white-space: nowrap;"><a href="#" style="display: block;">Lorem ipsum dolor</a></li>
-                            <li style="white-space: nowrap;"><a href="#" style="display: block;">Phasellus consequat</a></li>
-                            <li style="white-space: nowrap;"><a href="#" style="display: block;">Magna phasellus</a></li>
-                            <li style="white-space: nowrap;"><a href="#" style="display: block;">Etiam dolore nisl</a></li>
-                        </ul>
-                    </li>
-                    <li style="white-space: nowrap;"><a href="#" style="display: block;">Veroeros feugiat</a></li>
-                </ul>
-                </li>
-                <li style="white-space: nowrap;"><a href="left-sidebar.html">Left Sidebar</a></li>
-                <li style="white-space: nowrap;"><a href="right-sidebar.html">Right Sidebar</a></li>
-                <li style="white-space: nowrap;"><a href="no-sidebar.html">No Sidebar</a></li>
-            </ul>
         </nav>
-
-        </header>
-    </div>
-    </>
     );
 }
