@@ -114,9 +114,27 @@ const InterestsForm = ({ user_id }) => {
     });
   };
 
+  const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  const selectedInterestsIds = Object.keys(selectedInterests)
+    .filter(key => selectedInterests[key] !== null)
+    .map(Number);
+
+  await fetch(`http://localhost:8000/api/users/${user_id}/interests`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(selectedInterestsIds)
+  });
+  };
+
+
   return (
     user_id ? (
-      <form>
+      <form onSubmit={handleSubmit}>
         {interests.map((interest) => (
           <div key={interest.id}>
             <label>

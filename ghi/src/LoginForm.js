@@ -1,164 +1,60 @@
-// // import { login } from "./auth";
-// import React, { useState } from "react";
-// import BootstrapInput from "./BootstrapInput";
-// import useToken from "@galvanize-inc/jwtdown-for-react";
 
-// const LoginForm = () => {
-//   const [error, setError] = useState(null);
-//   const [formData, setFormData] = useState({
-//     username: "",
-//     password: "",
-//   });
-//   const { login } = useToken();
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     const data = {
-//       username: formData.username,
-//       password: formData.password,
-//     };
-
-//     const usersUrl = "http://localhost:8000/token";
-//     const fetchConfig = {
-//       method: "POST",
-//       body: JSON.stringify(data),
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     };
-
-//     if (!data.username || !data.password) {
-//       setError("Both fields are required");
-//       return;
-//     }
-//     console.log(formData);
-//     const response = await fetch(usersUrl, fetchConfig);
-//     if (response.ok) {
-//       const responseData = await response.json();
-//       // localStorage.setItem("token", responseData.token);
-//       login(responseData.user);
-//       setError(null);
-//     } else {
-//       setError(
-//         "You failed at following simple directions. You can't even log-in :("
-//       );
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       {error && <div className="error">{error}</div>}
-//       <BootstrapInput
-//         id="username"
-//         name="username"
-//         placeholder="Enter Username"
-//         labelText="Username"
-//         value={formData.username}
-//         onChange={handleInputChange}
-//         type="text"
-//       />
-//       <BootstrapInput
-//         id="password"
-//         name="password"
-//         placeholder="Enter password"
-//         labelText="Password"
-//         value={formData.password}
-//         onChange={handleInputChange}
-//         type="password"
-//       />
-//       <button type="submit" className="btn btn-primary">
-//         Log In!
-//       </button>
-//     </form>
-//   );
-// };
-
-// export default LoginForm;
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import useToken from '@galvanize-inc/jwtdown-for-react';
-// // import BootstrapInput from "./BootstrapInput";
-// // import styles from "./styling/Login.module.css";
-// // import Logo from "./styling/Logo.png";
-// // import { Link } from "react-router-dom";
-
-
-// const LoginForm = () => {
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const { login } = useToken();
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log(username, password);
-//     login(username, password);
-//     e.target.reset();
-//   };
-
-//   return (
-//     <div className="card text-bg-light mb-3">
-//       <h5 className="card-header">Login</h5>
-//       <div className="card-body">
-//         <form onSubmit={handleSubmit}>
-//           <div className="mb-3">
-//             <label className="form-label">Username:</label>
-//             <input
-//               name="username"
-//               type="text"
-//               className="form-control"
-//               onChange={(e) => setUsername(e.target.value)}
-//             />
-//           </div>
-//           <div className="mb-3">
-//             <label className="form-label">Password:</label>
-//             <input
-//               name="password"
-//               type="password"
-//               className="form-control"
-//               onChange={(e) => setPassword(e.target.value)}
-//             />
-//           </div>
-//           <div>
-//             <input className="btn btn-primary" type="submit" value="Login" />
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default LoginForm;
-
-
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
+import useAuthContext from "@galvanize-inc/jwtdown-for-react";
+import { useNavigate } from "react-router-dom";
+import BootstrapInput from "./BootstrapInput";
 import styles from "./styling/Login.module.css";
 import Logo from "./styling/Logo.png";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [invalid, setInvalid] = useState(false);
   const { login } = useToken();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [invalid, setInvalid] = useState(false);
+  // const navigate = useNavigate();
+
+  // const { login } = useAuthContext();
+
+
+  const handleInvalid = () => {
+    setInvalid(true);
+  };
+
+  const fetchUser = async () => {
+    const url = 'http://localhost:8000/token';
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data === null) {
+        handleInvalid();
+      } else {
+        navigate("/potentialmatch");
+      }
+    }
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   await login(username, password);
+  //   fetchUser();
+  // };
+
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -169,17 +65,40 @@ const LoginForm = () => {
   //     console.error('Login failed', error);
   //   }
   // };
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    await login(formData.username, formData.password);
-    const user = { id: formData.username };  // replace this with actual user id when you have it
-    localStorage.setItem("user", JSON.stringify(user));
-    console.log(formData);
-  } catch (error) {
-    console.error('Login failed', error);
-  }
-};
+
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+          await login(formData.username, formData.password);
+          fetchUser();
+          navigate("/potentialmatch");
+      } catch (error) {
+          console.error('Login failed', error);
+          setInvalid(true);
+      }
+  };
+
+
+  // const [formData, setFormData] = useState({
+  //   username: "",
+  //   password: "",
+  // });
+  // const { login } = useToken();
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await login(formData.username, formData.password);
+  //     console.log(formData)
+  //   } catch (error) {
+  //     console.error('Login failed', error);
+  //   }
+  // };
 
 
   return (

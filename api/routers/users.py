@@ -21,7 +21,8 @@ from db.user_db import (
     DuplicateUserError,
     UserQueries,
 )
-
+import logging
+import traceback
 
 router = APIRouter()
 
@@ -140,27 +141,42 @@ async def create_user(
     return AccountToken(account=account, **token.dict())
 
 
-@router.delete("/api/users/{user_id}", response_model=bool)
-def delete_user(
-    user_id: int,
-    response: Response,
-    queries: UserQueries = Depends(),
-):
-    user = queries.get_user(user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
+# @router.delete("/api/users/{user_id}", response_model=bool)
+# def delete_user(
+#     user_id: int,
+#     response: Response,
+#     queries: UserQueries = Depends(),
+# ):
+#     user = queries.get_user(user_id)
+#     if user is None:
+#         raise HTTPException(
+#             status_code=status_code=404, detail="User Not FoundHTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
 
+#     queries.delete_user(user_id)
+#     return Response(status_code=204)
+
+
+@router.delete("/api/users/{user_id}", status_code=204)
+def delete_user(user_id: int, queries: UserQueries = Depends()):
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     queries.delete_user(user_id)
-    return True
+    return Response(status_code=204)
 
 
 @router.get("/api/users", response_model=UsersOut)
 def get_users(queries: UserQueries = Depends()):
-    users = queries.get_users()
-    return {"users": users}
+    try:
+        users = queries.get_users()
+        logging.info(users)
+        return UsersOut(users=users)
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        logging.error(traceback.format_exc())
+        raise e
 
 
 @router.get("/api/users/{user_id}", response_model=UserOut)

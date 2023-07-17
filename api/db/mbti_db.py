@@ -25,7 +25,7 @@ class MbtiQueries:
                 db.execute(
                     """
                     SELECT id, score
-                    FROM mbti_scores;
+                    FROM mbtis;
                     """
                 )
                 records = db.fetchall()

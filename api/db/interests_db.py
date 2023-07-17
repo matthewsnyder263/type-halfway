@@ -47,16 +47,16 @@ class InterestQueries:
             with conn.cursor() as db:
                 result = db.execute(
                     """
-                    INSERT INTO interests (name)
+                    INSERT INTO interests (interest_name)
                     VALUES (%S)
                     RETURNING id;
                     """,
-                    [data.name],
+                    [data.interest_name],
                 )
                 id = result.fetchone()[0]
                 return InterestOut(
                     id=id,
-                    name=data.name,
+                    interest_name=data.interest_name,
                 )
 
     def delete_interest(self, interest_id: int):

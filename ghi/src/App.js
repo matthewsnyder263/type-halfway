@@ -1,16 +1,19 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import SignupForm from "./Account/SignupForm";
+// import SignupForm from "./Account/SignupForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
-// import { getCurrentUserId } from "./auth";
+import { getCurrentUserId } from "./auth";
 // import { login, logout } from "./auth";
-import LoginForm from "./Account/LoginForm";
-// import LogOut from "./LogOut";
+import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
+import ProfilePage from './ProfilePage.js';
+// import LoginForm from "./Account/LoginForm";
+import LogOut from "./LogOut";
 // import InterestsForm from "./InterestsForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 // import { useNavigate } from 'react-router-dom';
@@ -20,9 +23,10 @@ function App() {
   // const navigate = useNavigate();
   const baseURL = process.env.REACT_APP_API_HOST;
 
-  // const [launchInfo, setLaunchInfo] = useState([]);
-  // const [error, setError] = useState(null);
-  // const [userId, setUserId] = useState(null);
+  const [launchInfo, setLaunchInfo] = useState([]);
+  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
+
 
 
   // useEffect(() => {
@@ -112,14 +116,16 @@ function App() {
     <div className="container">
         <AuthProvider baseUrl={baseURL}>
           <Routes>
-          {/* <ErrorNotification error={error} /> */}
-          <Route path = "/signup" element={<SignupForm />} />
+            {/* <ErrorNotification error={error} /> */}
+            <Route path = "/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
-          {/* <Route path = "/logout" element={<LogOut />} /> */}
-          {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
-          {/* <InterestsForm user_id={userId} /> */}
-          {/* <Construct info={launchInfo} /> */}
+            <Route path="/users/:id" element={<ProfilePage />} />
+            {/* <Route path={`/users/${userId}`} element={<ProfilePage />} /> */}
+            {/* <Route path = "/logout" element={<LogOut />} /> */}
+            {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
+            {/* <InterestsForm user_id={userId} /> */}
+            {/* <Construct info={launchInfo} /> */}
           </Routes>
         </AuthProvider>
     </div>
