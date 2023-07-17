@@ -1,12 +1,14 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import SignupForm from "./Account/SignupForm";
+// import SignupForm from "./Account/SignupForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
 // import { getCurrentUserId } from "./auth";
 // import { login, logout } from "./auth";
-import LoginForm from "./Account/LoginForm";
+// import LoginForm from "./Account/LoginForm";
+import SignupForm from './SignupForm.js';
+import LoginForm from './LoginForm.js';
 // import LogOut from "./LogOut";
 // import InterestsForm from "./InterestsForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
