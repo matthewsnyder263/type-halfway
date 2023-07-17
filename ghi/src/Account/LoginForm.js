@@ -147,6 +147,10 @@ import React, { useState, useEffect } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import useAuthContext from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 // import BootstrapInput from "./BootstrapInput";
 // import styles from "./styling/Login.module.css";
 // import Logo from "./styling/Logo.png";
@@ -302,13 +306,13 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="container d-flex mt-5">
+    <div className="container-flex mt-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-6">
-          <div className="card text-bg-light mb-3 shadow p-4">
+          <div className=" text-bg-light mb-4 shadow p-4">
             <div style={styles.container}>
               <form style={styles.form} onSubmit={handleSubmit}>
-                <h5 style={styles.label} className="label form-floating mb-3 card-header" >Login</h5>
+                <h5 style={styles.label} className='label form-floating mb-3 card-header' >Login</h5>
                 <div className="form-floating mb-3">
                   <label className="form-label">Username:</label>
                   <input
@@ -354,7 +358,7 @@ const LoginForm = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default LoginForm;

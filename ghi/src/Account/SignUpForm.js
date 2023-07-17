@@ -97,99 +97,122 @@ const SignupForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <BootstrapInput
-        id="username"
-        name="username"
-        placeholder="Enter username"
-        labelText="Username"
-        value={formData.username}
-        onChange={handleInputChange}
-        type="text"
-      />
-      <BootstrapInput
-        id="email"
-        name="email"
-        placeholder="you@example.com"
-        labelText="Email"
-        value={formData.email}
-        onChange={handleInputChange}
-        type="email"
-      />
-      <BootstrapInput
-        id="password"
-        name="password"
-        placeholder="Enter password"
-        labelText="Password"
-        value={formData.password}
-        onChange={handleInputChange}
-        type="password"
-      />
-      <BootstrapInput
-        id="full_name"
-        name="full_name"
-        placeholder="Enter Full Name"
-        labelText="Full Name"
-        value={formData.full_name}
-        onChange={handleInputChange}
-        type="text"
-      />
-      <BootstrapInput
-        id="age"
-        name="age"
-        placeholder="Enter Age"
-        labelText="Age"
-        value={formData.age}
-        onChange={handleInputChange}
-        type="number"
-      />
-      <BootstrapInput
-        id="bio"
-        name="bio"
-        placeholder="Enter Bio"
-        labelText="Bio"
-        value={formData.bio}
-        onChange={handleInputChange}
-        type="text"
-      />
-      <BootstrapInput
-        id="interest"
-        name="interest"
-        placeholder="Enter Interest"
-        labelText="Interest"
-        value={formData.interest}
-        onChange={handleInputChange}
-        type="text"
-      />
-      <BootstrapInput
-        id="picture"
-        name="picture"
-        placeholder="Enter Picture URL"
-        labelText="Picture"
-        value={formData.picture}
-        onChange={handleInputChange}
-        type="text"
-      />
-      <div>
-        <label htmlFor="mbti">MBTI</label>
-        <select
-          id="mbti"
-          name="mbti"
-          value={formData.mbti}
-          onChange={handleInputChange}
-          type="text"
-        >
-          {/* {formData.mbti.map((option) => (
+    <div className="container">
+      <div className="offset-3 col-6">
+        <div className="shadow p-4 mt-4">
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                labelText="Username"
+                value={formData.username}
+                onChange={handleInputChange}
+                type="text"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                labelText="Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                type="email"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                labelText="Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                type="password"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="full_name"
+                name="full_name"
+                placeholder="Enter Full Name"
+                labelText="Full Name"
+                value={formData.full_name}
+                onChange={handleInputChange}
+                type="text"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="age"
+                name="age"
+                placeholder="Enter Age"
+                labelText="Age"
+                value={formData.age}
+                onChange={handleInputChange}
+                type="number"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="bio"
+                name="bio"
+                placeholder="Enter Bio"
+                labelText="Bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                type="text"
+              />
+            </div>
+            <div className="form-floating mb-3">
+              <BootstrapInput
+                id="interest"
+                name="interest"
+                placeholder="Enter Interest"
+                labelText="Interest"
+                value={formData.interest}
+                onChange={handleInputChange}
+                type="text"
+              />
+            </div>
+            <BootstrapInput
+              id="picture"
+              name="picture"
+              placeholder="Enter Picture URL"
+              labelText="Picture"
+              value={formData.picture}
+              onChange={handleInputChange}
+              type="text"
+            />
+            <div className="mb-3">
+              <label htmlFor="mbti">MBTI</label>
+              <select
+                id="mbti"
+                name="mbti"
+                value={formData.mbti}
+                onChange={handleInputChange}
+                type="text"
+              >
+                {/* {formData.mbti.map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
           ))} */}
-        </select>
+              </select>
+            </div>
+            <div >
+              <button type="submit" className="btn btn-primary">
+                Sign Up!
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <button type="submit" className="btn btn-primary">
-        Sign Up!
-      </button>
-    </form>
+    </div>
   );
 };
 

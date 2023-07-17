@@ -7,6 +7,7 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "cSpell.words": [
+    "Automotives",
     "conninfo",
     "dotenv",
     "ENFJ",
@@ -28,6 +29,7 @@
     "ISTP",
     "jwtdown",
     "melo",
+    "potentialmatch",
     "psycopg",
     "pydantic",
     "setdestination"
