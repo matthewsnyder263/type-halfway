@@ -7,25 +7,13 @@ const PotentialMatches = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [compatibilityData, setCompatibilityData] = useState([]);
     const [lastCalculationDate, setLastCalculationDate] = useState(null);
-    const [createdDate, setCreatedDate] = useState("");
     const navigate = useNavigate();
     const { token } = useToken();
 
 
-    useEffect(() => {
-        if (!token) {
-            const storedToken = localStorage.getItem("token");
-            if (storedToken) {
-                navigate("/login");
-            }
-        }
-    }, [navigate, token]);
-
-    useEffect(() => {
-        if (token) {
-            localStorage.setItem("token", token);
-        }
-    }, [token]);
+    if (!token) {
+        navigate("/login");
+    }
 
 
     const fetchCurrentUser = async () => {
@@ -59,6 +47,48 @@ const PotentialMatches = () => {
         fetchAllUsers();
     }, []);
 
+
+    // const canCalculateCompatibility = useCallback(() => {
+    //     // Check if 7 days passed since the last calculation
+    //     if (!lastCalculationDate) {
+    //         return true;
+    //     }
+
+    //     const currentDate = new Date();
+    //     const lastCalculationDateObj = new Date(lastCalculationDate);
+    //     lastCalculationDateObj.setDate(lastCalculationDateObj.getDate() + 7);
+
+    //     return currentDate > lastCalculationDateObj;
+    // }, [lastCalculationDate]);
+
+    // setting the state, ujust assigning it to a list
+    useEffect(() => {
+        //check if potential matches have been posted within the last 7 days
+        console.log("Current User:", currentUser);
+        console.log("All users:", allUsers)
+        // const isCalculationAllowed = canCalculateCompatibility();
+
+        if (currentUser && allUsers?.users.length > 0) {
+            // Calculate compatibility strength for each user
+            const compatData = allUsers.users
+                // filter the currentuser in allusers
+                .filter((user) => user.id !== currentUser.id)
+                .map((user) => {
+                const compatibilityScore = calculateCompatibilityScore(
+                    currentUser.mbti,
+                    user.mbti
+                );
+                return {
+                    user,
+                    strength: compatibilityScore,
+                };
+            });
+            compatData.sort((a, b) => b.strength - a.strength);
+            const topCompatibilityData = compatData.slice(0, 5);
+            console.log("lookhere:", compatData)
+            setCompatibilityData(topCompatibilityData);
+        }
+    }, [currentUser, allUsers]);
 
 
     const calculateCompatibilityScore = (mbti1, mbti2) => {
@@ -99,99 +129,65 @@ const PotentialMatches = () => {
         return strengthTextMap[strength] || "";
     };
 
-    useEffect(() => {
-        // Retrieve the createdDate from local storage on component mount
-        const storedCreatedDate = localStorage.getItem(`createdDate_${currentUser.id}`);
-        if (storedCreatedDate) {
-            setCreatedDate(storedCreatedDate);
-        }
-    }, [currentUser]);
 
-    const handlePotentialMatchesRequest = async () => {
-        const storageKey = `createdDate_${currentUser.id}`;
-
-        if (!createdDate || isSevenDaysPassed(createdDate)) {
-            const currentDate = new Date().toISOString();
-            setCreatedDate(currentDate);
-
-            if (currentUser && allUsers?.users.length > 0) {
-                const compatData = [];
-
-                for (const user of allUsers) {
-                    if (user.id !== currentUser.id) {
-                        const compatibilityScore = calculateCompatibilityScore(
-                            currentUser.mbti,
-                            user.mbti
-                        );
-
-                        const potentialMatchData = {
-                            logged_in_user: currentUser.id,
-                            match_id: null,
-                            user_id: user.id,
-                            mbti_strength: compatibilityScore,
-                            liked: false,
-                        };
-
-                        compatData.push(potentialMatchData);
+    return (
+        <div>
+            <h2>Potential Matches of the Week</h2>
+            {/* <button
+                onClick={() => {
+                    if (compatibilityData.length > 0) {
+                        // Show potential match results
+                        setCompatibilityData(compatibilityData);
+                    } else {
+                        alert("No compatibility data available.");
                     }
-                }
-
-                const url = 'http://localhost:8000/api/potential_matches';
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "applpication/json",
-                    },
-                    body: JSON.stringify(compatData),
-                    credentials: "include",
-                });
-
-                if (response.ok) {
-                    console.log("potential matches created");
-                } else {
-                    console.error("Failed to create potential match");
-                }
-                setCompatibilityData(compatData);
-            }
-        };
-
-        const isSevenDaysPassed = (createdDate) => {
-            const createdTime = new Date(createdDate).getTime();
-            const currentTime = new Date().getTime();
-            const timeDiffInDays = (currentTime - createdTime) / (1000 * 60 * 60 * 24);
-            return timeDiffInDays >= 7;
-        };
-
-        return (
-            <div>
-                <h2>Potential Matches of the Week</h2>
-                <button onClick={handlePotentialMatchesRequest}>
-                    Request Potential Matches of the Week
-                </button>
-                {createdDate && (
-                    <p>Created Date: {new Date(createdDate).toLocaleString()}</p>
-                )}
-                {compatibilityData.length > 0 ? (
-                    <div>
-                        <h3>Potential Match Results:</h3>
-                        {compatibilityData.map((compatibility) => (
-                            <div key={compatibility.user.id}>
-                                <p>
-                                    User: {compatibility.user.username} - MBTI:{" "}
-                                    {compatibility.user.mbti}
-                                </p>
-                                <p>
-                                    Compatibility Strength:{" "}
-                                    {getCompatibilityStrengthText(compatibility.strength)}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>No compatibility data available.</p>
-                )}
-            </div>
-        );
-    };
+                }}
+            >
+                Request Potential Matches of the Week
+            </button> */}
+            <button
+                onClick={() => {
+                    if (compatibilityData.length === 0) {
+                        // Calculate compatibility data and set the state
+                        const compatData = allUsers.users.map((user) => {
+                            const compatibilityScore = calculateCompatibilityScore(
+                                currentUser.users.mbti,
+                                user.users.mbti
+                            );
+                            return {
+                                user,
+                                strength: compatibilityScore,
+                            };
+                        });
+                        setCompatibilityData(compatData);
+                    } else {
+                        alert("Compatibility data already fetched.");
+                    }
+                }}
+            >
+                Request Potential Matches of the Week
+            </button>
+            {compatibilityData.length > 0 ? (
+                <div>
+                    <h3>Potential Match Results:</h3>
+                    {compatibilityData.map((compatibility) => (
+                        <div key={compatibility.user.id}>
+                            <p>
+                                User: {compatibility.user.username} - MBTI:{" "}
+                                {compatibility.user.mbti}
+                            </p>
+                            <p>
+                                Compatibility Strength:{" "}
+                                {getCompatibilityStrengthText(compatibility.strength)}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>No compatibility data available.</p>
+            )}
+        </div>
+    );
 };
+
 export default PotentialMatches;
