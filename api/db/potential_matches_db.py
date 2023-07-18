@@ -43,9 +43,11 @@ class PotentialMatchQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO potential_matches (logged_in_user, match_id, user_id, mbti_strength, liked)
+                    INSERT INTO potential_matches (logged_in_user,
+                    match_id, user_id, mbti_strength, liked)
                     VALUES (%s, %s, %s, %s, %s)
-                    RETURNING id, logged_in_user, match_id, user_id, mbti_strength, liked, created_on;
+                    RETURNING id, logged_in_user, match_id, user_id,
+                    mbti_strength, liked, created_on;
                     """,
                     (
                         data.logged_in_user,
@@ -66,7 +68,8 @@ class PotentialMatchQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, logged_in_user, match_id, matched_user, mbti_strength, liked, created_on
+                    SELECT id, logged_in_user, match_id, matched_user,
+                    mbti_strength, liked, created_on
                     FROM potential_matches
                     WHERE logged_in_user = %s;
                     """,
@@ -85,7 +88,8 @@ class PotentialMatchQueries:
                     UPDATE potential_matches
                     SET liked = %s
                     WHERE id = %s
-                    RETURNING id, logged_in_user, match_id, matched_user, mbti_strength, liked, created_on;
+                    RETURNING id, logged_in_user, match_id, matched_user,
+                    mbti_strength, liked, created_on;
                     """,
                     (liked, match_id),
                 )

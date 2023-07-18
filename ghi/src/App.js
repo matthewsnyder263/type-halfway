@@ -13,6 +13,11 @@ import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import NavbarComponent from './NavBar';
+import Nav from './Nav.js';
+
+
+
+
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
 
@@ -47,7 +52,7 @@ function App() {
   return (
     <div className="">
       <BrowserRouter>
-        <NavbarComponent />
+        <Nav />
         <AuthProvider baseUrl={baseURL}>
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}

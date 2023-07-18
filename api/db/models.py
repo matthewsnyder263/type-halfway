@@ -11,11 +11,12 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = "user"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True)
     fullname = Column(String)
     email = Column(String, unique=True)
-    password = Column(String)
+    hashed_password = Column(String)
+    gender = relationship("Gender", back_populates="user", uselist=False)
     mbti = relationship("MBTI", backref="user")
     mbti_id = Column(Integer, ForeignKey("mbti.id"))
     city = Column(String)
@@ -32,37 +33,45 @@ class User(Base):
                                     mbti={self.mbti})"
 
 
-class Interests(Base):
-    __tablename__ = "interests"
+class Gender(Base):
+    __tablename__ = "gender"
 
     id = Column(Integer, primary_key=True)
-    interest_name = Column(String, unique=True)
-
-    def __str__(self):
-        return f"Interests(interest={self.interest})"
-
-
-class UserInterests(Base):
-    __tablename__ = "user_interests"
-
-    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
     user_id = Column(Integer, ForeignKey("user.id"))
-    interest_id = Column(Integer, ForeignKey("interests.id"))
-
-    def __repr__(self):
-        return f"UserInterests(user_id={self.user_id},\
-                interest_id={self.interest_id})"
 
 
-class MBTI(Base):
-    __tablename__ = "mbti"
+# class Interests(Base):
+#     __tablename__ = "interests"
 
-    id = Column(Integer, primary_key=True)
-    mbti_type = Column(String, unique=True)
-    users_mbti = relationship("User", backref="user")
+#     id = Column(Integer, primary_key=True)
+#     interest_name = Column(String, unique=True)
 
-    def __str__(self):
-        return f"MBTI(mbti_type={self.mbti_type})"  # users={self.users})"
+#     def __str__(self):
+#         return f"Interests(interest={self.interest})"
+
+
+# class UserInterests(Base):
+#     __tablename__ = "user_interests"
+
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey("user.id"))
+#     interest_id = Column(Integer, ForeignKey("interests.id"))
+
+#     def __repr__(self):
+#         return f"UserInterests(user_id={self.user_id},\
+#                 interest_id={self.interest_id})"
+
+
+# class MBTI(Base):
+#     __tablename__ = "mbti"
+
+#     id = Column(Integer, primary_key=True)
+#     mbti_type = Column(String, unique=True)
+#     users_mbti = relationship("User", backref="user")
+
+#     def __str__(self):
+#         return f"MBTI(mbti_type={self.mbti_type})"  # users={self.users})"
 
 
 # class UserMBTI(Base):
@@ -77,20 +86,20 @@ class MBTI(Base):
 #                 mbti_id={self.mbti_id})"
 
 
-class UserMatches(Base):
-    __tablename__ = "user_matches"
+# class UserMatches(Base):
+#     __tablename__ = "user_matches"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
-    match_id = Column(Integer, ForeignKey("user.id"))
-    distance = Column(Integer)
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey("user.id"))
+#     match_id = Column(Integer, ForeignKey("user.id"))
+#     distance = Column(Integer)
 
-    def __str__(self):
-        return f"UserMatches(user_id={self.user_id},\
-                match_id={self.match_id})"
+#     def __str__(self):
+#         return f"UserMatches(user_id={self.user_id},\
+#                 match_id={self.match_id})"
 
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 # new_user = User(
 #     username="AA",
 #     fullname="AA",

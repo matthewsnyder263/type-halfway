@@ -5,14 +5,17 @@ from psycopg_pool import ConnectionPool
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
+
 class MatchIn(BaseModel):
     logged_in_user: int
     user_id: int
+
 
 class MatchOut(BaseModel):
     id: int
     logged_in_user: int
     user_id: int
+
 
 class MatchQueries:
     def create_match(self, data: MatchIn) -> MatchOut:

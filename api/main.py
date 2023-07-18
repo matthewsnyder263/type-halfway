@@ -4,14 +4,15 @@ import os
 
 # import requests
 from authenticator import authenticator
-from routers import users, interests, potential_matches, matches
-import os
+from routers import users  # , interests, potential_matches, matches
+
+# import os
 
 app = FastAPI(debug=True)
-app.include_router(authenticator.router)
-app.include_router(users.router)
-app.include_router(potential_matches.router)
-app.include_router(matches.router)
+
+# app.include_router(users.router)
+# app.include_router(potential_matches.router)
+# app.include_router(matches.router)
 
 
 app.add_middleware(
@@ -41,6 +42,7 @@ def launch_details():
     }
 
 
+app.include_router(authenticator.router)
 app.include_router(users.router)
-app.include_router(interests.router)
+# app.include_router(interests.router)
 # app.include_router(mbti.router)
