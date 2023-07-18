@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Construct(props) {
   return (
     <div className="App">
