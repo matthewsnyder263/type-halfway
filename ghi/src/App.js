@@ -49,7 +49,7 @@ function App() {
       <BrowserRouter>
         <NavbarComponent />
         <AuthProvider baseUrl={baseURL}>
-          <Routes>
+          <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />

@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 export default function Navbar() {
     return (
-        <nav className="navbar navbar-expand-lg bg-pink-500 flex justify-between items-center w-full">
+        <nav className="navbar navbar-expand-lg flex justify-between items-center w-full" style={{ backgroundColor: 'rgb(255, 175, 204)' }}>
             <div className="container-fluid mx-auto px-0 justify-between">
                 <div className="flex space-x-4">
                     <NavLink to="/" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
