@@ -61,6 +61,7 @@ class Home extends Component {
                           fringilla
                         </p>
                       </div>
+                      <button className="LikeButton">Like</button>
                     </section>
                   </div>
                   <div className="col-4 col-12-medium">

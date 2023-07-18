@@ -197,7 +197,7 @@ body {
     url("images/bg01.png");
   background-image: linear-gradient(top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0)),
     url("images/bg01.png");
-  background-color: #ebe1c5;
+  background-color: #f5f0e5;
   background-position: top left, top left;
   background-repeat: repeat-x, repeat;
   background-size: 100% 30em, auto;
@@ -2828,4 +2828,8 @@ ul.menu li:first-child {
   max-width: 500px;
   max-height: 500px;
   border-radius: 10px;
+}
+.LikeButton {
+  display: flex;
+  align-self: center;
 }
