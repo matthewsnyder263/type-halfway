@@ -53,13 +53,13 @@ services:
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
-  pg-admin:
-    image: dpage/pgadmin4
-    volumes:
-      - pg-admin:/var/lib/pgadmin4
-    ports:
-      - 8082:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: email@email.com
-      PGADMIN_DEFAULT_PASSWORD: password
-      PGADMIN_DISABLE_POSTFIX: 1
+  # pg-admin:
+  #   image: dpage/pgadmin4
+  #   volumes:
+  #     - pg-admin:/var/lib/pgadmin4
+  #   ports:
+  #     - 8082:80
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: email@email.com
+  #     PGADMIN_DEFAULT_PASSWORD: password
+  #     PGADMIN_DISABLE_POSTFIX: 1

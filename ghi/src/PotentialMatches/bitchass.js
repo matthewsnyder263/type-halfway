@@ -107,91 +107,82 @@ const PotentialMatches = () => {
         }
     }, [currentUser]);
 
-    const handlePotentialMatchesRequest = async () => {
+    const handlePotentialMatchesRequest = () => {
         const storageKey = `createdDate_${currentUser.id}`;
 
         if (!createdDate || isSevenDaysPassed(createdDate)) {
             const currentDate = new Date().toISOString();
             setCreatedDate(currentDate);
 
-            if (currentUser && allUsers?.users.length > 0) {
-                const compatData = [];
+            // Store the createdDate in local storage
+            localStorage.setItem(storageKey, currentDate);
 
-                for (const user of allUsers) {
-                    if (user.id !== currentUser.id) {
+            if (currentUser && allUsers?.users.length > 0) {
+                const compatData = allUsers.users
+                    .filter((user) => user.id !== currentUser.id)
+                    .map((user) => {
                         const compatibilityScore = calculateCompatibilityScore(
                             currentUser.mbti,
                             user.mbti
                         );
-
-                        const potentialMatchData = {
-                            logged_in_user: currentUser.id,
-                            match_id: null,
-                            user_id: user.id,
-                            mbti_strength: compatibilityScore,
-                            liked: false,
+                        return {
+                            user,
+                            strength: compatibilityScore,
                         };
+                    });
+                compatData.sort((a, b) => b.strength - a.strength);
+                const topCompatibilityData = compatData.slice(0, 5);
+                setCompatibilityData(topCompatibilityData);
 
-                        compatData.push(potentialMatchData);
-                    }
-                }
-
-                const url = 'http://localhost:8000/api/potential_matches';
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "applpication/json",
-                    },
-                    body: JSON.stringify(compatData),
-                    credentials: "include",
-                });
-
-                if (response.ok) {
-                    console.log("potential matches created");
-                } else {
-                    console.error("Failed to create potential match");
-                }
-                setCompatibilityData(compatData);
+                // Store the compatibility data in local storage
+                localStorage.setItem("compatibilityData", JSON.stringify(topCompatibilityData));
             }
-        };
-
-        const isSevenDaysPassed = (createdDate) => {
-            const createdTime = new Date(createdDate).getTime();
-            const currentTime = new Date().getTime();
-            const timeDiffInDays = (currentTime - createdTime) / (1000 * 60 * 60 * 24);
-            return timeDiffInDays >= 7;
-        };
-
-        return (
-            <div>
-                <h2>Potential Matches of the Week</h2>
-                <button onClick={handlePotentialMatchesRequest}>
-                    Request Potential Matches of the Week
-                </button>
-                {createdDate && (
-                    <p>Created Date: {new Date(createdDate).toLocaleString()}</p>
-                )}
-                {compatibilityData.length > 0 ? (
-                    <div>
-                        <h3>Potential Match Results:</h3>
-                        {compatibilityData.map((compatibility) => (
-                            <div key={compatibility.user.id}>
-                                <p>
-                                    User: {compatibility.user.username} - MBTI:{" "}
-                                    {compatibility.user.mbti}
-                                </p>
-                                <p>
-                                    Compatibility Strength:{" "}
-                                    {getCompatibilityStrengthText(compatibility.strength)}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>No compatibility data available.</p>
-                )}
-            </div>
-        );
+        } else {
+            // Compatibility data is already available in local storage
+            const storedCompatibilityData = localStorage.getItem("compatibilityData");
+            if (storedCompatibilityData) {
+                setCompatibilityData(JSON.parse(storedCompatibilityData));
+            }
+        }
     };
+
+    const isSevenDaysPassed = (createdDate) => {
+        const createdTime = new Date(createdDate).getTime();
+        const currentTime = new Date().getTime();
+        const timeDiffInDays = (currentTime - createdTime) / (1000 * 60 * 60 * 24);
+        return timeDiffInDays >= 7;
+    };
+
+    return (
+        <div>
+            <h2>Potential Matches of the Week</h2>
+            <button onClick={handlePotentialMatchesRequest}>
+                Request Potential Matches of the Week
+            </button>
+            {createdDate && (
+                <p>Created Date: {new Date(createdDate).toLocaleString()}</p>
+            )}
+            {compatibilityData.length > 0 ? (
+                <div>
+                    <h3>Potential Match Results:</h3>
+                    {compatibilityData.map((compatibility) => (
+                        <div key={compatibility.user.id}>
+                            <p>
+                                User: {compatibility.user.username} - MBTI:{" "}
+                                {compatibility.user.mbti}
+                            </p>
+                            <p>
+                                Compatibility Strength:{" "}
+                                {getCompatibilityStrengthText(compatibility.strength)}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>No compatibility data available.</p>
+            )}
+        </div>
+    );
 };
+
 export default PotentialMatches;
