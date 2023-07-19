@@ -36,6 +36,7 @@ const PotentialMatches = () => {
             setCurrentUser(data.account);
         }
     };
+    
     useEffect(() => {
         fetchCurrentUser();
     }, [token]);

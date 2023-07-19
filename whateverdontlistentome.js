@@ -191,3 +191,28 @@ const PotentialMatches = () => {
 };
 
 export default PotentialMatches;
+
+
+
+
+useEffect(() => {
+    const getCurrentUser = async () => {
+        if (currentUser.length < 0) {
+            // currentUser is not set or does not have an id yet
+            return;
+        }
+        const url = `http://localhost:8000/api/token`
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setCurrentUser(data);
+        } else {
+            console.error("was not able to get")
+        }
+    };
+    getCurrentUser();
+    console.log("LET'S SEEEE", currentUser)
+}, [currentUser]);
