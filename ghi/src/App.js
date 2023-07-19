@@ -14,12 +14,16 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import NavbarComponent from './NavBar';
 import Nav from './Nav.js';
+import ProfilePage from './ProfilePage';
 
 
 
 
 function App() {
-  const baseURL = process.env.REACT_APP_API_HOST;
+  // const baseURL = process.env.REACT_APP_API_HOST;
+  const domain = /https:\/\/[^/]+/;
+  const basename = process.env.PUBLIC_URL.replace(domain, "");
+
 
   // const [launchInfo, setLaunchInfo] = useState([]);
   // const [error, setError] = useState(null);
@@ -53,11 +57,12 @@ function App() {
     <div className="">
       <BrowserRouter>
         <Nav />
-        <AuthProvider baseUrl={baseURL}>
+        <AuthProvider basename={basename}>
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             {/* <Route path = "/logout" element={<LogOut />} /> */}
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}

@@ -50,5 +50,6 @@
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "search.useGlobalIgnoreFiles": true,
-  "search.useParentIgnoreFiles": true
+  "search.useParentIgnoreFiles": true,
+  "dataworkspace.excludedProjects": ["db/db.sqlproj"]
 }

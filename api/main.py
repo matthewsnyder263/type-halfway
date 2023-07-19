@@ -10,10 +10,6 @@ from routers import users  # , interests, potential_matches, matches
 
 app = FastAPI(debug=True)
 
-# app.include_router(users.router)
-# app.include_router(potential_matches.router)
-# app.include_router(matches.router)
-
 
 app.add_middleware(
     CORSMiddleware,

@@ -150,7 +150,7 @@ const SignupForm = () => {
               <BootstrapInput
                 id="age"
                 name="age"
-                placeholder="Enter Age"
+                placeholder="Age"
                 labelText="Age"
                 value={formData.age}
                 onChange={handleInputChange}

@@ -4,7 +4,7 @@ from sqlalchemy import (
     String,
     ForeignKey,
 )
-from .db_config import Base, engine
+from db_config import Base  # , engine
 from sqlalchemy.orm import relationship
 
 
@@ -15,13 +15,17 @@ class User(Base):
     username = Column(String, unique=True)
     fullname = Column(String)
     email = Column(String, unique=True)
-    hashed_password = Column(String)
     gender = relationship("Gender", back_populates="user", uselist=False)
+    age = Column(Integer)
     mbti = relationship("MBTI", backref="user")
+    hashed_password = Column(String)
+    bio = Column(String)
     mbti_id = Column(Integer, ForeignKey("mbti.id"))
-    city = Column(String)
-    state = Column(String)
     zip_code = Column(String)
+    picture = Column(String)
+    interest = relationship(
+        "Interest", secondary="user_interest", back_populates="user"
+    )
 
     def __str__(self):
         return f"User(username={self.username},\

@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 # from sqlalchemy.schema import MetaData
 from contextlib import contextmanager
+import models
 
 engine = create_engine(
     "postgresql://user:password@db:5432/data",
@@ -12,7 +13,7 @@ engine = create_engine(
 
 Base = declarative_base()
 
-Base.metadata.create_all(engine)
+models.Base.metadata.create_all(engine)
 
 SessionLocal = sessionmaker(bind=engine)
 
