@@ -94,84 +94,104 @@ const PotentialMatches = () => {
     };
 
     useEffect(() => {
-        console.log("Current User:", currentUser);
-        console.log("All users:", allUsers)
+        // Display compatibility data when `compatibilityData` changes
+        if (compatibilityData.length > 0) {
+            console.log("Compatibility data:", compatibilityData);
+        }
+    }, [compatibilityData]);
 
-        if (currentUser && allUsers.users) {
-            const potentialDataList = [];
-            const compatData = allUsers.users
-                .filter((user) => user.id !== currentUser.id)
-                .map((user) => {
+    const handlePotentialMatchesRequest = async () => {
+        // ask about the ? below
+        if (currentUser && allUsers.length > 0) {
+            const compatData = [];
+            for (const user of allUsers) {
+                if (user.users.id !== currentUser.account.id) {
                     const compatibilityScore = calculateCompatibilityScore(
-                        currentUser.mbti,
-                        user.mbti
+                        currentUser.account.mbti,
+                        user.users.mbti
                     );
-                    const potentialData = {
-                        logged_in_user: currentUser.id,
+                    const potentialMatchData = {
+                        logged_in_user: currentUser.account.id,
                         match_id: null,
-                        matched_user: user.id,
+                        matched_user: user.users.id,
                         mbti_strength: compatibilityScore,
                         liked: false,
-                    }
-                    potentialDataList.push(potentialData);
-                });
-            potentialDataList.sort((a, b) => b.mbti_strength - a.mbti_strength);
-            const topCompatibilityData = potentialDataList.slice(0, 5);
-            console.log("lookhere:", potentialDataList)
-            console.log("lookhere:", topCompatibilityData)
-            setCompatibilityData(topCompatibilityData);
+                    };
 
-            const postCompatibilityData = async (data) => {
-                const url = "http://localhost:8000/api/potential_matches";
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                    credentials: "include",
-                });
-            };
-            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+                    compatData.push(potentialMatchData);
+                }
+            }
+
+            const url = "http://localhost:8000/api/potential_matches";
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(compatData),
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                console.log("Potential matches created");
+                await fetchCompatibilityData(); // Fetch compatibility data after creating potential matches
+            } else {
+                console.error("Failed to create potential matches");
+            }
+        }
+    };
+
+    const fetchCompatibilityData = async (id) => {
+        const url = `http://localhost:8000/api/potential_matches/${currentUser.account.id}`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+
+
+        if (response.ok) {
+            const data = await response.json();
+            setCompatibilityData(data);
+        } else {
+            console.error("Failed to fetch compatibility data");
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser && allUsers.length > 0) {
+            handlePotentialMatchesRequest();
         }
     }, [currentUser, allUsers]);
 
-    useEffect(() => {
-        const getPotentialMatches = async () => {
-            if (!currentUser || !currentUser.id) {
-                // currentUser is not set or does not have an id yet
-                return;
-            }
-            const url = `http://localhost:8000/api/potential_matches/${currentUser.id}`
-            const response = await fetch(url, {
-                method: "GET",
-                credentials: "include",
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setCompatibilityData(data);
-            } else {
-                console.error("was not able to get")
-            }
-        };
-        getPotentialMatches();
-        console.log("fetch get request", getPotentialMatches())
-    }, [currentUser]);
-
-    const recentCompatibilityData = compatibilityData
-        .sort((a, b) => new Date(b.created_Date) - new Date(a.created_Date))
-        .slice(0, 5);
 
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
-            {recentCompatibilityData.map((data) => (
-                <div key={data.match_id}>
-                    <p>Matched User: {data.matched_user}</p>
-                    <p>Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+            <button onClick={handlePotentialMatchesRequest}>
+                Request Potential Matches of the Week
+            </button>
+            {compatibilityData.length > 0 ? (
+                <div>
+                    <h3>Top 5 Potential Match Results:</h3>
+                    {compatibilityData
+                        .sort((a, b) => b.mbti_strength - a.mbti_strength)
+                        .slice(0, 5)
+                        .map((compatibility) => (
+                            <div key={compatibility.id}>
+                                <p>
+                                    Matched User: {compatibility.matched_user} - MBTI strength:{" "}
+                                    {compatibility.mbti_strength}
+                                </p>
+                                <p>
+                                    Compatibility Strength:{" "}
+                                    {getCompatibilityStrengthText(compatibility.mbti_strength)}
+                                </p>
+                            </div>
+                        ))}
                 </div>
-            ))}
-
+            ) : (
+                <p>No compatibility data available.</p>
+            )}
         </div>
     );
 };

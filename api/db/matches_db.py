@@ -7,12 +7,12 @@ pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
 class MatchIn(BaseModel):
     logged_in_user: int
-    user_id: int
+    matched_user: int
 
 class MatchOut(BaseModel):
     id: int
     logged_in_user: int
-    user_id: int
+    matched_user: int
 
 class MatchQueries:
     def create_match(self, data: MatchIn) -> MatchOut:
@@ -20,26 +20,26 @@ class MatchQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO matches (logged_in_user, user_id)
+                    INSERT INTO matches (logged_in_user, matched_user)
                     VALUES (%s, %s)
-                    RETURNING id, logged_in_user, user_id;
+                    RETURNING id, logged_in_user, matched_user;
                     """,
-                    (data.logged_in_user, data.user_id),
+                    (data.logged_in_user, data.matched_user),
                 )
                 row = cur.fetchone()
                 if row is not None:
                     return MatchOut(*row)
 
-    def get_matches_by_user(self, user_id: int) -> List[MatchOut]:
+    def get_matches_by_user(self, matched_user: int) -> List[MatchOut]:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, logged_in_user, user_id
+                    SELECT id, logged_in_user, matched_user
                     FROM matches
                     WHERE logged_in_user = %s;
                     """,
-                    [user_id],
+                    [matched_user],
                 )
                 rows = cur.fetchall()
                 return [MatchOut(*row) for row in rows]
