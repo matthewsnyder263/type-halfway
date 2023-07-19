@@ -16,6 +16,7 @@ import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import useToken from '@galvanize-inc/jwtdown-for-react';
+import Nav from './Nav.js';
 // import { useNavigate } from 'react-router-dom';
 
 function App() {
@@ -114,6 +115,7 @@ function App() {
 
   return (
     <div className="container">
+        {/* <Nav /> */}
         <AuthProvider baseUrl={baseURL}>
           <Routes>
             {/* <ErrorNotification error={error} /> */}

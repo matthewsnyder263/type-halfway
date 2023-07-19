@@ -4,14 +4,15 @@ from typing import List
 from pydantic import BaseModel
 
 
-
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
 
 class Compatibility(BaseModel):
     id: int
     user_id_1: int
     user_id_2: int
     strength: float
+
 
 class CompatibilityIn(BaseModel):
     id: int
@@ -27,11 +28,11 @@ class CompatibilityOut(BaseModel):
     strength: str
     username: str
     full_name: str
-    mbti: str
+    mbti_id: int
 
 
 class CompatibilitysOut(BaseModel):
-    mbti: List[CompatibilityOut]
+    mbti_id: List[CompatibilityOut]
 
 
 class CompatibilityQueries:
@@ -40,7 +41,7 @@ class CompatibilityQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti
+                    SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti_id
                     FROM compatibility c
                     INNER JOIN users u ON c.user_id_2 = u.id
                     WHERE c.user_id_1 = %s
@@ -59,7 +60,7 @@ class CompatibilityQueries:
                 strength=record[3],
                 username=record[4],
                 full_name=record[5],
-                mbti=record[6],
+                mbti_id=record[6],
             )
 
             compatibilities.append(compatibility)
@@ -78,19 +79,13 @@ class CompatibilityQueries:
                 cur.execute(
                     """
                     INSERT INTO compatibility (user_id_1, user_id_2, strength)
-                    SELECT %s, u.id, calculate_compatibility(%s, u.mbti)
+                    SELECT %s, u.id, calculate_compatibility(%s, u.mbti_id)
                     FROM users u
                     WHERE u.id != %s;
                     """,
                     (user_id, user_id, user_id),
                 )
                 conn.commit()
-
-
-
-
-
-
 
     # def calculate_and_save_compatibility(self, user_id: int) -> None:
     #     with pool.connection() as conn:
@@ -105,7 +100,7 @@ class CompatibilityQueries:
     #             cur.execute(
     #                 """
     #                 INSERT INTO compatibility (user_id_1, user_id_2, strength)
-    #                 SELECT %s, u.id, calculate_compatibility(%s, u.mbti)
+    #                 SELECT %s, u.id, calculate_compatibility(%s, u.mbti_id)
     #                 FROM users u
     #                 WHERE u.id != %s;
     #                 """,
@@ -113,13 +108,14 @@ class CompatibilityQueries:
     #             )
     #             conn.commit()
 
+
 # class CompatibilityQueries:
 #     def get_compatibility_by_user_id(self, user_id: int) -> CompatibilitysOut:
 #         with pool.connection() as conn:
 #             with conn.cursor() as cur:
 #                 cur.execute(
 #                     """
-#                     SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti
+#                     SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti_id
 #                     FROM compatibility c
 #                     INNER JOIN users u ON c.user_id_2 = u.id
 #                     WHERE c.user_id_1 = %s
@@ -138,7 +134,7 @@ class CompatibilityQueries:
 #                 strength=record[3],
 #                 username=record[4],
 #                 full_name=record[5],
-#                 mbti=record[6],
+#                 mbti_id=record[6],
 #             )
 
 #             compatibilities.append(compatibility)
@@ -157,14 +153,13 @@ class CompatibilityQueries:
 #                 cur.execute(
 #                     """
 #                     INSERT INTO compatibility (user_id_1, user_id_2, strength)
-#                     SELECT %s, u.id, calculate_compatibility(%s, u.mbti)
+#                     SELECT %s, u.id, calculate_compatibility(%s, u.mbti_id)
 #                     FROM users u
 #                     WHERE u.id != %s;
 #                     """,
 #                     (user_id, user_id, user_id),
 #                 )
 #                 conn.commit()
-
 
 
 #
@@ -174,7 +169,7 @@ class CompatibilityQueries:
 #             with conn.cursor() as cur:
 #                 cur.execute(
 #                     """
-#                     SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti
+#                     SELECT c.id, c.user_id_1, c.user_id_2, c.strength, u.username, u.full_name, u.mbti_id
 #                     FROM compatibility c
 #                     INNER JOIN users u ON c.user_id_2 = u.id
 #                     WHERE c.user_id_2 = %s
@@ -193,7 +188,7 @@ class CompatibilityQueries:
 #                             strength=record[3],
 #                             username=record[4],
 #                             full_name=record[5],
-#                             mbti=record[6],
+#                             mbti_id=record[6],
 #             )
 
 #             compatibilities.append(compatibility)
@@ -212,7 +207,7 @@ class CompatibilityQueries:
 #                 cur.execute(
 #                     """
 #                     INSERT INTO compatibility (user_id, compatible_user_id, compatibility_score)
-#                     SELECT %s, u.id, calculate_compatibility(%s, u.mbti)
+#                     SELECT %s, u.id, calculate_compatibility(%s, u.mbti_id)
 #                     FROM users u
 #                     WHERE u.id != %s;
 #                     """,
