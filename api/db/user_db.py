@@ -29,7 +29,6 @@ class UserDB(BaseModel):
     zip_code: str
     interest: str
     picture: str
-    interests: List[int]
 
 
 class UserIn(BaseModel):
@@ -44,14 +43,13 @@ class UserIn(BaseModel):
     zip_code: str
     interest: str
     picture: str
-    interests: List[int]
 
 
 class UserOut(BaseModel):
     id: int
     username: str
     email: str
-    password: str
+    # password: str
     full_name: str
     gender: int
     age: int
@@ -60,7 +58,6 @@ class UserOut(BaseModel):
     zip_code: str
     interest: str
     picture: str
-    interests: List[str]
 
 
 class UsersOut(BaseModel):
@@ -68,7 +65,7 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def get(self, username: str) -> UserOut:
+    def get(self, username: str) -> UserDB:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -93,7 +90,7 @@ class UserQueries:
                 record = result.fetchone()
                 if record is None:
                     return None
-                return UserOut(
+                return UserDB(
                     id=record[0],
                     username=record[1],
                     email=record[2],
@@ -134,7 +131,7 @@ class UserQueries:
                         id=record[0],
                         username=record[1],
                         email=record[2],
-                        hashed_password=record[3],
+                        # hashed_password=record[3],
                         full_name=record[4],
                         gender=record[5],
                         age=record[6],
@@ -178,7 +175,7 @@ class UserQueries:
                     id=record[0],
                     username=record[1],
                     email=record[2],
-                    hashed_password=record[3],
+                    # hashed_password=record[3],
                     full_name=record[4],
                     gender=record[5],
                     age=record[6],
@@ -283,7 +280,7 @@ class UserQueries:
                     WHERE id = %s
                     RETURNING id, username, email, hashed_password,
                     full_name, gender, age, mbti, bio, zip_code,
-                    interest, picture
+                    interest, picture, interests;
                     """,
                     params,
                 )

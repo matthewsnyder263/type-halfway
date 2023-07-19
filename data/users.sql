@@ -1,6 +1,9 @@
+DROP TABLE IF EXISTS user_interests;
 DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS matches;
 -- DROP TABLE IF EXISTS potential_matches;
+DROP TABLE IF EXISTS genders;
+DROP TABLE IF EXISTS interests;
 
 
 CREATE TABLE genders(
@@ -26,12 +29,17 @@ CREATE TABLE users (
     bio TEXT,
     zip_code VARCHAR(5) NOT NULL,
     interest TEXT,
-    picture TEXT,
-    interests_id INT REFERENCES interests(id)
+    picture TEXT
     -- matches_id INT
     -- CONSTRAINT fk_matches
     --     FOREIGN KEY (matches_id)
     --     REFERENCES matches (id)
+);
+
+CREATE TABLE user_interests (
+    user_id INT REFERENCES users(id),
+    interest_id INT REFERENCES interests(id),
+    PRIMARY KEY (user_id, interest_id)
 );
 
 

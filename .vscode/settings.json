@@ -39,16 +39,7 @@
     {
       "previewLimit": 50,
       "server": "localhost",
-      "port": 15432,
-      "driver": "PostgreSQL",
-      "name": "usersdb",
-      "database": "data",
-      "username": "user"
-    },
-    {
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 15432,
+      "port": 5432,
       "driver": "PostgreSQL",
       "name": "db",
       "database": "data",

@@ -47,7 +47,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
