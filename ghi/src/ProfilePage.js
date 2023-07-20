@@ -3,53 +3,106 @@ import { Link } from 'react-router-dom';
 import './ProfilePage.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@galvanize-inc/jwtdown-for-react';
-import { AuthContext } from '@galvanize-inc/jwtdown-for-react';
-import { useContext } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const ProfilePage = () => {
-    const { logout } = useAuthContext();
+    // SNYDER CODE ADDED BELOW<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // const { id: userId } = useParams();
+    // const [userData, setUserData] = useState(null);
+    // SNYDER CODE ADDED ABOVE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     const [currentUser, setCurrentUser] = useState('');
     const navigate = useNavigate();
-    const { token } = useToken();
-
-    useEffect(() => {
-        if (!token) {
-            const storedToken = localStorage.getItem("token");
-            if (storedToken) {
-                navigate("/login");
-            }
-        }
-    }, [navigate, token]);
+    const { token, logout } = useToken();
 
     useEffect(() => {
         if (token) {
-            localStorage.setItem("token", token);
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+            setCurrentUser(storedUser);
+            // console.log("currentUser PROFILE", storedUser)
+        } else {
+            localStorage.removeItem("user");
+            setCurrentUser(null);
+            navigate('/login');
+
         }
     }, [token]);
 
-    useEffect(() => {
-        const getCurrentUser = async () => {
-            if (currentUser.length < 0) {
-                // currentUser is not set or does not have an id yet
-                return;
-            }
-            const url = `http://localhost:8000/api/token`
-            const response = await fetch(url, {
-                method: "GET",
-                credentials: "include",
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setCurrentUser(data.account);
-            } else {
-                console.error("was not able to get")
-            }
-        };
-        getCurrentUser();
-        console.log("LET'S SEEEE", currentUser)
-    }, [currentUser]);
+    // // >>>>>>SNYDER CODE ADDED BELOW FOR LIKE USER<<<<<<<<
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             }
+    //         });
+    //         if (!response.ok) {
+    //             console.error(`HTTP error! status: ${response.status}`);
+    //             const text = await response.text();
+    //             console.error(`Response text: ${text}`);
+    //             return;
+    //         }
+    //         const data = await response.json();
+    //         setUserData(data);
+    //     };
+
+    //     const storedUser = localStorage.getItem('userData');
+    //     if (storedUser) {
+    //         try {
+    //             setCurrentUser(JSON.parse(storedUser));
+    //         } catch (error) {
+    //             console.error('Failed to parse user data from localStorage:', error);
+    //         }
+    //     }
+    //     fetchData();
+    // }, [userId, token]);
+
+    // if (!userData) {
+    //     return <div>Loading..</div>
+    // }
+
+    // const likeUser = async () => {
+    //     const loggedInUserId = currentUser.id;
+
+    //     const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
+    //         method: "POST",
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`,
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             logged_in_user: loggedInUserId,
+    //             matched_user: userId,
+    //             mutual: false
+    //         })
+    //     });
+
+
+
+    //     if (!response.ok) {
+    //         console.error(`Failed to like user: ${response.statusText}`);
+    //         return;
+    //     }
+
+    //     const data = await response.json();
+    //     console.log('User Has Been Liked.');
+    //     console.log(data.message);
+
+    //     if (data.message.includes("mutual")) {
+    //         showMatchedPopup();
+    //     }
+    // };
+
+    // const showMatchedPopup = () => {
+    //     window.alert("You've Matched!");
+    // }
+
+    // // >>>>>>>>>>>>>>>>>>>>>>>>>SNYDER CODE ADDED ABOVE<<<<<<<<<<<<<<<<<<<<<
+
+    // useEffect(() => {
+    //     console.log("currentUser", currentUser);
+    // }, [currentUser]);
+
 
     return (
         <>
@@ -60,9 +113,13 @@ const ProfilePage = () => {
                             <div className="media align-items-end profile-head">
                                 <div className="profile mr-3">
                                     <img
-                                        src={currentUser.image}
+                                        src={currentUser.picture}
                                         alt="..."
-                                        width="130"
+                                        // width="130"
+                                        style={{
+                                            width: "auto",
+                                            height: "auto"
+                                        }}
                                         className="rounded mb-2 img-thumbnail"
                                     />
                                     <Link to="#" className="btn btn-outline-light btn-sm btn-block">
@@ -70,14 +127,20 @@ const ProfilePage = () => {
                                     </Link>
                                     <button
                                         className="btn btn-outline-light btn-sm btn-block"
-                                        onClick={() => {
-                                            logout();
+                                        onClick={async () => {
                                             localStorage.removeItem("token");
-                                            navigate("/login");
+                                            logout();
                                         }}>
                                         Logout
                                     </button>
                                 </div>
+                                {/* SNYDER CODE ADDED BELOW */}
+                                {/* <div className="profile-column">
+                                    <h1>{userData.mbti}</h1>
+                                    <p>***Gender Input Here*** | AGE: {userData.age}</p>
+                                    <button onClick={likeUser} disabled={!currentUser}>Like</button>
+                                </div> */}
+                                {/* SNYDER CODE ADDED ABOVE */}
 
                                 <div className="media-body mb-5 text-white">
                                     <h4 className="mt-0 mb-0">{currentUser.username}</h4>
@@ -130,68 +193,3 @@ const ProfilePage = () => {
     )
 };
 export default ProfilePage;
-
-
-
-
-    // useEffect(() => {
-    //     if (!token) {
-    //         navigate("/login");
-    //     } else {
-    //         const user = localStorage.getItem("user");
-    //         if (user) {
-    //             setCurrentUser(JSON.parse(user));
-    //             console.log('User: ', currentUser)
-    //         } else {
-    //             navigate("/login");
-    //         }
-    //     }
-    // }, [navigate, token]);
-
-    // useEffect(() => {
-    //     if (!currentUser) {
-    //         navigate("/login");
-    //     }
-    // }, [navigate, currentUser]);
-
-
-
-    // useEffect(() => {
-    //     if (!token) {
-    //         const storedToken = localStorage.getItem("token");
-    //         if (storedToken) {
-    //             navigate("/login");
-    //         }
-    //     }
-    // }, [navigate, token]);
-    // MATTS UPDATE***********************************************
-    // const fetchCurrentUser = async () => {
-    //     const url = `http://localhost:8000/api/users/{userId}`; // replace /token with /api/users/{userId}
-    //     const response = await fetch(url, {
-    //         method: "GET",
-    //         headers: {
-    //             Authorization: `Bearer ${token}`,
-    //         },
-    //         credentials: "include",
-    //     });
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         setCurrentUser(data.account);
-    //     }
-    // };
-
-    // const fetchCurrentUser = async () => {
-    //     const url = `http://localhost:8000/token`;
-    //     const response = await fetch(url, {
-    //         method: "GET",
-    //         credentials: "include",
-    //     });
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         setCurrentUser(data.account);
-    //     }
-    // };
-    // useEffect(() => {
-    //     fetchCurrentUser();
-    //     console.log("Current User:", currentUser);
-    // }, [token]);

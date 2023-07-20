@@ -20,10 +20,10 @@ import ProfilePage from './ProfilePage';
 
 
 function App() {
-  // const baseURL = process.env.REACT_APP_API_HOST;
-  const domain = /https:\/\/[^/]+/;
-  const basename = process.env.PUBLIC_URL.replace(domain, "");
 
+  // const domain = /https:\/\/[^/]+/;
+  // // const baseURL = process.env.REACT_APP_PUBLIC_URL.replace(domain, "");
+  const baseURL = process.env.REACT_APP_API_HOST
 
   // const [launchInfo, setLaunchInfo] = useState([]);
   // const [error, setError] = useState(null);
@@ -57,7 +57,7 @@ function App() {
     <div className="">
       <BrowserRouter>
         <Nav />
-        <AuthProvider basename={basename}>
+        <AuthProvider baseUrl={baseURL}>
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             <Route path="/signup" element={<SignupForm />} />

@@ -22,8 +22,8 @@ class UserDB(BaseModel):
     email: str
     hashed_password: str
     full_name: str
-    gender: int
-    age: int
+    gender: str
+    age: str
     mbti: str
     bio: str
     zip_code: str
@@ -36,8 +36,8 @@ class UserIn(BaseModel):
     email: str
     password: str
     full_name: str
-    gender: int
-    age: int
+    gender: str
+    age: str
     mbti: str
     bio: str
     zip_code: str
@@ -51,8 +51,8 @@ class UserOut(BaseModel):
     email: str
     # password: str
     full_name: str
-    gender: int
-    age: int
+    gender: str
+    age: str
     mbti: str
     bio: str
     zip_code: str

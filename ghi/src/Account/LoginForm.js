@@ -12,12 +12,19 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [invalid, setInvalid] = useState(false);
   const navigate = useNavigate();
+  const { login, token } = useToken();
+  // console.log("token", token)
 
-  const { login } = useAuthContext();
 
   const handleInvalid = () => {
     setInvalid(true);
   };
+
+  useEffect(() => {
+    if (token) {
+      fetchUser();
+    }
+  }, [token]);
 
   const fetchUser = async () => {
     const url = 'http://localhost:8000/token';
@@ -25,11 +32,15 @@ const LoginForm = () => {
       method: "GET",
       credentials: "include",
     });
+    // console.log("response", response)
     if (response.ok) {
       const data = await response.json();
+      // console.log("account", data.account)
       if (data === null) {
         handleInvalid();
       } else {
+        localStorage.setItem('user', JSON.stringify(data.account));
+        // console.log("data.account", data.account)
         navigate("/profile");
       }
     }
@@ -37,13 +48,19 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    fetchUser();
+    try {
+      await login(username, password)
+      fetchUser()
+    } catch (error) {
+      console.error("Login failed with exception:", error);
+      handleInvalid();
+    }
   };
 
 
+
   return (
-    <div className="container-flex mt-5">
+    <div className="container-flex mt-12">
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-6">
           <div className=" text-bg-light mb-4 shadow p-4">
@@ -84,7 +101,7 @@ const LoginForm = () => {
                   {invalid ? (
                     <div className="w-full bg-[#ffa3a9] rounded-md border border-gray-500 p-4 inline-block">
                       <div className="text-[#a3000b]">
-                        Invalid email or password
+                        Invalid username or password
                       </div>
                     </div>
                   ) : null}
@@ -114,192 +131,13 @@ const styles = {
   },
   form: {
     backgroundColor: 'lightgrey',
-    padding: '2em',
-    borderRadius: '1em',
-    boxShadow: '0 0 1em rgba(0, 0, 0, 0.2)',
+    padding: '5em',
+    borderRadius: '5em',
+    boxShadow: '0 0 100em rgba(254, 100, 115, 8)',
 
   },
   label: {
     fontWeight: 'bold',
-    marginRight: '1em'
+    marginRight: '12em'
   }
 };
-
-
-
-
-  // const { login } = useAuthContext();
-
-  // const handleInvalid = () => {
-  //   setInvalid(true);
-  // };
-
-  // const fetchUser = async () => {
-  //   const url = 'http://localhost:8000/token';
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   });
-  //   if (response.ok) {
-  //     const data = await response.json();
-  //     if (!data) {
-  //       handleInvalid();
-  //     } else {
-  //       setUser(data.account);
-  //       navigate("/profile");
-  //     }
-  //   }
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   await login(username, password);
-  //   fetchUser();
-  // };
-
-  // useEffect(() => {
-  //   if (!token) {
-  //     const storedToken = localStorage.getItem("token");
-  //     if (storedToken) {
-  //       navigate("/login");
-  //     }
-  //   }
-  // }, [navigate, token]);
-
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [invalid, setInvalid] = useState(false);
-  // const navigate = useNavigate();
-  // const { login } = useAuthContext();
-
-  // const handleInvalid = () => {
-  //   setInvalid(true);
-  // };
-
-  // const fetchUser = async () => {
-  //   const url = 'http://localhost:8000/token';
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   });
-  //   if (response.ok) {
-  //     const data = await response.json();
-  //     if (data === null) {
-  //       handleInvalid();
-  //     } else {
-  //       localStorage.setItem('userData', JSON.stringify(data.account));
-  //       navigate("/profile");
-  //     }
-  //   }
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   await login(username, password);
-  //   fetchUser();
-  // };
-
-
-
-
-
-
-
-// import BootstrapInput from "./BootstrapInput";
-// import styles from "./styling/Login.module.css";
-// import Logo from "./styling/Logo.png";
-// import { Link } from "react-router-dom";
-
-
-// const LoginForm = () => {
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [checker, setChecker] = useState(false);
-//   const [invalid, setInvalid] = useState(false);
-//   const navigate = useNavigate();
-
-//   const { login } = useAuthContext();
-
-//   const handleInvalid = () => {
-//     setInvalid(true);
-//   };
-
-//   const handleChecker = () => {
-//     setChecker(!checker);
-//   };
-
-//   const fetchUser = async () => {
-//     const url = 'http://localhost:8000/token';
-//     const response = await fetch(url, {
-//       method: "GET",
-//       credentials: "include",
-//     });
-//     if (response.ok) {
-//       const data = await response.json();
-//       if (data === null) {
-//         handleInvalid();
-//       } else {
-//         navigate("/potentialmatch");
-//       }
-//     }
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     await login(username, password);
-//     fetchUser();
-//   };
-
-//   useEffect(() => {
-//     login(username, password);
-//   }, [checker, login, username, password]);
-
-
-//   return (
-//     <div className="card text-bg-light mb-3">
-//       <h5 className="card-header">Login</h5>
-//       <div className="card-body">
-//         <form onSubmit={handleSubmit}>
-//           <div className="mb-3">
-//             <label className="form-label">Username:</label>
-//             <input
-//               name="username"
-//               type="text"
-//               className="form-control"
-//               onChange={(e) => setUsername(e.target.value)}
-//             />
-//           </div>
-//           <div className="mb-3">
-//             <label className="form-label">Password:</label>
-//             <input
-//               name="password"
-//               type="password"
-//               className="form-control"
-//               onChange={(e) => setPassword(e.target.value)}
-//             />
-//           </div>
-//           <div className="flex items-center justify-between">
-//               <button
-//                 onMouseOver={handleChecker}
-//                 className="bg-[#05bd83] hover:bg-[#009767] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-//                 type="submit"
-//               >
-//                 Login
-//               </button>
-//             </div>
-//           <div className="w-full text-center pt-4">
-//               {invalid ? (
-//                 <div className="w-full bg-[#ffa3a9] rounded-md border border-gray-500 p-4 inline-block">
-//                   <div className="text-[#a3000b]">
-//                     Invalid email or password
-//                   </div>
-//                 </div>
-//               ) : null}
-//             </div>
-//         </form>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default LoginForm;

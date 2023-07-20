@@ -4,7 +4,7 @@ import os
 
 # import requests
 from authenticator import authenticator
-from routers import users  # , interests, potential_matches, matches
+from routers import users, gender  # , interests, potential_matches, matches
 
 # import os
 
@@ -40,5 +40,12 @@ def launch_details():
 
 app.include_router(authenticator.router)
 app.include_router(users.router)
+app.include_router(gender.router)
+
+# snyder edit.. added router include below
+# app.include_router(matches.router)
+# snyder edit above code
+
+
 # app.include_router(interests.router)
 # app.include_router(mbti.router)

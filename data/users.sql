@@ -6,10 +6,10 @@ DROP TABLE IF EXISTS genders;
 DROP TABLE IF EXISTS interests;
 
 
-CREATE TABLE genders(
-    id SERIAL PRIMARY KEY,
-    gender TEXT NOT NULL
-);
+-- CREATE TABLE genders(
+--     id SERIAL PRIMARY KEY,
+--     gender TEXT NOT NULL
+-- );
 
 CREATE TABLE interests (
     id SERIAL PRIMARY KEY,
@@ -22,8 +22,8 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     full_name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    gender INT REFERENCES genders(id),
-    age INT NOT NULL,
+    gender TEXT NOT NULL,
+    age VARCHAR(3) NOT NULL,
     mbti TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
     bio TEXT,
@@ -41,6 +41,25 @@ CREATE TABLE user_interests (
     interest_id INT REFERENCES interests(id),
     PRIMARY KEY (user_id, interest_id)
 );
+
+
+
+-- SNYDER TABLE ADDED BELOW<<<<<<<<<<<<<<<<<<<<<<
+
+-- CREATE TABLE matches (
+-- id SERIAL PRIMARY KEY,
+-- logged_in_user INT REFERENCES users(id),
+-- matched_user INT REFERENCES users(id),
+-- mutual BOOLEAN NOT NULL DEFAULT FALSE
+-- );
+
+-- SNYDER TABLE ADDED ABOVE<<<<<<<<<<<<<<<<<<<<<>
+
+
+
+
+
+
 
 
 -- CREATE TABLE matches (
@@ -113,10 +132,10 @@ VALUES
 ('Wine and cocktails');
 
 
-INSERT INTO genders (gender)
-VALUES
-('Male'),
-('Female'),
-('Non-binary'),
-('Other'),
-('Prefer not to say');
+-- INSERT INTO genders (gender)
+-- VALUES
+-- ('Male'),
+-- ('Female'),
+-- ('Non-binary'),
+-- ('Other'),
+-- ('Prefer not to say');
