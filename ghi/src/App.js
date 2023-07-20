@@ -17,6 +17,7 @@ import { Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import Nav from './Nav.js';
+import EditProfileForm from './EditProfileForm.js';
 // import { useNavigate } from 'react-router-dom';
 
 function App() {
@@ -123,6 +124,7 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/users/:id" element={<ProfilePage />} />
+            <Route path="/edit" element={<EditProfileForm />} />
             {/* <Route path={`/users/${userId}`} element={<ProfilePage />} /> */}
             {/* <Route path = "/logout" element={<LogOut />} /> */}
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
