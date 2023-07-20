@@ -27,6 +27,7 @@ CREATE TABLE matches (
     id SERIAL PRIMARY KEY,
     logged_in_user INT NOT NULL,
     matched_user INT NOT NULL,
+    mutual BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_matched_user
         FOREIGN KEY (matched_user)
         REFERENCES users (id),
