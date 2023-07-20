@@ -36,7 +36,7 @@ const PotentialMatches = () => {
             setCurrentUser(data.account);
         }
     };
-    
+
     useEffect(() => {
         fetchCurrentUser();
     }, [token]);
@@ -160,19 +160,24 @@ const PotentialMatches = () => {
     }, [currentUser]);
 
     const recentCompatibilityData = compatibilityData
-        .sort((a, b) => new Date(b.created_Date) - new Date(a.created_Date))
+        .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
         .slice(0, 5);
 
+    
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
+            <div class="card" style={{ width: "18rem" }}>
             {recentCompatibilityData.map((data) => (
-                <div key={data.match_id}>
-                    <p>Matched User: {data.matched_user}</p>
-                    <p>Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                <div key={data.match_id} className="card mb-4">
+                    <img className="card-img-top" src="..." alt="Card image cap" />
+                    <div className="card-body">
+                        <h5 className="card-title">Matched User: {data.matched_user}</h5>
+                        <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                </div>
                 </div>
             ))}
-
+        </div>
         </div>
     );
 };

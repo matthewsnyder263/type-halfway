@@ -36,6 +36,17 @@ CREATE TABLE matches (
 );
 
 
+-- SNYDER NOTE>>>I DON'T HAVE CONSTRAINT FOR LIKE FUNCTIONALITY<<<
+-- CREATE TABLE matches (
+-- id SERIAL PRIMARY KEY,
+-- logged_in_user INT REFERENCES users(id),
+-- matched_user INT REFERENCES users(id),
+-- mutual BOOLEAN NOT NULL DEFAULT FALSE
+-- );
+
+
+
+
 ALTER TABLE users
     ADD CONSTRAINT fk_matches
         FOREIGN KEY (matches_id)

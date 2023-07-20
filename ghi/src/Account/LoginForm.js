@@ -126,7 +126,7 @@ const LoginForm = () => {
       if (data === null) {
         handleInvalid();
       } else {
-        navigate("/profile");
+        navigate("/potentialmatch");
       }
     }
   };

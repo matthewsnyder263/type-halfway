@@ -11,8 +11,10 @@ import LoginForm from "./Account/LoginForm";
 // import InterestsForm from "./InterestsForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PotentialMatches from './PotentialMatches/PotentialMatches';
-import ProfilePage from './PotentialMatches/profile';
+// import PotentialMatches from './PotentialMatches/PotentialMatches';
+// import ProfilePage from './PotentialMatches/profile';
+// import PotentialMatches from './PotentialMatches/bitchass';
+import PotentialMatches from './PotentialMatches/likepotentialmatch';
 
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
@@ -54,7 +56,7 @@ function App() {
           <Route path = "/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
-            <Route path = "/profile" element={<ProfilePage />} />
+            {/* <Route path = "/profile" element={<ProfilePage />} /> */}
           {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
           {/* <InterestsForm user_id={userId} /> */}
           {/* <Construct info={launchInfo} /> */}
