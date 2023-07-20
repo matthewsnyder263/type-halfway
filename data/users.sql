@@ -26,14 +26,26 @@ CREATE TABLE users (
 CREATE TABLE matches (
     id SERIAL PRIMARY KEY,
     logged_in_user INT NOT NULL,
-    user_id INT NOT NULL,
-    CONSTRAINT fk_user
-        FOREIGN KEY (user_id)
+    matched_user INT NOT NULL,
+    mutual BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT fk_matched_user
+        FOREIGN KEY (matched_user)
         REFERENCES users (id),
     CONSTRAINT fk_logged_in_user
         FOREIGN KEY (logged_in_user)
         REFERENCES users (id)
 );
+
+
+-- SNYDER NOTE>>>I DON'T HAVE CONSTRAINT FOR LIKE FUNCTIONALITY<<<
+-- CREATE TABLE matches (
+-- id SERIAL PRIMARY KEY,
+-- logged_in_user INT REFERENCES users(id),
+-- matched_user INT REFERENCES users(id),
+-- mutual BOOLEAN NOT NULL DEFAULT FALSE
+-- );
+
+
 
 
 ALTER TABLE users
@@ -45,7 +57,7 @@ ALTER TABLE users
 CREATE TABLE potential_matches (
     id SERIAL PRIMARY KEY,
     logged_in_user INT NOT NULL,
-    match_id INT NOT NULL,
+    match_id INT DEFAULT NULL,
     matched_user INT NOT NULL,
     mbti_strength INT NOT NULL,
     liked BOOLEAN DEFAULT false,
@@ -54,7 +66,7 @@ CREATE TABLE potential_matches (
         FOREIGN KEY (match_id)
         REFERENCES matches (id),
     CONSTRAINT fk_matched_user
-        FOREIGN KEY (user_id)
+        FOREIGN KEY (matched_user)
         REFERENCES users (id),
     CONSTRAINT fk_logged_in_user
         FOREIGN KEY (logged_in_user)

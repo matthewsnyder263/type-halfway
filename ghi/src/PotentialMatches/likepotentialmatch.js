@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
-import { differenceInDays, parseISO } from 'date-fns'
 
 
 const PotentialMatches = () => {
@@ -123,25 +122,20 @@ const PotentialMatches = () => {
             console.log("lookhere:", topCompatibilityData)
             setCompatibilityData(topCompatibilityData);
 
-            const lastCreatedDate = recentCompatibilityData.length > 0 ? recentCompatibilityData[0].created_on : null;
-            const isMoreThan7Days = lastCreatedDate && differenceInDays(new Date(), parseISO(lastCreatedDate)) > 7;
-
-            if (isMoreThan7Days) {
-                const postCompatibilityData = async (data) => {
-                    const url = "http://localhost:8000/api/potential_matches";
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(data),
-                        credentials: "include",
-                    });
-                };
-                const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
-            }
+            const postCompatibilityData = async (data) => {
+                const url = "http://localhost:8000/api/potential_matches";
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                });
+            };
+            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
         }
-    }, [currentUser, allUsers, recentCompatibilityData]);
+    }, [currentUser, allUsers]);
 
     useEffect(() => {
         const getPotentialMatches = async () => {
@@ -162,12 +156,46 @@ const PotentialMatches = () => {
             }
         };
         getPotentialMatches();
-
+        console.log("fetch get request", getPotentialMatches())
     }, [currentUser]);
 
+    const handleLike = async (userId) => {
+        try {
+            const loggedInUserId = currentUser.id;
+
+            const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    logged_in_user: loggedInUserId,
+                    matched_user: userId,
+                    mutual: false
+                })
+            });
+
+            if (!response.ok) {
+                console.error(`Failed to like user: ${response.statusText}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('User Has Been Liked.');
+            console.log(data.message);
+
+            if (data.message.includes("mutual")) {
+                window.alert("You've Matched!");
+            }
+        } catch (error) {
+            console.error('Error occurred while liking user:', error);
+        }
+    };
+
     const recentCompatibilityData = compatibilityData
-            .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
-            .slice(0, 5);
+        .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
+        .slice(0, 5);
 
 
     return (
@@ -176,10 +204,13 @@ const PotentialMatches = () => {
             <div class="card" style={{ width: "18rem" }}>
                 {recentCompatibilityData.map((data) => (
                     <div key={data.match_id} className="card mb-4">
-                        <img className="card-img-top" src={allUsers[data.matched_user]?.image || "default-placeholder.jpg"} alt="Card image cap" />
+                        <img className="card-img-top" src="..." alt="Card image cap" />
                         <div className="card-body">
                             <h5 className="card-title">Matched User: {data.matched_user}</h5>
                             <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                            <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                {data.liked ? "Liked" : "Like"}
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -189,3 +220,4 @@ const PotentialMatches = () => {
 };
 
 export default PotentialMatches;
+

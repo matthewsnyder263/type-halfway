@@ -16,7 +16,7 @@ user_queries = UserQueries()
 
 
 @router.post(
-    "/potential_matches", response_model=PotentialMatchOut, status_code=201
+    "/api/potential_matches", response_model=PotentialMatchOut, status_code=201
 )
 def create_potential_match(
     potential_match: PotentialMatchIn,
@@ -24,9 +24,10 @@ def create_potential_match(
     logged_in_user = user_queries.get_user_by_id(
         potential_match.logged_in_user
     )
+    logged_in_user_id = logged_in_user.id if logged_in_user else None
     match_user = user_queries.get_user_by_id(potential_match.matched_user)
 
-    if not logged_in_user or not match_user:
+    if not logged_in_user_id or not match_user:
         raise HTTPException(status_code=404, detail="User not found.")
 
     new_potential_match = potential_match_queries.create_potential_match(
@@ -36,21 +37,21 @@ def create_potential_match(
 
 
 @router.get(
-    "/potential_matches/{user_id}", response_model=List[PotentialMatchOut]
+    "/api/potential_matches/{logged_in_user}", response_model=List[PotentialMatchOut]
 )
-def get_potential_matches(user_id: int) -> List[PotentialMatchOut]:
-    user = user_queries.get_user_by_id(user_id)
+def get_potential_matches(logged_in_user: int) -> List[PotentialMatchOut]:
+    user = user_queries.get_user_by_id(logged_in_user)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
 
     potential_matches = potential_match_queries.get_potential_matches_by_user(
-        user_id
+        logged_in_user
     )
     return potential_matches
 
 
-@router.put("/potential-matches/{match_id}", response_model=PotentialMatchOut)
+@router.put("/api/potential-matches/{match_id}", response_model=PotentialMatchOut)
 async def update_potential_match(match_id: int, liked: bool):
     potential_match = potential_match_queries.get_potential_matches_by_user(
         match_id
