@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import SignupForm from "./Account/SignupForm";
+// import SignupForm from "./Account/SignupForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
@@ -52,14 +52,14 @@ function App() {
       <BrowserRouter>
         <AuthProvider baseUrl={baseURL}>
           <Routes>
-          {/* <ErrorNotification error={error} /> */}
-          <Route path = "/signup" element={<SignupForm />} />
+            {/* <ErrorNotification error={error} /> */}
+            {/* <Route path = "/signup" element={<SignupForm />} /> */}
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             {/* <Route path = "/profile" element={<ProfilePage />} /> */}
-          {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
-          {/* <InterestsForm user_id={userId} /> */}
-          {/* <Construct info={launchInfo} /> */}
+            {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
+            {/* <InterestsForm user_id={userId} /> */}
+            {/* <Construct info={launchInfo} /> */}
           </Routes>
         </AuthProvider>
       </BrowserRouter>
