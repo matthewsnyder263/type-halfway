@@ -217,7 +217,7 @@ const PotentialMatches = () => {
                                 <h6 style={{ marginTop: "10px" }} >Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</h6>
 
                             </div>
-                            <div styles={styles}>
+                            <div>
                             </div>
                         </div>
                     ))}
@@ -228,19 +228,3 @@ const PotentialMatches = () => {
 };
 
 export default PotentialMatches;
-
-
-
-
-
-const styles = {
-    transform: "translate(-50%, -50%)",
-    class: "translate-middle",
-    values: {
-        null: "translate(-50%, -50%)",
-        x: "translateX(-50%)",
-        y: "translateY(-50%)",
-
-    },
-    marginTop: '10x'
-};
