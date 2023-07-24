@@ -29,29 +29,48 @@ DROP TABLE IF EXISTS interests;
 -- );
 
 
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     gender TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL,
     full_name TEXT NOT NULL,
     mbti TEXT NOT NULL,
-    -- mbti_id INT REFERENCES mbtis(id),
     email TEXT UNIQUE NOT NULL,
-    gender TEXT NOT NULL,
     age VARCHAR(3) NOT NULL,
-    mbti TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
     bio TEXT,
     interests TEXT[],
     picture TEXT,
-    zip_code VARCHAR(5) NOT NULL,
-    interest TEXT,
-    picture TEXT
-    -- matches_id INT
-    -- CONSTRAINT fk_matches
-    --     FOREIGN KEY (matches_id)
-    --     REFERENCES matches (id)
+    zip_code VARCHAR(5) NOT NULL
 );
+
+
+
+
+-- CREATE TABLE users (
+--     id SERIAL PRIMARY KEY,
+--     gender TEXT NOT NULL,
+--     username TEXT UNIQUE NOT NULL,
+--     full_name TEXT NOT NULL,
+--     mbti TEXT NOT NULL,
+--     -- mbti_id INT REFERENCES mbtis(id),
+--     email TEXT UNIQUE NOT NULL,
+--     gender TEXT NOT NULL,
+--     age VARCHAR(3) NOT NULL,
+--     mbti TEXT NOT NULL,
+--     hashed_password TEXT NOT NULL,
+--     bio TEXT,
+--     interests TEXT[],
+--     picture TEXT,
+--     zip_code VARCHAR(5) NOT NULL,
+--     -- interest TEXT,
+--     picture TEXT
+--     -- matches_id INT
+--     -- CONSTRAINT fk_matches
+--     --     FOREIGN KEY (matches_id)
+--     --     REFERENCES matches (id)
+-- );
 
 
 -- CREATE TABLE interests (
@@ -101,24 +120,32 @@ CREATE TABLE potential_matches (
 );
 
 
-INSERT INTO mbtis VALUES
-(1, 'INFP'),
-(2, 'ENFP'),
-(3, 'ESTJ'),
-(4, 'INFJ'),
-(5, 'ENFJ'),
-(6, 'INTJ'),
-(7, 'ENTJ'),
-(8, 'INTP'),
-(9, 'ENTP'),
-(10, 'ISFP'),
-(11, 'ESFP'),
-(12, 'ISTP'),
-(13, 'ESTP'),
-(14, 'ISFJ'),
-(15, 'ESFJ'),
-(16, 'ISTJ')
-;
+-- INSERT INTO mbtis VALUES
+-- (1, 'INFP'),
+-- (2, 'ENFP'),
+-- (3, 'ESTJ'),
+-- (4, 'INFJ'),
+-- (5, 'ENFJ'),
+-- (6, 'INTJ'),
+-- (7, 'ENTJ'),
+-- (8, 'INTP'),
+-- (9, 'ENTP'),
+-- (10, 'ISFP'),
+-- (11, 'ESFP'),
+-- (12, 'ISTP'),
+-- (13, 'ESTP'),
+-- (14, 'ISFJ'),
+-- (15, 'ESFJ'),
+-- (16, 'ISTJ')
+-- ;
+
+
+
+INSERT INTO users (gender, username, full_name, mbti, email, hashed_password, age, bio, interests, picture, zip_code) VALUES
+    ('Male', 'Msnyd', 'Matt Snyder', 'INFP', 'msnyd87@gmail.com', 'password', 55, 'I got sunshine on a cloudy day', ARRAY['Jumping', 'Running', 'Long Walks on the Pier'], 'https://www.surfertoday.com/images/stories/pointbreakmovie.jpg', '58216'),
+    ('Female', '1', '1', 'INFP', '1@gmail.com', '1', 1, 'Bio Here', ARRAY['Hobbies here'], 'https://www.printableparadise.com/numbers/printable-number-1-silhouette.png', '20839'),
+    ('Male', 'Mr.Freeman', 'Morgan Freeman', 'INFP', 'morgan@gmail.com', 'password', 63, 'I can narrate you to sleep', ARRAY['Hobbies here2'], 'https://cdn.britannica.com/40/144440-050-DA828627/Morgan-Freeman.jpg', '48102');
+
 
 
 
@@ -127,10 +154,10 @@ INSERT INTO mbtis VALUES
 -- ('Female', '1', '1', 1, '1@gmail.com', '1', 1, 'Bio Here', 'Hobbies here', 'https://www.printableparadise.com/numbers/printable-number-1-silhouette.png', '20839'),
 -- ('Male', 'Mr.Freeman', 'Morgan Freeman', 1, 'morgan@gmail.com', 'password', 63, 'I can narrate you to sleep', 'Hobbies here2', 'https://cdn.britannica.com/40/144440-050-DA828627/Morgan-Freeman.jpg', '48102');
 
-INSERT INTO users (gender, username, full_name, mbti, email, hashed_password, age, bio, interests, picture, zipcode) VALUES
-    ('Male', 'Msnyd', 'Matt Snyder', 1, 'msnyd87@gmail.com', 'password', 55, 'I got sunshine on a cloudy day', '{Jumping, Running, "Long Walks on the Pier"}', 'https://www.surfertoday.com/images/stories/pointbreakmovie.jpg', '58216'),
-    ('Female', '1', '1', 1, '1@gmail.com', '1', 1, 'Bio Here', '{Hobbies here}', 'https://www.printableparadise.com/numbers/printable-number-1-silhouette.png', '20839'),
-    ('Male', 'Mr.Freeman', 'Morgan Freeman', 1, 'morgan@gmail.com', 'password', 63, 'I can narrate you to sleep', '{Hobbies here2}', 'https://cdn.britannica.com/40/144440-050-DA828627/Morgan-Freeman.jpg', '48102');
+-- INSERT INTO users (gender, username, full_name, mbti, email, hashed_password, age, bio, interests, picture, zipcode) VALUES
+--     ('Male', 'Msnyd', 'Matt Snyder', 1, 'msnyd87@gmail.com', 'password', 55, 'I got sunshine on a cloudy day', '{Jumping, Running, "Long Walks on the Pier"}', 'https://www.surfertoday.com/images/stories/pointbreakmovie.jpg', '58216'),
+--     ('Female', '1', '1', 1, '1@gmail.com', '1', 1, 'Bio Here', '{Hobbies here}', 'https://www.printableparadise.com/numbers/printable-number-1-silhouette.png', '20839'),
+--     ('Male', 'Mr.Freeman', 'Morgan Freeman', 1, 'morgan@gmail.com', 'password', 63, 'I can narrate you to sleep', '{Hobbies here2}', 'https://cdn.britannica.com/40/144440-050-DA828627/Morgan-Freeman.jpg', '48102');
 
 
 -- INSERT INTO users VALUES

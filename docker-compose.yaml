@@ -41,13 +41,15 @@ services:
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
 
   db:
-    image: postgres:14.2-bullseye
+    build:
+      context: data
+      dockerfile: Dockerfile.dev
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
@@ -58,6 +60,6 @@ services:
     ports:
       - 8082:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: jay@jay.com
-      PGADMIN_DEFAULT_PASSWORD: jay
+      PGADMIN_DEFAULT_EMAIL: email@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
       PGADMIN_DISABLE_POSTFIX: 1
