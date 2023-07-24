@@ -290,21 +290,31 @@
 
 import React, { useState, useEffect } from "react";
 import BootstrapInput from "../BootstrapInput";
+import { useNavigate } from "react-router-dom";
+import useToken from '@galvanize-inc/jwtdown-for-react';
+
+const initialFormData = {
+  username: "",
+  full_name: "",
+  email: "",
+  gender: "",
+  age: "",
+  mbti: "",
+  password: "",
+  bio: "",
+  zip_code: "",
+  interest: "",
+  picture: "",
+}
 
 const SignupForm = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    full_name: "",
-    email: "",
-    gender: "",
-    age: "",
-    mbti: "",
-    password: "",
-    bio: "",
-    zip_code: "",
-    interest: "",
-    picture: "",
-  });
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, token } = useToken();
+
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -314,54 +324,33 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      username: formData.username,
-      full_name: formData.full_name,
-      email: formData.email,
-      gender: formData.gender,
-      age: formData.age,
-      mbti: formData.mbti,
-      password: formData.password,
-      bio: formData.bio,
-      zip_code: formData.password,
-      interest: formData.interest,
-      picture: formData.picture,
-    };
+    const data = { ...formData }
     console.log("FORM data", data);
+    setUsername(data.username);
+    setPassword(data.password);
 
     try {
-      const usersUrl = "http://localhost:8000/api/users/";
+      const usersUrl = "http://localhost:8000/api/users";
       const fetchConfig = {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
-        },
-      };
-
+        }
+      }
       const response = await fetch(usersUrl, fetchConfig);
 
       if (response.ok) {
         const responseData = await response.json();
         console.log(responseData);
 
-        setFormData({
-          username: "",
-          full_name: "",
-          email: "",
-          gender: "",
-          age: "",
-          mbti: "",
-          password: "",
-          bio: "",
-          zip_code: "",
-          interest: "",
-          picture: "",
-        });
+        setFormData(initialFormData);
+        login(data.username, data.password);
+        // localStorage.setItem('user', JSON.stringify(responseData));
+        navigate("/profile");
       } else {
         console.error("Server responded with status", response.status);
-        const errorData = await response.json();
-        console.error("Server response:", errorData);
+        console.error("Server response:", response.error);
       }
     } catch (error) {
       console.error("Error creating user:", error);
