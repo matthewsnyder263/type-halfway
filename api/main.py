@@ -39,8 +39,6 @@ def launch_details():
 
 
 app.include_router(authenticator.router)
-app.include_router(compatibility.router)
 app.include_router(users.router)
-# app.include_router(interests.router)
-app.include_router(mbti.router)
+app.include_router(potential_matches.router)
 app.include_router(matches.router)

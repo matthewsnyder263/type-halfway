@@ -1,12 +1,13 @@
+# router.py
 from fastapi import (
-    # Body,
+    Body,
     Depends,
     HTTPException,
     status,
     Response,
     APIRouter,
     Request,
-    # logger,
+    logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -17,18 +18,12 @@ from db.user_db import (
     UserIn,
     UserOut,
     UsersOut,
-    UserDB,
     DuplicateUserError,
     UserQueries,
 )
 
-# from fastapi.security import PasswordHasher
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter()
-queries = UserQueries()
 
 
 class AccountForm(BaseModel):
@@ -54,7 +49,7 @@ async def get_protected(
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
-    account: UserDB = Depends(authenticator.try_get_current_account_data),
+    account: UserOut = Depends(authenticator.try_get_current_account_data),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
         return {
@@ -62,6 +57,67 @@ async def get_token(
             "type": "Bearer",
             "account": account,
         }
+
+
+# implemented users:
+# return user data
+
+
+# @router.get("/token", response_model=AccountToken | None)
+# async def get_token(
+#     request: Request,
+#     account: UserOut = Depends(authenticator.try_get_current_account_data),
+#     users: UserQueries = Depends(),
+# ) -> AccountToken | None:
+#     if account and authenticator.cookie_name in request.cookies:
+#         user = users.get_user_by_id(account.id)
+#         if user is not None:
+#             return {
+#                 "access_token": request.cookies[authenticator.cookie_name],
+#                 "type": "Bearer",
+#                 "account": account,
+#                 "user": user,
+#             }
+#     return None
+
+# @router.post("/token", response_model=AccountToken | HttpError)
+# async def login(
+#     request: Request,
+#     response: Response,
+#     form: AccountForm = Body(...),
+#     users: UserQueries = Depends(),
+# ):
+#     # print(await request.body)
+#     print(form)
+#     account = users.get(form.username)
+#     if not account:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="User not found",
+#         )
+#     token = await authenticator.login(response, request, form, users)
+#     return AccountToken(account=account, **token.dict())
+
+
+# @router.get("/token", response_model=AccountToken | None)
+# async def get_token(
+#     request: Request,
+#     account: UserOut = Depends(authenticator.try_get_current_account_data),
+#     users: UserQueries = Depends(),
+# ) -> AccountToken | None:
+#     if account and authenticator.cookie_name in request.cookies:
+#         user = users.get_user_by_id(account.id)
+#         if user is not None:
+#             token = await authenticator.login(
+#                 response, request, AccountForm(username=user.username, password=user.password), users
+#             )
+#             return {
+#                 "access_token": request.cookies[authenticator.cookie_name],
+#                 "type": "Bearer",
+#                 "account": account,
+#                 "user": user,
+#             }
+#     return None
 
 
 @router.post("/api/users", response_model=AccountToken | HttpError)
@@ -121,38 +177,18 @@ def get_user_by_id(
     return user
 
 
-# @router.put("/api/users/{user_id}", response_model=UserOut)
-# def update_user(
-#     user_id: int,
-#     user_in: UserIn,
-#     response: Response,
-#     queries: UserQueries = Depends(),
-# ):
-#     user = queries.get_user_by_id(user_id)
-#     if user is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     updated_user = queries.update_user(user_id, user_in)
-#     return updated_user
-
-
 @router.put("/api/users/{user_id}", response_model=UserOut)
-async def update_user_endpoint(
-    user_id: int, user_in: UserIn, queries: UserQueries = Depends()
+def update_user(
+    user_id: int,
+    user_in: UserIn,
+    response: Response,
+    queries: UserQueries = Depends(),
 ):
-    # Here you would also normally check if user_id exists in the database,
-    # if it does not you should return an HTTPException with status code 404
-
-    # hash the received password
-    hashed_password = pwd_context.hash(user_in.password)
-
-    try:
-        # update the user and pass the hashed password
-        updated_user = queries.update_user(user_id, user_in, hashed_password)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    # return the updated user data
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    updated_user = queries.update_user(user_id, user_in)
     return updated_user

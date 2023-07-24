@@ -12,7 +12,7 @@ import ProfilePage from './ProfilePage';
 import Chat from './Account/chat';
 import NavbarComponent from './NavBar';
 import Nav from './Nav.js';
-
+import { BrowserRouter } from 'react-router-dom';
 
 
 
@@ -42,6 +42,7 @@ function App() {
             {/* <Construct info={launchInfo} /> */}
           </Routes>
         </AuthProvider>
+      </BrowserRouter>
     </div>
   );
 }
