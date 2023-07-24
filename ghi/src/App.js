@@ -12,7 +12,7 @@ import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
-// import ProfilePage from './PotentialMatches/profile';
+import ProfilePage from './ProfilePage';
 // import PotentialMatches from './PotentialMatches/bitchass';
 // import PotentialMatches from './PotentialMatches/likepotentialmatch';
 // import SignupForm from './Account/mocksignup'
@@ -59,7 +59,7 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/chat" element={<Chat />} />
-            {/* <Route path = "/profile" element={<ProfilePage />} /> */}
+            <Route path = "/profile" element={<ProfilePage />} />
           {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
           {/* <InterestsForm user_id={userId} /> */}
           {/* <Construct info={launchInfo} /> */}
