@@ -276,7 +276,7 @@ class UserQueries:
                     , interest = %s
                     , picture = %s
                     WHERE id = %s
-                    RETURNING id, username, email, hashed_password, full_name, gender, age, mbti, bio, zipcode, interest, picture
+                    RETURNING id, username, email, hashed_password, full_name, gender, age, mbti, bio, zip_code, interest, picture
                     """,
                     params,
                 )

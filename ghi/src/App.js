@@ -10,7 +10,6 @@ import { Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import ProfilePage from './ProfilePage';
 import Chat from './Account/chat';
-import NavbarComponent from './NavBar';
 import Nav from './Nav.js';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -32,6 +31,10 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
+            {/* <InterestsForm user_id={userId} /> */}
+            {/* <Construct info={launchInfo} /> */}
             <Route path="/profile" element={<ProfilePage />} />
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
             {/* <InterestsForm user_id={userId} /> */}

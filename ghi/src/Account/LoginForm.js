@@ -32,15 +32,12 @@ const LoginForm = () => {
       method: "GET",
       credentials: "include",
     });
-    // console.log("response", response)
     if (response.ok) {
       const data = await response.json()
-      // console.log("account", data.account)
       if (data === null) {
         handleInvalid()
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
-        // console.log("data.account", data.account)
         navigate("/profile")
       }
     }
@@ -56,8 +53,6 @@ const LoginForm = () => {
       handleInvalid()
     }
   }
-
-
 
   return (
     <div className="row justify-content-center">
