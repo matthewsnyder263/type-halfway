@@ -19,7 +19,6 @@ import Nav from './Nav.js';
 
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   // const [launchInfo, setLaunchInfo] = useState([]);
   // const [error, setError] = useState(null);
@@ -53,11 +52,11 @@ function App() {
     <div className="container">
       <BrowserRouter>
         <AuthProvider baseUrl={baseURL}>
+          {/* <Nav /> */}
           <Routes>
             {/* <ErrorNotification error={error} /> */}
             {/* <Route path = "/signup" element={<SignupForm />} /> */}
             <Route path="/login" element={<LoginForm />} />
-            {isLoggedIn && <Nav />}
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             {/* <Route path = "/profile" element={<ProfilePage />} /> */}
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}

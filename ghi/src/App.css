@@ -1,14 +1,128 @@
-.App {
-  text-align: center;
+.parent-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  background: linear-gradient(to right, #e96443, #904e95);
+}
+div.row{
+  border-radius: 10px;
+  scroll-padding-top: 10px;
+}
+.match-Carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+
+}
+.match-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.carousel .control-dots .dot {
+  transition: opacity .25s ease-in;
+  opacity: .3;
+  filter: alpha(opacity=30);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+  background: #ffffff;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 8px;
+}
+#banner-wrapper {
+  padding: 0 15px 0 15px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#banner {
+  text-align: left;
+}
+
+#banner ul {
+  margin: 2em 0 0 0;
+}
+
+#banner {
+  position: relative;
+}
+
+#banner h2 {
+  font-size: 3.5em;
+}
+
+#banner p {
+  font-size: 2.75em;
+  margin: 0;
+}
+
+#banner ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 0 2em;
+}
+
+#banner ul li {
+  padding-left: 0;
+}
+#view-button{
+  justify-content: space-between;
+}
+#content {
+    border-bottom: solid 1px #e8e8e8;
+    margin-bottom: 0 !important;
+  }
+
+  #content > :last-child {
+    margin-bottom: 0 !important;
+  }
+
+#content {
+    padding-bottom: 3em;
+  }
+
+section.last {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  max-width: 1000px;
+  padding: 10px;
+  /* background-color: blanchedalmond; */
+}
+
+.logo{
+  display: flex;
+  transform: translateY(100px);
+  margin-left: 20px;
+}
+
+.containerz {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to a new row when needed */
+  justify-content: center; /* Center the items horizontally */
+  padding-top: 50px;
+
+}
+
+.like-button{
+  width: 150px;
+  background-color: #904e95;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+.image-container {
+  /* Add margin or padding here if needed */
+  padding-left: 40px;
+}
+.SPA{
+  background: #654ea3;
+  background: linear-gradient(to right, #f1f1f1, #904e95);
+  /* background-image: url(https://images.unsplash.com/photo-1530305408560-82d13781b33a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80); */
+
 }
