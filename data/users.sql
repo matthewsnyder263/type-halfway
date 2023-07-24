@@ -55,20 +55,20 @@ CREATE TABLE matches (
 
 
 
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    gender TEXT NOT NULL,
-    username TEXT UNIQUE NOT NULL,
-    full_name TEXT NOT NULL,
-    mbti TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    age VARCHAR(3) NOT NULL,
-    hashed_password TEXT NOT NULL,
-    bio TEXT,
-    interests TEXT[],
-    picture TEXT,
-    zip_code VARCHAR(5) NOT NULL
-);
+-- CREATE TABLE users (
+--     id SERIAL PRIMARY KEY,
+--     gender TEXT NOT NULL,
+--     username TEXT UNIQUE NOT NULL,
+--     full_name TEXT NOT NULL,
+--     mbti TEXT NOT NULL,
+--     email TEXT UNIQUE NOT NULL,
+--     age VARCHAR(3) NOT NULL,
+--     hashed_password TEXT NOT NULL,
+--     bio TEXT,
+--     interests TEXT[],
+--     picture TEXT,
+--     zip_code VARCHAR(5) NOT NULL
+-- );
 
 
 
