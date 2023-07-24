@@ -10,10 +10,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import ProfilePage from './ProfilePage';
 import Chat from './Account/chat';
-import NavbarComponent from './NavBar';
 import Nav from './Nav.js';
-
-
 
 
 

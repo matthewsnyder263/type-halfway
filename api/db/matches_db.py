@@ -10,6 +10,12 @@ from typing import List
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
+class Match(BaseModel):
+    id: int
+    logged_in_user: int
+    matched_user: int
+    mutual: bool
+
 class MatchIn(BaseModel):
     logged_in_user: int
     matched_user: int
