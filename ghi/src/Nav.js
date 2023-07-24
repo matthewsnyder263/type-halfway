@@ -1,181 +1,87 @@
-import React from 'react';
-import { NavLink } from "react-router-dom";
-import "./index.css";
+import React from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import useToken from '@galvanize-inc/jwtdown-for-react';
+import { useState, useEffect } from 'react';
 
-function Nav() {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success ">
-      <div className="container-fluid">
-        <NavLink
-          className="navbar-brand d-flex flex-column align-items-center"
-          to="/"
-        >
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbqNx3IE9hBOozWSCy-aBDCXAZAkvKv2KbexAiTG_iGw&usqp=CAU&ec=48665701"
-            alt=""
-            width="100"
-            height="75"
-          />
-          <div>CarCar</div>
-        </NavLink>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <div className="row">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  id="navbarDropdownAutomotives"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Automotives
-                </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink className="dropdown-item" to="manufacturers">
-                      Manufacturers
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="manufacturers/create"
-                    >
-                      Create a manufacturer
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/models">
-                      Models
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/models/new">
-                      Create a model
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="automobiles">
-                      Automobiles
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/automobiles/new">
-                      Create an automobile
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  id="navbarDropdownSales"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Sales
-                </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink className="dropdown-item" to="/salespeople">
-                      Salespeople
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/salespeople/new">
-                      Add a salesperson
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/customers">
-                      Customers
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/customers/new">
-                      Add a customer
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/sales">
-                      Sales
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/sales/new">
-                      Add a sale
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="/sales/history">
-                      Salesperson History
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  id="navbarDropdownServices"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Services
-                </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink className="dropdown-item" to="technicians">
-                      Technicians
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="technicians/create">
-                      Add a technician
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="appointments">
-                      Service Appointments
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item" to="appointments/create">
-                      Create a service appointment
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="appointments/history"
-                    >
-                      Service History
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
+
+export default function Nav() {
+    const { isLoggedIn, logout, token } = useToken();
+    const [currentUser, setCurrentUser] = useState();
+
+    useEffect(() => {
+        if (token) {
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+            setCurrentUser(storedUser);
+            console.log("currentUser PROFILE", storedUser)
+            // display logout button
+
+        } else {
+            localStorage.removeItem("user");
+            // setCurrentUser(null);
+            //display login button and signup button
+        }
+    }, [token])
+
+    return (
+        <>
+            <nav className="navbar navbar-expand-lg flex justify-between items-center w-full" style={{ backgroundColor: 'rgba(200, 75, 150, 102)' }}>
+                <div className="container-fluid mx-auto px-0 justify-between">
+                    <div className="flex space-x-4">
+                        <NavLink to="/" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-house-heart-fill" viewBox="0 0 16 16">
+                                <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.707L8 2.207 1.354 8.853a.5.5 0 1 1-.708-.707L7.293 1.5Z" />
+                                <path d="m14 9.293-6-6-6 6V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9.293Zm-6-.811c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018Z" />
+                            </svg>
+                            Home
+                        </NavLink>
+                    </div>
+                    <div className="flex space-x-4">
+                        <Link to="/matches" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-through-heart-fill" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M2.854 15.854A.5.5 0 0 1 2 15.5V14H.5a.5.5 0 0 1-.354-.854l1.5-1.5A.5.5 0 0 1 2 11.5h1.793l3.103-3.104a.5.5 0 1 1 .708.708L4.5 12.207V14a.5.5 0 0 1-.146.354l-1.5 1.5ZM16 3.5a.5.5 0 0 1-.854.354L14 2.707l-1.006 1.006c.236.248.44.531.6.845.562 1.096.585 2.517-.213 4.092-.793 1.563-2.395 3.288-5.105 5.08L8 13.912l-.276-.182A23.825 23.825 0 0 1 5.8 12.323L8.31 9.81a1.5 1.5 0 0 0-2.122-2.122L3.657 10.22a8.827 8.827 0 0 1-1.039-1.57c-.798-1.576-.775-2.997-.213-4.093C3.426 2.565 6.18 1.809 8 3.233c1.25-.98 2.944-.928 4.212-.152L13.292 2 12.147.854A.5.5 0 0 1 12.5 0h3a.5.5 0 0 1 .5.5v3Z" />
+                            </svg>
+                            Matches
+                        </Link>
+                    </div>
+                    <div className="flex space-x-4">
+                        <Link to="/profile" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                            </svg>
+                            Profile
+                        </Link>
+                    </div>
+                    {isLoggedIn ? (
+                        <Link to="/" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center" onClick={logout()}>
+                            <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Log Out
+                        </Link>
+                    ) : (
+                        <>
+                            <div className="flex space-x-4">
+                                <Link to="/signup" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                                    <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                                    </svg>
+                                    Sign Up
+                                </Link>
+                            </div>
+                            <div className="flex space-x-4">
+                                <Link to="/login" className="text-white text-base font-bold px-4 py-2 hover:bg-pink-600 rounded flex items-center">
+                                    <svg className="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                    Log In
+                                </Link>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </nav>
+        </>
+    )
 }
-
-export default Nav;

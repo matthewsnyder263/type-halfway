@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import SignupForm from "./Account/SignupForm";
+import SignupForm from "./Account/SignUpForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
 import "./App.css";
@@ -17,9 +17,18 @@ import ProfilePage from './ProfilePage';
 // import PotentialMatches from './PotentialMatches/likepotentialmatch';
 // import SignupForm from './Account/mocksignup'
 import Chat from './Account/chat';
+import NavbarComponent from './NavBar';
+import Nav from './Nav.js';
+import ProfilePage from './ProfilePage';
+
+
+
 
 function App() {
-  const baseURL = process.env.REACT_APP_API_HOST;
+
+  // const domain = /https:\/\/[^/]+/;
+  // // const baseURL = process.env.REACT_APP_PUBLIC_URL.replace(domain, "");
+  const baseURL = process.env.REACT_APP_API_HOST
 
   // const [launchInfo, setLaunchInfo] = useState([]);
   // const [error, setError] = useState(null);
@@ -50,19 +59,25 @@ function App() {
   // }, []);
 
   return (
-    <div className="container">
+    <div className="">
       <BrowserRouter>
+        <Nav />
         <AuthProvider baseUrl={baseURL}>
-          <Routes>
-          {/* <ErrorNotification error={error} /> */}
-          <Route path = "/signup" element={<SignupForm />} />
+          <Routes path='/'>
+            {/* <ErrorNotification error={error} /> */}
+            <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/chat" element={<Chat />} />
             <Route path = "/profile" element={<ProfilePage />} />
           {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
           {/* <InterestsForm user_id={userId} /> */}
           {/* <Construct info={launchInfo} /> */}
+            {/* <Route path = "/logout" element={<LogOut />} /> */}
+            {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
+            {/* <InterestsForm user_id={userId} /> */}
+            {/* <Construct info={launchInfo} /> */}
           </Routes>
         </AuthProvider>
       </BrowserRouter>

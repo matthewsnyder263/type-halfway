@@ -6,9 +6,7 @@ function BootstrapInput(props) {
 
   return (
     <div className="form-floating mb-3">
-      <label htmlFor={id} className="form-label">
-        {labelText}
-      </label>
+
       <input
         value={value}
         onChange={onChange}
@@ -17,8 +15,11 @@ function BootstrapInput(props) {
         className="form-control"
         id={id}
         name={name}
-        placeholder={placeholder}
+      // placeholder={placeholder}
       />
+      <label htmlFor={id} className="form-label">
+        {labelText}
+      </label>
     </div>
   );
 }

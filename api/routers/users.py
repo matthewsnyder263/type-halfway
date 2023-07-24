@@ -1,13 +1,12 @@
-# router.py
 from fastapi import (
-    Body,
+    # Body,
     Depends,
     HTTPException,
     status,
     Response,
     APIRouter,
     Request,
-    logger,
+    # logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -18,6 +17,7 @@ from db.user_db import (
     UserIn,
     UserOut,
     UsersOut,
+    UserDB,
     DuplicateUserError,
     UserQueries,
 )
@@ -49,7 +49,7 @@ async def get_protected(
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
-    account: UserOut = Depends(authenticator.try_get_current_account_data),
+    account: UserDB = Depends(authenticator.try_get_current_account_data),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
         return {
@@ -57,66 +57,6 @@ async def get_token(
             "type": "Bearer",
             "account": account,
         }
-
-# implemented users:
-# return user data
-
-
-# @router.get("/token", response_model=AccountToken | None)
-# async def get_token(
-#     request: Request,
-#     account: UserOut = Depends(authenticator.try_get_current_account_data),
-#     users: UserQueries = Depends(),
-# ) -> AccountToken | None:
-#     if account and authenticator.cookie_name in request.cookies:
-#         user = users.get_user_by_id(account.id)
-#         if user is not None:
-#             return {
-#                 "access_token": request.cookies[authenticator.cookie_name],
-#                 "type": "Bearer",
-#                 "account": account,
-#                 "user": user,
-#             }
-#     return None
-
-# @router.post("/token", response_model=AccountToken | HttpError)
-# async def login(
-#     request: Request,
-#     response: Response,
-#     form: AccountForm = Body(...),
-#     users: UserQueries = Depends(),
-# ):
-#     # print(await request.body)
-#     print(form)
-#     account = users.get(form.username)
-#     if not account:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     token = await authenticator.login(response, request, form, users)
-#     return AccountToken(account=account, **token.dict())
-
-
-# @router.get("/token", response_model=AccountToken | None)
-# async def get_token(
-#     request: Request,
-#     account: UserOut = Depends(authenticator.try_get_current_account_data),
-#     users: UserQueries = Depends(),
-# ) -> AccountToken | None:
-#     if account and authenticator.cookie_name in request.cookies:
-#         user = users.get_user_by_id(account.id)
-#         if user is not None:
-#             token = await authenticator.login(
-#                 response, request, AccountForm(username=user.username, password=user.password), users
-#             )
-#             return {
-#                 "access_token": request.cookies[authenticator.cookie_name],
-#                 "type": "Bearer",
-#                 "account": account,
-#                 "user": user,
-#             }
-#     return None
 
 
 @router.post("/api/users", response_model=AccountToken | HttpError)
