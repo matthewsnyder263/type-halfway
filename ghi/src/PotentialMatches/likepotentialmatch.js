@@ -197,27 +197,30 @@ const PotentialMatches = () => {
         .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
         .slice(0, 5);
 
-
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
-            <div class="card" style={{ width: "18rem" }}>
-                {recentCompatibilityData.map((data) => (
-                    <div key={data.match_id} className="card mb-4">
-                        <img className="card-img-top" src="..." alt="Card image cap" />
-                        <div className="card-body">
-                            <h5 className="card-title">Matched User: {data.matched_user}</h5>
-                            <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
-                            <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
-                                {data.liked ? "Liked" : "Like"}
-                            </button>
+            <div className="card" style={{ width: "18rem" }}>
+                {recentCompatibilityData.map((data) => {
+                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                    const matchedUserName = matchedUser.full_name;
+                    return (
+                        <div key={data.match_id} className="card mb-4">
+                            <img className="card-img-top" src="..." alt="Card image cap" />
+                            <div className="card-body">
+                                <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                    {data.liked ? "Liked" : "Like"}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );
+
 };
 
 export default PotentialMatches;
-

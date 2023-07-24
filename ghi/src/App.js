@@ -15,6 +15,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import ProfilePage from './PotentialMatches/profile';
 // import PotentialMatches from './PotentialMatches/bitchass';
 import PotentialMatches from './PotentialMatches/likepotentialmatch';
+// import SignupForm from './Account/mocksignup'
+import Chat from './Account/chat';
 
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
@@ -56,6 +58,7 @@ function App() {
           <Route path = "/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
+            <Route path="/chat" element={<Chat />} />
             {/* <Route path = "/profile" element={<ProfilePage />} /> */}
           {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
           {/* <InterestsForm user_id={userId} /> */}
