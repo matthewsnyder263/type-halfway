@@ -1,4 +1,3 @@
-
 # SNYDER CHANGES >>> COMMENTED OUT ABOVE<<< ADDED BELOW CODE
 
 import os
@@ -10,6 +9,14 @@ from typing import List
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
+
+class Match(BaseModel):
+    id: int
+    logged_in_user: int
+    matched_user: int
+    mutual: bool
+
+
 class MatchIn(BaseModel):
     logged_in_user: int
     matched_user: int
@@ -18,6 +25,7 @@ class MatchIn(BaseModel):
 
 class MatchesOut(BaseModel):
     matches: List[Match]
+
 
 class MatchOut(BaseModel):
     id: int
@@ -103,8 +111,6 @@ class MatchQueries:
                 ]
                 return MatchesOut(matches=matches)
 
-
-
     def get_mutual_matches(self, user_id: int) -> List[Match]:
         with pool.connection() as conn:
             with conn.cursor() as db:
@@ -115,7 +121,8 @@ class MatchQueries:
                         , matched_user
                         , mutual
                     FROM matches
-                    WHERE (logged_in_user = %s OR matched_user = %s) AND mutual = True
+                    WHERE (logged_in_user = %s OR matched_user = %s)
+                    AND mutual = True
                     """,
                     [user_id, user_id],
                 )
@@ -131,7 +138,6 @@ class MatchQueries:
                         )
                     )
                 return matches
-
 
     def get_match_by_id(self, match_id: int) -> Match:
         with pool.connection() as conn:
@@ -158,7 +164,6 @@ class MatchQueries:
                     mutual=record[3],
                 )
                 return match
-
 
     def create_match(self, match: MatchIn):
         with pool.connection() as conn:
@@ -239,7 +244,9 @@ class MatchQueries:
                     WHERE logged_in_user = %s
                     """,
                     [user_id],
-                )  # note i took out AND mutual = False, in 'WHERE logged_in_user = %S AND mutual = False'
+                )
+                # note i took out AND mutual = False, in
+                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:
@@ -294,5 +301,5 @@ class MatchQueries:
                     """,
                     [user_id],
                 )
-                rows = cur.fetchall()
+                rows = result.fetchall()
                 return [MatchOut(*row) for row in rows]

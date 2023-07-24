@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS user_interests;
-DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS matches;
--- DROP TABLE IF EXISTS potential_matches;
-DROP TABLE IF EXISTS genders;
+-- DROP TABLE IF EXISTS user_interests;
+DROP TABLE IF EXISTS potential_matches;
+-- DROP TABLE IF EXISTS genders;
 DROP TABLE IF EXISTS interests;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS users;
 
 
 -- CREATE TABLE genders(
@@ -62,10 +62,10 @@ CREATE TABLE matches (
 
 
 
-ALTER TABLE users
-    ADD CONSTRAINT fk_matches
-        FOREIGN KEY (matches_id)
-        REFERENCES matches (id);
+-- ALTER TABLE users
+--     ADD CONSTRAINT fk_matches
+--         FOREIGN KEY (matches_id)
+--         REFERENCES matches (id);
 
 
 CREATE TABLE potential_matches (
