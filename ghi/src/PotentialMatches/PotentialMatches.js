@@ -159,27 +159,68 @@ const PotentialMatches = () => {
         console.log("fetch get request", getPotentialMatches())
     }, [currentUser]);
 
+    const handleLike = async (userId) => {
+        try {
+            const loggedInUserId = currentUser.id;
+
+            const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    logged_in_user: loggedInUserId,
+                    matched_user: userId,
+                    mutual: false
+                })
+            });
+
+            if (!response.ok) {
+                console.error(`Failed to like user: ${response.statusText}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('User Has Been Liked.');
+            console.log(data.message);
+
+            if (data.message.includes("mutual")) {
+                window.alert("You've Matched!");
+            }
+        } catch (error) {
+            console.error('Error occurred while liking user:', error);
+        }
+    };
+
     const recentCompatibilityData = compatibilityData
         .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
         .slice(0, 5);
 
-    
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
-            <div class="card" style={{ width: "18rem" }}>
-            {recentCompatibilityData.map((data) => (
-                <div key={data.match_id} className="card mb-4">
-                    <img className="card-img-top" src="..." alt="Card image cap" />
-                    <div className="card-body">
-                        <h5 className="card-title">Matched User: {data.matched_user}</h5>
-                        <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
-                </div>
-                </div>
-            ))}
-        </div>
+            <div className="card" style={{ width: "18rem" }}>
+                {recentCompatibilityData.map((data) => {
+                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                    const matchedUserName = matchedUser.full_name;
+                    return (
+                        <div key={data.match_id} className="card mb-4">
+                            <img className="card-img-top" src="..." alt="Card image cap" />
+                            <div className="card-body">
+                                <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                    {data.liked ? "Liked" : "Like"}
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
+
 };
 
 export default PotentialMatches;

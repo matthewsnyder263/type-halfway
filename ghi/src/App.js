@@ -11,10 +11,10 @@ import LoginForm from "./Account/LoginForm";
 // import InterestsForm from "./InterestsForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import PotentialMatches from './PotentialMatches/PotentialMatches';
+import PotentialMatches from './PotentialMatches/PotentialMatches';
 // import ProfilePage from './PotentialMatches/profile';
 // import PotentialMatches from './PotentialMatches/bitchass';
-import PotentialMatches from './PotentialMatches/likepotentialmatch';
+// import PotentialMatches from './PotentialMatches/likepotentialmatch';
 // import SignupForm from './Account/mocksignup'
 import Chat from './Account/chat';
 
