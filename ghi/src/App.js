@@ -29,7 +29,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/chat" element={<Chat />} />
-            <Route path = "/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
           {/* <InterestsForm user_id={userId} /> */}
           {/* <Construct info={launchInfo} /> */}
