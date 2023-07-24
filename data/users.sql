@@ -1,15 +1,9 @@
-DROP TABLE IF EXISTS user_interests;
 DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS matches;
--- DROP TABLE IF EXISTS potential_matches;
-DROP TABLE IF EXISTS genders;
+DROP TABLE IF EXISTS user_interests;
 DROP TABLE IF EXISTS interests;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS potential_matches;
 
-
--- CREATE TABLE genders(
---     id SERIAL PRIMARY KEY,
---     gender TEXT NOT NULL
--- );
 
 CREATE TABLE interests (
     id SERIAL PRIMARY KEY,
@@ -29,8 +23,8 @@ CREATE TABLE users (
     bio TEXT,
     zip_code VARCHAR(5) NOT NULL,
     interest TEXT,
-    picture TEXT
-    -- matches_id INT
+    picture TEXT,
+    matches_id INT
     -- CONSTRAINT fk_matches
     --     FOREIGN KEY (matches_id)
     --     REFERENCES matches (id)
