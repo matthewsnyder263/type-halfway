@@ -1,14 +1,12 @@
-# router.py
 from fastapi import (
-    Body,
-    FastAPI,
+    # Body,
     Depends,
     HTTPException,
     status,
     Response,
     APIRouter,
     Request,
-    logger,
+    # logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -19,6 +17,7 @@ from db.user_db import (
     UserIn,
     UserOut,
     UsersOut,
+    UserDB,
     DuplicateUserError,
     UserQueries,
 )
@@ -55,7 +54,7 @@ async def get_protected(
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
-    account: UserOut = Depends(authenticator.try_get_current_account_data),
+    account: UserDB = Depends(authenticator.try_get_current_account_data),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
         return {

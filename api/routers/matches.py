@@ -1,3 +1,41 @@
+# from fastapi import APIRouter, HTTPException
+# from typing import List
+# from db.matches_db import MatchQueries, MatchIn, MatchOut
+# from db.user_db import UserOut, UserQueries
+
+# router = APIRouter()
+# match_queries = MatchQueries()
+# user_queries = UserQueries()
+
+# @router.post("/matches", response_model=MatchOut, status_code=201)
+# def create_match(match: MatchIn) -> MatchOut:
+#     loggedInUser = user_queries.get_user_by_id(match.logged_in_user)
+#     matchedUser = user_queries.get_user_by_id(match.matched_user)
+
+#     if not loggedInUser or not matchedUser:
+#         raise HTTPException(status_code=404, detail="User not found.")
+
+#     # Check if both users have liked each other
+#     if match.liked_user1 and match.liked_user2:
+#         new_match = match_queries.create_match(match)
+#         return new_match
+#     else:
+#         raise HTTPException(status_code=400, detail="Both users must like each other to create a match.")
+
+# @router.get("/matches/{logged_in_user}", response_model=List[MatchOut])
+# def get_matches(logged_in_user: int) -> List[MatchOut]:
+#     user = user_queries.get_user_by_id(logged_in_user)
+
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found.")
+
+#     matches = match_queries.get_matches_by_user(logged_in_user)
+#     return matches
+
+
+# >>>>SNYDER CHANGES<<< COMMENTED OUT ABOVE AND  ADDED CODE BELOW<<<<<<<<<<<<<<<<<<<<<<<<
+
+
 from fastapi import (
     Body,
     Depends,
@@ -19,61 +57,6 @@ router = APIRouter()
 
 
 from fastapi import HTTPException, status
-
-# create get_match
-
-
-# basically this logic ensures that theres no duplicate likes which may cause errors down line
-# if logged_in_user is 100 and matched_user is 50 and 100 likes 50, it will be read
-# 50 is liked by 100 b/c we could have two instances
-# @router.post("/matches/{logged_in_user}/{matched_user}")
-# async def create_match(
-#     logged_in_user: int, matched_user: int, matches: MatchQueries = Depends()
-# ):
-#     if logged_in_user == matched_user:
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail="logged_in_user must not be the same as matched_user.",
-#         )
-
-#     # Ensure logged_in_user is always less than matched_user to avoid duplicate matches
-#     if logged_in_user > matched_user:
-#         logged_in_user, matched_user = matched_user, logged_in_user
-
-#     # Check if match already exists
-#     existing_match = matches.get_match(logged_in_user, matched_user)
-#     if existing_match:
-#         # If match exists and isn't mutual yet, update it to be mutual
-#         if not existing_match.mutual:
-#             existing_match.mutual = True
-#             matches.update_match(existing_match)
-#             return {"message": "Match is now mutual.", "match": existing_match}
-#         else:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail="A mutual match already exists between these users.",
-#             )
-
-#     # If match doesn't exist, create a new non-mutual match
-#     new_match = Match(logged_in_user=logged_in_user, matched_user=matched_user, mutual=False)
-#     created_match = matches.create_match(new_match)
-#     return {"message": "Match created.", "match": created_match}
-
-
-# @router.post("/matches/{logged_in_user}/{matched_user}")
-# async def create_match(
-#     logged_in_user: int, matched_user: int, matches: MatchQueries = Depends()
-# ):
-#     existing_match = matches.get_match(logged_in_user=matched_user, matched_user=logged_in_user)
-
-#     if existing_match:
-#         existing_match.mutual = True
-#         updated_match = matches.update_match(existing_match)
-#         return {"message": "Match updated to mutual.", "match": updated_match}
-
-#     new_match = Match(logged_in_user=logged_in_user, matched_user=matched_user, mutual=False)
-#     created_match = matches.create_match(new_match)
-#     return {"message": "Match created.", "match": created_match}
 
 
 @router.post("/matches/{logged_in_user}/{matched_user}")

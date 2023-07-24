@@ -1,15 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI  # HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from authenticator import authenticator
-from routers import users, mbti, compatibility, matches
+from authenticator import authenticator
+from routers import users, interests, potential_matches, matches
 import os
 import logging
 import sys
 
 
 app = FastAPI(debug=True)
-
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
 
 app.add_middleware(

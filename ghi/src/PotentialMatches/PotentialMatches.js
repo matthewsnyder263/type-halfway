@@ -1,140 +1,60 @@
-// const { fetchWithCookie, fetchWithCookie } = useToken();
-// useEffect(() => {
-//     const fetchConfig = {};
-//     (async () => {
-//         const response = await fetch("http://localhost:8000/token", fetchConfig);
-//         const response2 = await fetchWithToken("http://localhost:8000/api/users", "GET", fetchConfig)
-//     })
-// }, []);
-
 import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
+import { useNavigate } from "react-router-dom";
+
 
 const PotentialMatches = () => {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState("");
     const [allUsers, setAllUsers] = useState([]);
     const [compatibilityData, setCompatibilityData] = useState([]);
-    const [lastCalculationDate, setLastCalculationDate] = useState(null);
-
-    // const { token } = useToken();
-    const { fetchWithToken } = useToken();
+    const navigate = useNavigate();
+    const { token } = useToken();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const usersResponse = await fetchWithToken("http://localhost:8000/api/users", "GET");
-                const currentUserResponse = await fetchWithToken("http://localhost:8000/token", "GET");
-
-                if (usersResponse.ok && currentUserResponse.ok) {
-                    const usersData = await usersResponse.json();
-                    const currentUserData = await currentUserResponse.json();
-
-                    // map mbti
-                    if (usersData && usersData.allUsers && currentUserData) {
-                        setAllUsers(usersData.allUsers);
-                        setCurrentUser(currentUserData);
-                    }
-                } else {
-                    console.error('Failed to fetch data');
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
+        if (!token) {
+            const storedToken = localStorage.getItem("token");
+            if (storedToken) {
+                navigate("/login");
             }
-        };
-
-        fetchData();
-    }, [fetchWithToken]);
-
-
-    // useEffect(() => {
-    //     // Fetch the current user's data
-    //     const fetchCurrentUser = async () => {
-    //         try {
-    //             const response = await fetch("http://localhost:8000/token", {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             });
-    //             if (response.ok) {
-    //                 const data = await response.json();
-    //                 setCurrentUser(data);
-    //             } else {
-    //                 console.error('Failed to fetch current user');
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching current user:', error);
-    //         }
-    //     };
-
-    //     // Fetch all users
-    //     const fetchAllUsers = async () => {
-    //         try {
-    //             const response = await fetch("http://localhost:8000/api/users", {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             });
-    //             if (response.ok) {
-    //                 const data = await response.json();
-    //                 setAllUsers(data.allUsers);
-    //             } else {
-    //                 console.error('Failed to fetch all users');
-    //             }
-    //         } catch (error) {
-    //             console.error('Error fetching all users:', error);
-    //         }
-    //     };
-
-    //     if (token) {
-    //         fetchCurrentUser();
-    //         fetchAllUsers();
-    //     }
-    // }, [token]);
-
-    // using useCallback so the site does not re-render unless 7 days have passed
-    // and it's giving me a error...
-    const canCalculateCompatibility = useCallback(() => {
-        // Check if 7 days passed since the last calculation
-        if (!lastCalculationDate) {
-            return true;
         }
-
-        const currentDate = new Date();
-        const lastCalculationDateObj = new Date(lastCalculationDate);
-        lastCalculationDateObj.setDate(lastCalculationDateObj.getDate() + 7);
-
-        return currentDate > lastCalculationDateObj;
-    }, [lastCalculationDate]);
-
+    }, [navigate, token]);
 
     useEffect(() => {
-        //check if potential matches have been posted within the last 7 days
-        console.log("Current User:", currentUser);
-        const isCalculationAllowed = canCalculateCompatibility();
-
-        if (isCalculationAllowed && currentUser && allUsers.length > 0) {
-            // Calculate compatibility strength for each user
-            const compatibilityData = allUsers.map((user) => {
-                const compatibilityScore = calculateCompatibilityScore(
-                    currentUser.mbti,
-                    user.mbti
-                );
-                return {
-                    user,
-                    strength: compatibilityScore,
-                };
-            });
-            // sort in descending order
-            compatibilityData.sort((a, b) => b.strength - a.strength);
-            // slice the top 5 matches
-            const topCompatibilityData = compatibilityData.slice(0, 5);
-            // Update the compatibility data in the state
-            setCompatibilityData(topCompatibilityData);
-            // Update the last calculation date to the current date
-            setLastCalculationDate(new Date().toISOString());
+        if (token) {
+            localStorage.setItem("token", token);
         }
-    }, [currentUser, allUsers, canCalculateCompatibility]);
+    }, [token]);
 
+    const fetchCurrentUser = async () => {
+        const url = `http://localhost:8000/token`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setCurrentUser(data.account);
+        }
+    };
+
+    useEffect(() => {
+        fetchCurrentUser();
+    }, [token]);
+
+    const fetchAllUsers = async () => {
+        const url = `http://localhost:8000/api/users`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setAllUsers(data);
+        }
+    };
+    useEffect(() => {
+        fetchAllUsers();
+    }, []);
 
     const calculateCompatibilityScore = (mbti1, mbti2) => {
         const compatibilityChart = {
@@ -158,56 +78,149 @@ const PotentialMatches = () => {
         if (!(mbti1 in compatibilityChart) || !(mbti2 in compatibilityChart)) {
             return "Please enter a valid MBTI type.";
         }
-        const strengthNumbMap = { "poor": 1, "bad": 2, "average": 3, "good": 4, "perfect": 5 }
+        const strengthNumbMap = { "POOR": 1, "BAD": 2, "AVERAGE": 3, "GOOD": 4, "PERFECT": 5 }
         const rawScore = compatibilityChart[mbti1][mbti2]
         return strengthNumbMap[rawScore];
     }
 
     const getCompatibilityStrengthText = (strength) => {
         const strengthTextMap = {
-            1: "Poor",
-            2: "Bad",
-            3: "Average",
-            4: "Good",
-            5: "Perfect",
+            1: "POOR",
+            2: "BAD",
+            3: "AVERAGE",
+            4: "GOOD",
+            5: "PERFECT",
         };
         return strengthTextMap[strength] || "";
     };
 
+    useEffect(() => {
+        console.log("Current User:", currentUser);
+        console.log("All users:", allUsers)
+
+        if (currentUser && allUsers.users) {
+            const potentialDataList = [];
+            const compatData = allUsers.users
+                .filter((user) => user.id !== currentUser.id)
+                .map((user) => {
+                    const compatibilityScore = calculateCompatibilityScore(
+                        currentUser.mbti,
+                        user.mbti
+                    );
+                    const potentialData = {
+                        logged_in_user: currentUser.id,
+                        match_id: null,
+                        matched_user: user.id,
+                        mbti_strength: compatibilityScore,
+                        liked: false,
+                    }
+                    potentialDataList.push(potentialData);
+                });
+            potentialDataList.sort((a, b) => b.mbti_strength - a.mbti_strength);
+            const topCompatibilityData = potentialDataList.slice(0, 5);
+            console.log("lookhere:", potentialDataList)
+            console.log("lookhere:", topCompatibilityData)
+            setCompatibilityData(topCompatibilityData);
+
+            const postCompatibilityData = async (data) => {
+                const url = "http://localhost:8000/api/potential_matches";
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                });
+            };
+            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+        }
+    }, [currentUser, allUsers]);
+
+    useEffect(() => {
+        const getPotentialMatches = async () => {
+            if (!currentUser || !currentUser.id) {
+                // currentUser is not set or does not have an id yet
+                return;
+            }
+            const url = `http://localhost:8000/api/potential_matches/${currentUser.id}`
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "include",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCompatibilityData(data);
+            } else {
+                console.error("was not able to get")
+            }
+        };
+        getPotentialMatches();
+        console.log("fetch get request", getPotentialMatches())
+    }, [currentUser]);
+
+    const handleLike = async (userId) => {
+        try {
+            const loggedInUserId = currentUser.id;
+
+            const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    logged_in_user: loggedInUserId,
+                    matched_user: userId,
+                    mutual: false
+                })
+            });
+
+            if (!response.ok) {
+                console.error(`Failed to like user: ${response.statusText}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('User Has Been Liked.');
+            console.log(data.message);
+
+            if (data.message.includes("mutual")) {
+                window.alert("You've Matched!");
+            }
+        } catch (error) {
+            console.error('Error occurred while liking user:', error);
+        }
+    };
+
+    const recentCompatibilityData = compatibilityData
+        .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
+        .slice(0, 5);
 
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
-            <button
-                onClick={() => {
-                    if (canCalculateCompatibility()) {
-                        // trigger the compatibility calculation
-                        setCompatibilityData([]);
-                    } else {
-                        alert("You can view new potential matches once per 7 days");
-                    }
-                }}
-            >
-                Request Potential Matches of the week
-            </button>
-            {compatibilityData.length > 0 ? (
-                <div>
-                    <h3>Potential Match Results:</h3>
-                    {compatibilityData.map((compatibility) => (
-                        <div key={compatibility.user.id}>
-                            <p>
-                                User: {compatibility.user.username} - MBTI:{" "}
-                                {compatibility.user.mbti}
-                            </p>
-                            <p>Compatibility Strength: {getCompatibilityStrengthText(compatibility.strength)}</p>
+            <div className="card" style={{ width: "18rem" }}>
+                {recentCompatibilityData.map((data) => {
+                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                    const matchedUserName = matchedUser.full_name;
+                    return (
+                        <div key={data.match_id} className="card mb-4">
+                            <img className="card-img-top" src="..." alt="Card image cap" />
+                            <div className="card-body">
+                                <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                    {data.liked ? "Liked" : "Like"}
+                                </button>
+                            </div>
                         </div>
-                    ))}
-                </div>
-            ) : (
-                <p>No compatibility data available.</p>
-            )}
+                    );
+                })}
+            </div>
         </div>
     );
+
 };
 
 export default PotentialMatches;

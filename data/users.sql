@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS matches;
-DROP TABLE IF EXISTS user_interest;
+DROP TABLE IF EXISTS user_interests;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS mbtis;
 DROP TABLE IF EXISTS interests;
@@ -13,6 +12,22 @@ CREATE TABLE mbtis (
     score TEXT NOT NULL
 );
 
+-- DROP TABLE IF EXISTS matches;
+-- DROP TABLE IF EXISTS potential_matches;
+DROP TABLE IF EXISTS genders;
+DROP TABLE IF EXISTS interests;
+
+
+-- CREATE TABLE genders(
+--     id SERIAL PRIMARY KEY,
+--     gender TEXT NOT NULL
+-- );
+
+CREATE TABLE interests (
+    id SERIAL PRIMARY KEY,
+    interest_name TEXT NOT NULL
+);
+
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -21,12 +36,21 @@ CREATE TABLE users (
     full_name TEXT NOT NULL,
     mbti_id INT REFERENCES mbtis(id),
     email TEXT UNIQUE NOT NULL,
+    gender TEXT NOT NULL,
+    age VARCHAR(3) NOT NULL,
+    mbti TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
-    age INT NOT NULL,
     bio TEXT,
     interests TEXT[],
     picture TEXT,
     zipcode VARCHAR(5)
+    zip_code VARCHAR(5) NOT NULL,
+    interest TEXT,
+    picture TEXT
+    -- matches_id INT
+    -- CONSTRAINT fk_matches
+    --     FOREIGN KEY (matches_id)
+    --     REFERENCES matches (id)
 );
 
 
@@ -115,24 +139,12 @@ INSERT INTO users (gender, username, full_name, mbti_id, email, hashed_password,
 -- (3, 'Male', 'Mr.Freeman', 'Morgan Freeman', '1', 'morgan@gmail.com', 'password', 63, 'I can narrate you to sleep', 'Hobbies here2', 'https://cdn.britannica.com/40/144440-050-DA828627/Morgan-Freeman.jpg', '48102')
 -- ;
 
--- INSERT INTO interests VALUES
--- (1, 'Traveling'),
--- (2, 'Hiking/Camping'),
--- (3, 'Playing Musical Instruments'),
--- (4, 'Sailing'),
--- (5, 'Photography'),
--- (6, 'Singing'),
--- (7, 'Fitness'),
--- (8, 'Dogs'),
--- (9, 'Cats'),
--- (10, 'Yoga'),
--- (11, 'Reading'),
--- (12, 'Surfing'),
--- (13, 'Rock Climbing'),
--- (14, 'Skiing/Snowboarding'),
--- (15, 'Sky Diving'),
--- (16, 'Cooking')
--- ;
+
+
+ALTER TABLE users
+    ADD CONSTRAINT fk_matches
+        FOREIGN KEY (matches_id)
+        REFERENCES matches (id);
 
 
 -- INSERT INTO user_interest VALUES (1, 1), (1, 2);
@@ -283,3 +295,21 @@ INSERT INTO users (gender, username, full_name, mbti_id, email, hashed_password,
 -- -- INSERT INTO matches VALUES
 -- --     (1, 1, 2, false),
 -- --     (2, 2, 3, false);
+CREATE TABLE potential_matches (
+    id SERIAL PRIMARY KEY,
+    logged_in_user INT NOT NULL,
+    match_id INT DEFAULT NULL,
+    matched_user INT NOT NULL,
+    mbti_strength INT NOT NULL,
+    liked BOOLEAN DEFAULT false,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_match
+        FOREIGN KEY (match_id)
+        REFERENCES matches (id),
+    CONSTRAINT fk_matched_user
+        FOREIGN KEY (matched_user)
+        REFERENCES users (id),
+    CONSTRAINT fk_logged_in_user
+        FOREIGN KEY (logged_in_user)
+        REFERENCES users (id)
+);
