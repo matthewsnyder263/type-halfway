@@ -12,7 +12,6 @@ import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
-import NavbarComponent from './NavBar';
 import Nav from './Nav.js';
 import ProfilePage from './ProfilePage';
 
