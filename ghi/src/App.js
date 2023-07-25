@@ -16,6 +16,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import PotentialMatches from './PotentialMatches/bitchass';
 import PotentialMatches from './PotentialMatches/likepotentialmatch';
 import Nav from './Nav.js';
+// import ProfilePage from './Account/ProfilePage.js'
+
 
 function App() {
   const baseURL = process.env.REACT_APP_API_HOST;
@@ -58,6 +60,7 @@ function App() {
             {/* <Route path = "/signup" element={<SignupForm />} /> */}
             <Route path="/login" element={<LoginForm />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
+            {/* <Route path="/profile" element={<ProfilePage />} /> */}
             {/* <Route path = "/profile" element={<ProfilePage />} /> */}
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
             {/* <InterestsForm user_id={userId} /> */}

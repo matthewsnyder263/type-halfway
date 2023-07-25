@@ -15,6 +15,7 @@ div.row{
   align-items: center;
   height: 30vh;
 
+
 }
 .match-content{
   display: flex;
@@ -92,6 +93,7 @@ section.last {
   justify-content: center;
   max-width: 1000px;
   padding: 10px;
+  box-shadow: 6px 6px 2px 1px rgba(0, 0, 0, 0.2)
   /* background-color: blanchedalmond; */
 }
 

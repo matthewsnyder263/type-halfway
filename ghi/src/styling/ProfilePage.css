@@ -1,0 +1,183 @@
+.desktop-1,
+.desktop-1 * {
+  box-sizing: border-box;
+}
+.desktop-1 {
+  background: #ffffff;
+  width: 1440px;
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.nav {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-1 {
+  background: #d9d9d9;
+  width: 1440px;
+  height: 1024px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.rectangle-2 {
+  background: #9c226c;
+  width: 1440px;
+  height: 61px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.nav2 {
+  color: #000000;
+  text-align: left;
+  font: 400 48px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 668px;
+  top: 18px;
+}
+.profile-content {
+  position: absolute;
+  inset: 0;
+}
+.ellipse-1 {
+  border-radius: 50%;
+  width: 243.32px;
+  height: 226px;
+  position: absolute;
+  left: 16px;
+  top: 115px;
+}
+.rectangle-3 {
+  background: #d9d9d9;
+  width: 240.19px;
+  height: 96.29px;
+  position: absolute;
+  left: 270.81px;
+  top: 138.74px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+._32-new-york-ny {
+  color: #000000;
+  text-align: left;
+  font: 400 20px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 276.03px;
+  top: 253.5px;
+  width: 221.39px;
+  height: 56.72px;
+}
+.ana-doe {
+  color: #000000;
+  text-align: left;
+  font: 400 48px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 285.43px;
+  top: 166.44px;
+  width: 203.64px;
+  height: 68.59px;
+}
+.rectangle-4 {
+  background: #d9d9d9;
+  width: 343.58px;
+  height: 279.64px;
+  position: absolute;
+  left: 16px;
+  top: 451.36px;
+}
+.group-1 {
+  width: 256.9px;
+  height: 328px;
+  position: static;
+}
+.rectangle-6 {
+  background: #d9d9d9;
+  border-radius: 35px;
+  width: 250.63px;
+  height: 285px;
+  position: absolute;
+  left: 22.27px;
+  top: 439px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.hang-out-in-parks-code-on-my-free-time-eat-food-go-on-dates-city-life {
+  color: #000000;
+  text-align: center;
+  font: 400 16px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 45.24px;
+  top: 463px;
+  width: 198.42px;
+  height: 226px;
+}
+.interests {
+  color: #000000;
+  text-align: center;
+  font: 400 48px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 19.13px;
+  top: 396px;
+  width: 256.9px;
+  height: 53px;
+}
+.group-2 {
+  position: absolute;
+  inset: 0;
+}
+.rectangle-5 {
+  background: #d9d9d9;
+  border-radius: 28px;
+  width: 446px;
+  height: 353px;
+  position: absolute;
+  left: 458px;
+  top: 336px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.who-am-i {
+  color: #000000;
+  text-align: left;
+  font: 400 48px/107.5% "Kdam Thmor", sans-serif;
+  position: absolute;
+  left: 544px;
+  top: 289px;
+}
+.hey-there-i-m-ana-doe-a-proud-outsider-in-the-vibrant-city-of-nyc-you-ll-often-find-me-exploring-the-beauty-of-parks-basking-in-the-serenity-they-offer-amidst-the-bustling-urban-landscape-at-23-years-old-i-embrace-the-magic-of-outdoor-dining-savoring-delicious-meals-al-fresco-when-the-weather-is-just-right-pink-is-my-absolute-favorite-color-as-it-brings-a-touch-of-whimsy-and-joy-to-my-world-and-when-it-comes-to-indulging-my-taste-buds-nothing-beats-the-creamy-goodness-of-vanilla-ice-cream-it-s-my-ultimate-treat-join-me-on-my-adventures-as-i-seek-out-new-experiences-and-create-memorable-moments-in-the-city-that-never-sleeps {
+  color: #000000;
+  text-align: center;
+  font: 400 18px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 458px;
+  top: 378px;
+  width: 446px;
+  height: 353px;
+}
+.logo-1 {
+  border-radius: 56px;
+  width: 507px;
+  height: 268px;
+  position: absolute;
+  left: 904px;
+  top: 86px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.rectangle-7 {
+  background: #d9d9d9;
+  width: 1382px;
+  height: 173px;
+  position: absolute;
+  left: 29px;
+  top: 845px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.footer {
+  color: #000000;
+  text-align: center;
+  font: 400 36px/107.5% "JejuGothic", sans-serif;
+  position: absolute;
+  left: 79px;
+  top: 870px;
+  width: 1290px;
+  height: 124px;
+}

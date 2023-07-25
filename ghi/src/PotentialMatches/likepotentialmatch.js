@@ -234,7 +234,7 @@ const PotentialMatches = () => {
                                     <div key={data.match_id}>
                                         <div className="card mb-4">
                                             <p className="card-text" style={{ marginTop: "10px" }}>
-                                                Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}
+                                                Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong>
                                             </p>
                                             <img className="card-img-top" src="https://picsum.photos/200" alt=" " />
                                             <button className="like-button" onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
