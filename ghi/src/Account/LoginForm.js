@@ -65,6 +65,7 @@ const LoginForm = () => {
         <form style={styles.form} onSubmit={handleSubmit}>
           <h5 style={styles.label} className='label form-floating mb-3 card-header' >Login</h5>
           <div className="form-floating mb-3">
+            {/* Username */}
             <input
               name="username"
               type="text"
@@ -73,9 +74,11 @@ const LoginForm = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
             />
-            <label className="form-label">Username:</label>
+            <label className="form-label"> Username</label>
           </div>
+
           <div className="form-floating mb-3">
+            {/* Password */}
             <input
               name="password"
               type="password"
@@ -84,8 +87,10 @@ const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
             />
-            <label className="form-label">Password:</label>
+            <label className="form-label">Password</label>
           </div>
+
+
           <div className="flex items-center justify-between">
             <button
               className="btn btn-primary"

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import SignupForm from "./Account/SignUpForm";
 import Construct from "./Construct.js";
 import ErrorNotification from "./ErrorNotification";
-import "./App.css";
+import "./PotentialMatches/styles/PotentialMatch.css";
 import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

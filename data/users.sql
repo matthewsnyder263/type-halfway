@@ -29,8 +29,8 @@ CREATE TABLE users (
     bio TEXT,
     zip_code VARCHAR(5) NOT NULL,
     interest TEXT,
-    picture TEXT
-    -- matches_id INT
+    picture TEXT,
+    matches_id INT
     -- CONSTRAINT fk_matches
     --     FOREIGN KEY (matches_id)
     --     REFERENCES matches (id)

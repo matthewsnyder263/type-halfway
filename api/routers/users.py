@@ -17,7 +17,7 @@ from db.user_db import (
     UserIn,
     UserOut,
     UsersOut,
-    UserDB,
+    User,
     DuplicateUserError,
     UserQueries,
 )
@@ -26,39 +26,30 @@ from db.user_db import (
 router = APIRouter()
 
 
-class Queries:
-    pass
-
-
-class UserIn(BaseModel):
-    first: str
-    last: str
-    mbti: str
-    email: str
+class AccountForm(BaseModel):
     username: str
+    password: str
 
 
-class UserOut(BaseModel):
-    id: int
-    first: str
-    last: str
-    mbti: str
-    email: str
-    username: str
+class AccountToken(Token):
+    account: UserOut
 
 
-class UserOutWithPassword(UserOut):
-    hashed_password: str
+class HttpError(BaseModel):
+    detail: str
 
 
-class UsersOut(BaseModel):
-    users: List[UserOut]
+@router.get("/api/protected", response_model=bool)
+async def get_protected(
+    account_data: dict = Depends(authenticator.get_current_account_data),
+):
+    return True
 
 
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
-    account: UserDB = Depends(authenticator.try_get_current_account_data),
+    account: User = Depends(authenticator.try_get_current_account_data),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
         return {
@@ -116,16 +107,13 @@ def get_user_by_id(
     user_id: int,
     queries: UserQueries = Depends(),
 ):
-    record = queries.get_user(user_id)
-    if record is None:
-        response.status_code = 404
-    else:
-        return record
-
-
-@router.post("api/users/", response_model=UserOut)
-def create_user(user_in: UserIn, queries: UserQueries = Depends()):
-    return queries.create_user(user_in)
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    return user
 
 
 @router.put("/api/users/{user_id}", response_model=UserOut)
@@ -135,14 +123,11 @@ def update_user(
     response: Response,
     queries: UserQueries = Depends(),
 ):
-    record = queries.update_user(user_id, user_in)
-    if record is None:
-        response.status_code = 404
-    else:
-        return record
-
-
-@router.delete("/api/users/{user_id}", response_model=bool)
-def delete_user(user_id: int, queries: UserQueries = Depends()):
-    queries.delete_user(user_id)
-    return True
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    updated_user = queries.update_user(user_id, user_in)
+    return updated_user

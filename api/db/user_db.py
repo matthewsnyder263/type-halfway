@@ -16,7 +16,7 @@ class DuplicateUserError(ValueError):
     pass
 
 
-class UserDB(BaseModel):
+class User(BaseModel):
     id: int
     username: str
     email: str
@@ -65,7 +65,7 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def get(self, username: str) -> UserDB:
+    def get(self, username: str) -> User:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -90,7 +90,7 @@ class UserQueries:
                 record = result.fetchone()
                 if record is None:
                     return None
-                return UserDB(
+                return User(
                     id=record[0],
                     username=record[1],
                     email=record[2],
@@ -223,7 +223,7 @@ class UserQueries:
                     ],
                 )
                 id = result.fetchone()[0]
-                return UserDB(
+                return User(
                     id=id,
                     username=info.username,
                     email=info.email,
@@ -239,7 +239,7 @@ class UserQueries:
                 )
 
     def delete_user(self, user_id: int):
-        user = self.db.query(UserDB).filter(UserDB.id == user_id).first()
+        user = self.db.query(User).filter(User.id == user_id).first()
         if user is None:
             return None
         self.db.delete(user)

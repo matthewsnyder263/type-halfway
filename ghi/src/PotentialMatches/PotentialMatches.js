@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 
 const PotentialMatches = () => {
@@ -199,28 +201,36 @@ const PotentialMatches = () => {
         .slice(0, 5);
 
     return (
-        <div>
-            <h2>Potential Matches of the Week</h2>
-            <div className="card" style={{ width: "18rem" }}>
-                {recentCompatibilityData.map((data) => {
-                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
-                    const matchedUserName = matchedUser.full_name;
-                    const userProfileUrl = `/profile/${matchedUser.id}`;
-                    return (
-                        <div key={data.match_id} className="card mb-4">
-                            <img className="card-img-top" src="..." alt="Card image cap" />
-                            <div className="card-body">
-                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
-                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
-                                </Link>
-                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
-                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
-                                    {data.liked ? "Liked" : "Like"}
-                                </button>
-                            </div>
-                        </div>
-                    );
-                })}
+        <div className="background">
+            <div className="carousel-container">
+                {/* <h2>Potential Matches of the Week</h2> */}
+                <div className="carousel" >
+                    <Carousel>
+                        {recentCompatibilityData.map((data) => {
+                            const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                            const matchedUserName = matchedUser.full_name;
+                            const userProfileUrl = `/profile/${matchedUser.id}`;
+                            return (
+
+                                <div key={data.match_id} className="card ">
+                                    <img src="https://picsum.photos/200/300" alt=" " />
+                                    <div className="card-body" >
+                                        <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
+                                            <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                        </Link>
+                                        <button onClick={() => handleLike(data.matched_user)} disabled={data.liked} className="like-button">
+                                            {data.liked ? "Liked" : "Like"}
+                                        </button>
+                                        <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
+                                        {/* <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                        {data.liked ? "Liked" : "Like"}
+                                    </button> */}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </Carousel>
+                </div>
             </div>
         </div>
     );
