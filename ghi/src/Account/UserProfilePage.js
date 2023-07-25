@@ -68,7 +68,7 @@ const UserProfile = () => {
                                 </Link>
                             </div>
                         </div>
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="col-lg-6 mb-2 pr-lg-1">
                                 <img
                                     src="https://images.unsplash.com/photo-1469594292607-7bd90f8d3ba4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
@@ -83,7 +83,7 @@ const UserProfile = () => {
                                 alt=""
                                 className="img-fluid rounded shadow-sm"
                             />
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>

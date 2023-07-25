@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import BootstrapInput from "../BootstrapInput";
+import BootstrapInput from "./BootstrapInput";
 import { useNavigate } from "react-router-dom";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
