@@ -6,10 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const ProfilePage = () => {
-    // SNYDER CODE ADDED BELOW<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    // const { id: userId } = useParams();
-    // const [userData, setUserData] = useState(null);
-    // SNYDER CODE ADDED ABOVE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     const [currentUser, setCurrentUser] = useState('');
     const navigate = useNavigate();
     const { token, logout } = useToken();
@@ -69,7 +65,7 @@ const ProfilePage = () => {
                             </div>
                         </div>
                         <div>
-                            <button className="btn btn-outline-light btn-sm btn-block">
+                            <button className="btn btn-secondary">
                                 View My Likes
                             </button>
 

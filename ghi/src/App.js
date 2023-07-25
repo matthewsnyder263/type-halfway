@@ -22,7 +22,6 @@ function App() {
           <Routes path='/'>
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
             <Route path="/profile" element={<ProfilePage />} />
