@@ -125,14 +125,6 @@ const ProfilePage = () => {
                                     <Link to="#" className="btn btn-outline-light btn-sm btn-block">
                                         Edit profile
                                     </Link>
-                                    <button
-                                        className="btn btn-outline-light btn-sm btn-block"
-                                        onClick={async () => {
-                                            localStorage.removeItem("token");
-                                            logout();
-                                        }}>
-                                        Logout
-                                    </button>
                                 </div>
                                 {/* SNYDER CODE ADDED BELOW */}
                                 {/* <div className="profile-column">

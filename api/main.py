@@ -1,7 +1,7 @@
 from fastapi import FastAPI  # HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-# from authenticator import authenticator
+from authenticator import authenticator
 from routers import users, matches
 import os
 
@@ -20,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(authenticator.router)
 
 
 @app.get("/api/launch-details")

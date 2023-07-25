@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 
 const PotentialMatches = () => {
@@ -204,11 +205,14 @@ const PotentialMatches = () => {
                 {recentCompatibilityData.map((data) => {
                     const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
                     const matchedUserName = matchedUser.full_name;
+                    const userProfileUrl = `/profile/${matchedUser.id}`;
                     return (
                         <div key={data.match_id} className="card mb-4">
                             <img className="card-img-top" src="..." alt="Card image cap" />
                             <div className="card-body">
-                                <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
+                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                </Link>
                                 <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
                                 <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
                                     {data.liked ? "Liked" : "Like"}

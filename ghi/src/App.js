@@ -8,9 +8,13 @@ import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
-import ProfilePage from './ProfilePage';
-import Chat from './Account/chat';
+import ProfilePage from './Account/ProfilePage';
+// import Chat from './Account/chat';
 import Nav from './Nav.js';
+import useToken from '@galvanize-inc/jwtdown-for-react';
+import LoggedOutNav from './LoggedOutNav.js';
+import UserProfile from './Account/UserProfile.js';
+
 
 
 
@@ -22,15 +26,16 @@ function App() {
   return (
     <div className="">
       <BrowserRouter>
-        <Nav />
         <AuthProvider baseUrl={baseURL}>
+          <Nav />
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/profile/:userId" element={<UserProfile />} />
+            {/* <Route path="/chat" element={<Chat />} /> */}
             <Route path="/profile" element={<ProfilePage />} />
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
             {/* <InterestsForm user_id={userId} /> */}
