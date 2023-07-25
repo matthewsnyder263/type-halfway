@@ -1,16 +1,19 @@
 FROM python:3.10-bullseye
 RUN python -m pip install --upgrade pip
+RUN pip install psycopg2-binary
 WORKDIR /app
 
 # Copy the top-level files in your service's directory
 # Modify these instructions to do that
 COPY requirements.txt requirements.txt
 COPY main.py main.py
+# COPY models.py models.py
 
 # Copy all of the subdirectories in your service's directory
 # Modify these instructions to do that
-# COPY queries queries
-# COPY routers routers
+COPY db db
+COPY routers routers
+COPY authenticator.py authenticator.py
 
 RUN python -m pip install -r requirements.txt
 

@@ -6,6 +6,47 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
+  "cSpell.words": [
+    "Automotives",
+    "conninfo",
+    "dotenv",
+    "ENFJ",
+    "ENFP",
+    "ENTJ",
+    "ENTP",
+    "ESFJ",
+    "ESFP",
+    "ESTJ",
+    "ESTP",
+    "fullname",
+    "INFJ",
+    "INFP",
+    "INTJ",
+    "INTP",
+    "ISFJ",
+    "ISFP",
+    "ISTJ",
+    "ISTP",
+    "jwtdown",
+    "melo",
+    "potentialmatch",
+    "psycopg",
+    "pydantic",
+    "setdestination",
+    "uselist"
+  ],
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "db",
+      "database": "data",
+      "username": "user"
+    }
+  ],
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
@@ -30,4 +71,7 @@
       "password": "password"
     }
   ]
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
+  "dataworkspace.excludedProjects": ["db/db.sqlproj"]
 }

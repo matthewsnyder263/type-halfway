@@ -1,6 +1,20 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS matches;
+-- DROP TABLE IF EXISTS user_interests;
 DROP TABLE IF EXISTS potential_matches;
+-- DROP TABLE IF EXISTS genders;
+DROP TABLE IF EXISTS interests;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS users;
+
+
+-- CREATE TABLE genders(
+--     id SERIAL PRIMARY KEY,
+--     gender TEXT NOT NULL
+-- );
+
+CREATE TABLE interests (
+    id SERIAL PRIMARY KEY,
+    interest_name TEXT NOT NULL
+);
 
 
 CREATE TABLE users (
@@ -9,14 +23,14 @@ CREATE TABLE users (
     full_name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     gender TEXT NOT NULL,
-    age INT NOT NULL,
+    age VARCHAR(3) NOT NULL,
     mbti TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
     bio TEXT,
     zip_code VARCHAR(5) NOT NULL,
     interest TEXT,
-    picture TEXT,
-    matches_id INT
+    picture TEXT
+    -- matches_id INT
     -- CONSTRAINT fk_matches
     --     FOREIGN KEY (matches_id)
     --     REFERENCES matches (id)
@@ -48,10 +62,10 @@ CREATE TABLE matches (
 
 
 
-ALTER TABLE users
-    ADD CONSTRAINT fk_matches
-        FOREIGN KEY (matches_id)
-        REFERENCES matches (id);
+-- ALTER TABLE users
+--     ADD CONSTRAINT fk_matches
+--         FOREIGN KEY (matches_id)
+--         REFERENCES matches (id);
 
 
 CREATE TABLE potential_matches (

@@ -1,24 +1,29 @@
 import os
 from psycopg_pool import ConnectionPool
 from typing import List
-from typing import ByteString
+
+# from typing import ByteString
 from pydantic import BaseModel
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
+
+class Error(BaseModel):
+    message: str
 
 
 class DuplicateUserError(ValueError):
     pass
 
 
-class User(BaseModel):
+class UserDB(BaseModel):
     id: int
     username: str
     email: str
     hashed_password: str
     full_name: str
     gender: str
-    age: int
+    age: str
     mbti: str
     bio: str
     zip_code: str
@@ -32,7 +37,7 @@ class UserIn(BaseModel):
     password: str
     full_name: str
     gender: str
-    age: int
+    age: str
     mbti: str
     bio: str
     zip_code: str
@@ -44,15 +49,15 @@ class UserOut(BaseModel):
     id: int
     username: str
     email: str
+    # password: str
     full_name: str
     gender: str
-    age: int
+    age: str
     mbti: str
     bio: str
     zip_code: str
     interest: str
     picture: str
-    hashed_password: str
 
 
 class UsersOut(BaseModel):
@@ -60,7 +65,7 @@ class UsersOut(BaseModel):
 
 
 class UserQueries:
-    def get(self, username: str) -> User:
+    def get(self, username: str) -> UserDB:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -85,7 +90,7 @@ class UserQueries:
                 record = result.fetchone()
                 if record is None:
                     return None
-                return User(
+                return UserDB(
                     id=record[0],
                     username=record[1],
                     email=record[2],
@@ -126,7 +131,7 @@ class UserQueries:
                         id=record[0],
                         username=record[1],
                         email=record[2],
-                        hashed_password=record[3],
+                        # hashed_password=record[3],
                         full_name=record[4],
                         gender=record[5],
                         age=record[6],
@@ -170,7 +175,7 @@ class UserQueries:
                     id=record[0],
                     username=record[1],
                     email=record[2],
-                    hashed_password=record[3],
+                    # hashed_password=record[3],
                     full_name=record[4],
                     gender=record[5],
                     age=record[6],
@@ -218,7 +223,7 @@ class UserQueries:
                     ],
                 )
                 id = result.fetchone()[0]
-                return User(
+                return UserDB(
                     id=id,
                     username=info.username,
                     email=info.email,
@@ -234,15 +239,12 @@ class UserQueries:
                 )
 
     def delete_user(self, user_id: int):
-        with pool.connection() as conn:
-            with conn.cursor() as db:
-                db.execute(
-                    """
-                    DELETE FROM users
-                    WHERE id = %s;
-                    """,
-                    [user_id],
-                )
+        user = self.db.query(UserDB).filter(UserDB.id == user_id).first()
+        if user is None:
+            return None
+        self.db.delete(user)
+        self.db.commit()
+        return True
 
     def update_user(self, user_id, data):
         with pool.connection() as conn:
@@ -276,7 +278,9 @@ class UserQueries:
                     , interest = %s
                     , picture = %s
                     WHERE id = %s
-                    RETURNING id, username, email, hashed_password, full_name, gender, age, mbti, bio, zip_code, interest, picture
+                    RETURNING id, username, email, hashed_password,
+                    full_name, gender, age, mbti, bio, zip_code,
+                    interest, picture, interests;
                     """,
                     params,
                 )

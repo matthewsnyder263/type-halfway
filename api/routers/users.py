@@ -1,19 +1,27 @@
-# router.py
 from fastapi import (
-    Body,
+    # Body,
     Depends,
     HTTPException,
     status,
     Response,
     APIRouter,
     Request,
-    logger,
+    # logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
 
 from pydantic import BaseModel
-from typing import List
+
+from db.user_db import (
+    UserIn,
+    UserOut,
+    UsersOut,
+    UserDB,
+    DuplicateUserError,
+    UserQueries,
+)
+
 
 router = APIRouter()
 
@@ -47,16 +55,54 @@ class UsersOut(BaseModel):
     users: List[UserOut]
 
 
-class UserQueries(Queries):
-    # region properties
+@router.get("/token", response_model=AccountToken | None)
+async def get_token(
+    request: Request,
+    account: UserDB = Depends(authenticator.try_get_current_account_data),
+) -> AccountToken | None:
+    if account and authenticator.cookie_name in request.cookies:
+        return {
+            "access_token": request.cookies[authenticator.cookie_name],
+            "type": "Bearer",
+            "account": account,
+        }
 
-    def get(self, email: str) -> UserOutWithPassword:
-        pass
 
-    def create(
-        self, info: UserIn, hashed_password: str
-    ) -> UserOutWithPassword:
-        pass
+@router.post("/api/users", response_model=AccountToken | HttpError)
+async def create_user(
+    info: UserIn,
+    request: Request,
+    response: Response,
+    users: UserQueries = Depends(),
+):
+    hashed_password = authenticator.hash_password(info.password)
+    try:
+        account = users.create_user(info, hashed_password)
+    except DuplicateUserError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot create an account with those credentials",
+        )
+    form = AccountForm(username=info.username, password=info.password)
+    token = await authenticator.login(response, request, form, users)
+    return AccountToken(account=account, **token.dict())
+
+
+@router.delete("/api/users/{user_id}", response_model=bool)
+def delete_user(
+    user_id: int,
+    response: Response,
+    queries: UserQueries = Depends(),
+):
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    queries.delete_user(user_id)
+    return True
 
 
 @router.get("/api/users", response_model=UsersOut)

@@ -1,14 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI  # HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+
 from authenticator import authenticator
-from routers import users, interests, potential_matches, matches
+from routers import users, matches
 import os
 
 app = FastAPI(debug=True)
-app.include_router(authenticator.router)
-app.include_router(users.router)
-app.include_router(potential_matches.router)
-app.include_router(matches.router)
 
 
 app.add_middleware(
@@ -24,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(authenticator.router)
+
 
 @app.get("/api/launch-details")
 def launch_details():
@@ -38,5 +37,7 @@ def launch_details():
     }
 
 
-app.include_router(interests.router)
+app.include_router(users.router)
+# app.include_router(interests.router)
 # app.include_router(mbti.router)
+app.include_router(matches.router)

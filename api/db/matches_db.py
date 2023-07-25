@@ -1,50 +1,3 @@
-# import os
-# from typing import List
-# from pydantic import BaseModel
-# from psycopg_pool import ConnectionPool
-
-# pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
-
-# class MatchIn(BaseModel):
-#     logged_in_user: int
-#     matched_user: int
-
-# class MatchOut(BaseModel):
-#     id: int
-#     logged_in_user: int
-#     matched_user: int
-
-# class MatchQueries:
-#     def create_match(self, data: MatchIn) -> MatchOut:
-#         with pool.connection() as conn:
-#             with conn.cursor() as cur:
-#                 cur.execute(
-#                     """
-#                     INSERT INTO matches (logged_in_user, matched_user)
-#                     VALUES (%s, %s)
-#                     RETURNING id, logged_in_user, matched_user;
-#                     """,
-#                     (data.logged_in_user, data.matched_user),
-#                 )
-#                 row = cur.fetchone()
-#                 if row is not None:
-#                     return MatchOut(*row)
-
-#     def get_matches_by_user(self, matched_user: int) -> List[MatchOut]:
-#         with pool.connection() as conn:
-#             with conn.cursor() as cur:
-#                 cur.execute(
-#                     """
-#                     SELECT id, logged_in_user, matched_user
-#                     FROM matches
-#                     WHERE logged_in_user = %s;
-#                     """,
-#                     [matched_user],
-#                 )
-#                 rows = cur.fetchall()
-#                 return [MatchOut(*row) for row in rows]
-
-
 # SNYDER CHANGES >>> COMMENTED OUT ABOVE<<< ADDED BELOW CODE
 
 import os
@@ -72,6 +25,12 @@ class MatchIn(BaseModel):
 
 class MatchesOut(BaseModel):
     matches: List[Match]
+
+
+class MatchOut(BaseModel):
+    id: int
+    logged_in_user: int
+    user_id: int
 
 
 class MatchQueries:
@@ -152,8 +111,6 @@ class MatchQueries:
                 ]
                 return MatchesOut(matches=matches)
 
-
-
     def get_mutual_matches(self, user_id: int) -> List[Match]:
         with pool.connection() as conn:
             with conn.cursor() as db:
@@ -164,7 +121,8 @@ class MatchQueries:
                         , matched_user
                         , mutual
                     FROM matches
-                    WHERE (logged_in_user = %s OR matched_user = %s) AND mutual = True
+                    WHERE (logged_in_user = %s OR matched_user = %s)
+                    AND mutual = True
                     """,
                     [user_id, user_id],
                 )
@@ -180,7 +138,6 @@ class MatchQueries:
                         )
                     )
                 return matches
-
 
     def get_match_by_id(self, match_id: int) -> Match:
         with pool.connection() as conn:
@@ -207,7 +164,6 @@ class MatchQueries:
                     mutual=record[3],
                 )
                 return match
-
 
     def create_match(self, match: MatchIn):
         with pool.connection() as conn:
@@ -288,7 +244,9 @@ class MatchQueries:
                     WHERE logged_in_user = %s
                     """,
                     [user_id],
-                )  # note i took out AND mutual = False, in 'WHERE logged_in_user = %S AND mutual = False'
+                )
+                # note i took out AND mutual = False, in
+                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:
@@ -343,58 +301,5 @@ class MatchQueries:
                     """,
                     [user_id],
                 )
-                records = result.fetchall()
-                likes = []
-                for record in records:
-                    likes.append(
-                        Match(
-                            id=record[0],
-                            logged_in_user=record[1],
-                            matched_user=record[2],
-                            mutual=record[3],
-                        )
-                    )
-                return likes
-
-    def get_all_matches(self) -> List[Match]:
-        with pool.connection() as conn:
-            with conn.cursor() as db:
-                db.execute(
-                    """
-                    SELECT id, logged_in_user, matched_user, mutual
-                    FROM matches
-                    WHERE mutual = True
-                    """
-                )
-                records = db.fetchall()
-                matches = [
-                    Match(
-                        id=record[0],
-                        logged_in_user=record[1],
-                        matched_user=record[2],
-                        mutual=record[3],
-                    )
-                    for record in records
-                ]
-                return matches
-
-    def get_all_likes(self) -> List[Match]:
-        with pool.connection() as conn:
-            with conn.cursor() as db:
-                db.execute(
-                    """
-                    SELECT id, logged_in_user, matched_user, mutual
-                    FROM matches
-                    """
-                )
-                records = db.fetchall()
-                likes = [
-                    Match(
-                        id=record[0],
-                        logged_in_user=record[1],
-                        matched_user=record[2],
-                        mutual=record[3],
-                    )
-                    for record in records
-                ]
-                return likes
+                rows = result.fetchall()
+                return [MatchOut(*row) for row in rows]
