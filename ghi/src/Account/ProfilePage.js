@@ -19,7 +19,6 @@ const ProfilePage = () => {
             localStorage.removeItem("user");
             setCurrentUser(null);
             navigate('/login');
-
         }
     }, [token]);
 

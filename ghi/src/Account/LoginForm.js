@@ -13,9 +13,8 @@ const LoginForm = () => {
   const [invalid, setInvalid] = useState(false)
   const navigate = useNavigate()
   const { login, token } = useToken()
-  // console.log("token", token)
 
-
+  
   const handleInvalid = () => {
     setInvalid(true);
   };
@@ -38,7 +37,7 @@ const LoginForm = () => {
         handleInvalid()
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
-        navigate("/profile")
+        navigate("/potentialmatch")
       }
     }
   };
