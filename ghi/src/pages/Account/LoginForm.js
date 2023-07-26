@@ -41,7 +41,7 @@ const LoginForm = () => {
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
         // console.log("data.account", data.account)
-        navigate("/profile")
+        navigate("/potentialmatch")
       }
     }
   };
