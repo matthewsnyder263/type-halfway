@@ -20,7 +20,8 @@
 #         new_match = match_queries.create_match(match)
 #         return new_match
 #     else:
-#         raise HTTPException(status_code=400, detail="Both users must like each other to create a match.")
+#         raise HTTPException(status_code=400,
+#               detail="Both users must like each other to create a match.")
 
 # @router.get("/matches/{logged_in_user}", response_model=List[MatchOut])
 # def get_matches(logged_in_user: int) -> List[MatchOut]:
@@ -33,30 +34,22 @@
 #     return matches
 
 
-# >>>>SNYDER CHANGES<<< COMMENTED OUT ABOVE AND  ADDED CODE BELOW<<<<<<<<<<<<<<<<<<<<<<<<
+# >>>>SNYDER CHANGES<<< COMMENTED OUT ABOVE AND  ADDED CODE BELOW<<<<<<<<<<<
 
 
 from fastapi import (
-    Body,
+    # Body,
     Depends,
     HTTPException,
     status,
-    Response,
+    # Response,
     APIRouter,
-    Request,
-    logger,
+    # Request,
+    # logger,
 )
-from jwtdown_fastapi.authentication import Token
-from authenticator import authenticator
-
-from pydantic import BaseModel
-
-from db.matches_db import MatchQueries, Match, MatchIn
+from db.matches_db import MatchQueries, MatchIn  # , Match
 
 router = APIRouter()
-
-
-from fastapi import HTTPException, status
 
 
 @router.post("/matches/{logged_in_user}/{matched_user}")
@@ -111,7 +104,6 @@ async def create_like(like: MatchIn, likes: MatchQueries = Depends()):
         logged_in_user=like.matched_user, matched_user=like.logged_in_user
     )
 
-    # If there's an existing like from matched_user to logged_in_user, make it mutual
     if existing_like:
         existing_like.mutual = True
         updated_like = likes.update_match(existing_like)

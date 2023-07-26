@@ -1,4 +1,4 @@
-/* .profile-head {
+.profile-head {
   transform: translateY(5rem);
 }
 
@@ -10,7 +10,7 @@
 
 body {
   background: #654ea3;
-  background: linear-gradient(to right, #e96443, #904e95);
+  background: linear-gradient(to right, #e3cce6fc, #926995);
   min-height: 100vh;
   overflow-x: hidden;
-} */
+}

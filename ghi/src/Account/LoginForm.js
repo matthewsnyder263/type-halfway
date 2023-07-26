@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
-import useAuthContext from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
-import "./Account.css";
+import { colors } from '@mui/material';
 
 
 const LoginForm = () => {
@@ -35,7 +34,7 @@ const LoginForm = () => {
         handleInvalid()
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
-        navigate("/potentialmatch")
+        navigate("/profile")
       }
     }
   };
@@ -53,9 +52,9 @@ const LoginForm = () => {
 
   return (
     <div className="row justify-content-center">
-      <div className="container">
-        <form className="form" onSubmit={handleSubmit}>
-          <h5 className="label form-floating mb-3 card-header">Login</h5>
+      <div style={styles.container}>
+        <form style={styles.form} onSubmit={handleSubmit}>
+          <h2 style={styles.label} className='label form-floating mb-3 card-header' >Login</h2>
           <div className="form-floating mb-3">
             <input
               name="username"
@@ -78,12 +77,31 @@ const LoginForm = () => {
             />
             <label className="form-label">Password:</label>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-row items-center justify-between">
             <button
-              className="btn btn-primary"
+              className="d-flex btn btn-md btn-outline-light mt-3"
               type="submit"
+              style={{
+                backgroundColor: '#dab7de9f',
+                color: 'white',
+                border: '2px solid white',
+                borderRadius: '5em',
+                boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
+                fontWeight: 'bold',
+                fontFamily: 'ui-rounded'
+              }}
             >
-              Login
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-door-open-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"></path>
+              </svg>
+              <span style={{ marginLeft: "5px" }}>Login</span>
             </button>
           </div>
           <div className="w-full text-center pt-4">
@@ -108,22 +126,24 @@ export default LoginForm
 
 
 
-// const styles = {
-//   container: {
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     height: '100vh',
-//   },
-//   form: {
-//     backgroundColor: 'rgba(200, 65, 115, 8)',
-//     padding: '5em',
-//     borderRadius: '5em',
-//     boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+  },
+  form: {
+    backgroundColor: 'linear-gradient(rgba(100, 0, 150, 8), rgba(200, 75, 150, 102))',
+    padding: '5em',
+    borderRadius: '5em',
+    boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
 
-//   },
-//   label: {
-//     fontWeight: 'bold',
-//     marginRight: '12em'
-//   }
-// };
+  },
+  label: {
+    fontWeight: 'bold',
+    marginRight: '10em',
+    marginBottom: '10em',
+    color: 'white',
+  },
+};

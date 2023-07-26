@@ -36,7 +36,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     const data = { ...formData }
-    console.log("FORM data", data);
+    // console.log("FORM data", data);
     setUsername(data.username);
     setPassword(data.password);
 
@@ -53,7 +53,7 @@ const SignupForm = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log(responseData);
+        // console.log(responseData);
 
         setFormData(initialFormData);
         login(data.username, data.password);
