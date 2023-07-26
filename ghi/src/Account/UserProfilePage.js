@@ -2,12 +2,10 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './ProfilePage.css';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const UserProfile = () => {
     const [user, setUser] = useState("");
-    const navigate = useNavigate();
     const { user_Id } = useParams();
     const { token, logout } = useToken();
 
