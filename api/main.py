@@ -1,7 +1,7 @@
 from fastapi import FastAPI  # HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from authenticator import authenticator
+from .authenticator import authenticator
 from routers import users, matches
 import os
 
@@ -14,6 +14,7 @@ app.add_middleware(
         os.environ.get(
             "CORS_HOST",
             "http://localhost:3000",
+
         )
     ],
     allow_credentials=True,

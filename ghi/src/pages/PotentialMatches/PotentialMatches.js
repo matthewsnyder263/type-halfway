@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -103,7 +102,7 @@ const PotentialMatches = () => {
 
         if (currentUser && allUsers.users) {
             const potentialDataList = [];
-            const compatData = allUsers.users
+            allUsers.users
                 .filter((user) => user.id !== currentUser.id)
                 .map((user) => {
                     const compatibilityScore = calculateCompatibilityScore(
@@ -127,7 +126,7 @@ const PotentialMatches = () => {
 
             const postCompatibilityData = async (data) => {
                 const url = "http://localhost:8000/api/potential_matches";
-                const response = await fetch(url, {
+                await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -136,7 +135,7 @@ const PotentialMatches = () => {
                     credentials: "include",
                 });
             };
-            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+            Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
         }
     }, [currentUser, allUsers]);
 
@@ -225,7 +224,7 @@ const PotentialMatches = () => {
                                     <img src="https://picsum.photos/200/300" alt=" " />
                                     <div className="card-body" >
                                         <div key={data.match_id}>
-                                            <h1>Matched User Name: {matchedUserName}</h1>
+                                            <h1>Name: {matchedUserName}</h1>
                                             <button onClick={() => handleMatchClick(matchedUser)}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
@@ -237,9 +236,6 @@ const PotentialMatches = () => {
                                             {data.liked ? "Liked" : "Like"}
                                         </button>
                                         <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
-                                        {/* <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
-                                        {data.liked ? "Liked" : "Like"}
-                                    </button> */}
                                     </div>
                                 </div>
                             );
