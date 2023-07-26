@@ -24,24 +24,33 @@ from db.user_db import (
 router = APIRouter()
 
 
-class AccountForm(BaseModel):
+class Queries:
+    pass
+
+
+class UserIn(BaseModel):
+    first: str
+    last: str
+    mbti: str
+    email: str
     username: str
-    password: str
 
 
-class AccountToken(Token):
-    account: UserOut
+class UserOut(BaseModel):
+    id: int
+    first: str
+    last: str
+    mbti: str
+    email: str
+    username: str
 
 
-class HttpError(BaseModel):
-    detail: str
+class UserOutWithPassword(UserOut):
+    hashed_password: str
 
 
-@router.get("/api/protected", response_model=bool)
-async def get_protected(
-    account_data: dict = Depends(authenticator.get_current_account_data),
-):
-    return True
+class UsersOut(BaseModel):
+    users: List[UserOut]
 
 
 @router.get("/token", response_model=AccountToken | None)
@@ -105,13 +114,16 @@ def get_user_by_id(
     user_id: int,
     queries: UserQueries = Depends(),
 ):
-    user = queries.get_user_by_id(user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    return user
+    record = queries.get_user(user_id)
+    if record is None:
+        response.status_code = 404
+    else:
+        return record
+
+
+@router.post("api/users/", response_model=UserOut)
+def create_user(user_in: UserIn, queries: UserQueries = Depends()):
+    return queries.create_user(user_in)
 
 
 @router.put("/api/users/{user_id}", response_model=UserOut)
@@ -121,11 +133,14 @@ def update_user(
     response: Response,
     queries: UserQueries = Depends(),
 ):
-    user = queries.get_user_by_id(user_id)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    updated_user = queries.update_user(user_id, user_in)
-    return updated_user
+    record = queries.update_user(user_id, user_in)
+    if record is None:
+        response.status_code = 404
+    else:
+        return record
+
+
+@router.delete("/api/users/{user_id}", response_model=bool)
+def delete_user(user_id: int, queries: UserQueries = Depends()):
+    queries.delete_user(user_id)
+    return True

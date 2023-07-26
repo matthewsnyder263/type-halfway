@@ -1,45 +1,243 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
+    <title>Halfway</title>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"/><div id="root"></div>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
   </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <body class="is-preload homepage">
+    <div id="page-wrapper">
+      <!-- Header -->
+      <div id="header-wrapper">
+        <header id="header" class="container">
+          <!-- Logo -->
+          <div id="logo">
+            <h1><a href="index.html">Halfway</a></h1>
+            <span>by Halfway Harmony</span>
+          </div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+          <!-- Nav -->
+          <nav id="nav">
+            <ul>
+              <li class="current"><a href="index.html">Welcome</a></li>
+              <li>
+                <a href="#">Hover</a>
+                <ul>
+                  <li><a href="#">Potential Matches</a></li>
+                  <li><a href="#">Meet The Team</a></li>
+                  <li><a href="#">Contact us</a></li>
+                </ul>
+              </li>
+              <li><a href="left-sidebar.html">View My Profile</a></li>
+              <li><a href="right-sidebar.html">About Us</a></li>
+              <li><a href="no-sidebar.html">Logout</a></li>
+            </ul>
+          </nav>
+        </header>
+      </div>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+      <!-- Banner -->
+      <div id="banner-wrapper">
+        <div id="banner" class="box container">
+          <div class="row">
+            <div class="col-7 col-12-medium">
+              <h2>Hi. Timothy.</h2>
+              <p>Find Match Meet Meet <strong>Halfway</strong></p>
+            </div>
+            <div class="col-5 col-12-medium">
+              <ul>
+                <li>
+                  <a
+                    href="#"
+                    class="button large icon solid fa-arrow-circle-right"
+                    >Find Matches</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    id="view-button"
+                    class="button alt large icon solid fa-question-circle"
+                    >View Profile</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div id="features-wrapper">
+        <div class="container">
+          <div class="row">
+            <div class="col-4 col-12-medium">
+              <!-- Box -->
+              <section class="box feature">
+                <a href="#" class="image featured"
+                  ><img src="ana.doe.jpg" alt=""
+                /></a>
+                <div class="inner">
+                  <header>
+                    <h2>Ana Doe</h2>
+                    <p>23, New York NY</p>
+                  </header>
+                  <p>
+                    Phasellus quam turpis, feugiat sit amet in, hendrerit in
+                    lectus. Praesent sed semper amet bibendum tristique
+                    fringilla
+                  </p>
+                </div>
+              </section>
+            </div>
+            <div class="col-4 col-12-medium">
+              <!-- Box -->
+              <section class="box feature">
+                <a href="#" class="image featured"
+                  ><img src="ana.doe.jpg" alt=""
+                /></a>
+                <div class="inner">
+                  <header>
+                    <h2>JoAnn Doe</h2>
+                    <p>23, Bronx, NY</p>
+                  </header>
+                  <p>
+                    Phasellus quam turpis, feugiat sit amet in, hendrerit in
+                    lectus. Praesent sed semper amet bibendum tristique
+                    fringilla.
+                  </p>
+                </div>
+              </section>
+            </div>
+            <div class="col-4 col-12-medium">
+              <!-- Box -->
+              <section class="box feature">
+                <a href="#" class="image featured"
+                  ><img src="ana.doe.jpg" alt=""
+                /></a>
+                <div class="inner">
+                  <header>
+                    <h2>Kim Doe</h2>
+                    <p>23, Brooklyn, NY</p>
+                  </header>
+                  <p>
+                    Phasellus quam turpis, feugiat sit amet in, hendrerit in
+                    lectus. Praesent sed semper amet bibendum tristique
+                    fringilla.
+                  </p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div id="main-wrapper">
+        <div class="container">
+          <div class="row gtr-200">
+            <div class="col-4 col-12-medium">
+              <!-- Sidebar -->
+              <div id="sidebar">
+                <section class="widget thumbnails">
+                  <h3>Potential Matches</h3>
+                  <div class="grid">
+                    <div class="row gtr-50">
+                      <div class="col-6">
+                        <a href="#" class="image fit"
+                          ><img src="ana.doe.jpg" alt=""
+                        /></a>
+                      </div>
+                      <div class="col-6">
+                        <a href="#" class="image fit"
+                          ><img src="ana.doe.jpg" alt=""
+                        /></a>
+                      </div>
+                      <div class="col-6">
+                        <a href="#" class="image fit"
+                          ><img src="ana.doe.jpg" alt=""
+                        /></a>
+                      </div>
+                      <div class="col-6">
+                        <a href="#" class="image fit"
+                          ><img src="ana.doe.jpg" alt=""
+                        /></a>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="#" class="button icon fa-file-alt">More</a>
+                </section>
+              </div>
+            </div>
+            <div class="col-8 col-12-medium imp-medium">
+              <!-- Content -->
+              <div id="content">
+                <section class="last">
+                  <h2>How does this work?</h2>
+                  <p>
+                    When users sign up for <strong>Halfway</strong>, they chose
+                    their MBTI to determine their personality type. MBTI helps
+                    us understand their preferences, characteristics, and
+                    compatibility with others. Based on this information, our
+                    algorithm suggests potential matches for each user.
+                  </p>
+
+                  <p></p>
+                  <p>
+                    The potential matches page on Halfway is where users can
+                    discover new people who align with their personality traits
+                    and have the potential for a meaningful connection. Every
+                    day, we update the potential matches list, ensuring that
+                    users have fresh options to explore.
+                  </p>
+                  <a href="#" class="button icon solid fa-arrow-circle-right"
+                    >Continue Reading</a
+                  >
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div id="footer-wrapper">
+        <footer id="footer" class="container">
+          <div class="row">
+            <!-- Links -->
+
+            <div class="col-3 col-6-medium col-12-small">
+              <!-- Links -->
+              <section class="widget links">
+                <h3>Random Stuff</h3>
+                <ul class="style2">
+                  <li><a href="#">Etiam feugiat condimentum</a></li>
+                  <li><a href="#">Aliquam imperdiet suscipit odio</a></li>
+                  <li><a href="#">Sed porttitor cras in erat nec</a></li>
+                  <li><a href="#">Felis varius pellentesque potenti</a></li>
+                  <li><a href="#">Nullam scelerisque blandit leo</a></li>
+                </ul>
+              </section>
+            </div>
+            <div class="col-3 col-6-medium col-12-small"></div>
+          </div>
+        </footer>
+      </div>
+    </div>
   </body>
+  <script src="public/scrips/jquery.min.js"></script>
+  <script src="public/scrips/jquery.dropotron.min.js"></script>
+  <script src="public/scrips/browser.min.js"></script>
+  <script src="public/scrips/breakpoints.min.js"></script>
+  <script src="public/scrips/util.js"></script>
+  <script src="public/scrips/mainidx.js"></script>
 </html>

@@ -34,20 +34,20 @@ services:
     ports:
       - "3000:3000"
     environment:
-      HOST_OS: ${OS}
-      NODE_ENV: development
-      HOST: "0.0.0.0"
-      PUBLIC_URL: http://localhost:3000
-      REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+      - HOST_OS=${OS}
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PUBLIC_URL=http://localhost:3000
+      - REACT_APP_API_HOST=${REACT_APP_API_HOST}
 
   db:
     build:
       context: data
       dockerfile: Dockerfile.dev
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: data
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=data
     ports:
       - "15432:5432"
     volumes:
