@@ -5,6 +5,7 @@
     "@galvanize-inc/jwtdown-for-react": "^0.2.2",
     "@mui/material": "^5.14.2",
     "mdb-react-ui-kit": "^6.1.0",
+    "react-modal": "^3.16.1",
     "zipcodes": "^8.0.0"
   }
 }

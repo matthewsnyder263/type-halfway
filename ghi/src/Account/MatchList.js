@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Match from './Match';
+import Modal from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import List from '@mui/material/List';
@@ -11,14 +10,22 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import zipcodes from 'zipcodes';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+
+Modal.setAppElement('#root');
 
 
 function MatchList() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const { token } = useToken();
     const navigate = useNavigate();
     const [matches, setMatches] = useState([]);
     const [currentUser, setCurrentUser] = useState("");
     const [allUsers, setAllUsers] = useState([]);
+    // const zipcodes = require('zipcodes');
 
     useEffect(() => {
         if (!token) {
@@ -94,44 +101,85 @@ function MatchList() {
         }
     }, [currentUser]);
 
+    const openModal = (user) => {
+        setSelectedUser(user);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+
 
     return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {matches.map((data, index) => {
-                const matchedUser = allUsers.find(user => user.id === data.matched_user);
-                if (!matchedUser) return null;
-                const matchedUserName = matchedUser ? matchedUser.full_name : 'Unknown User';
-                const userProfileUrl = `/profile/${matchedUser.id}`;
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            borderRadius: '100px'
+        }}>
+            <Typography variant="h2" color="white" align="center" style={{ marginBottom: '20px' }}>Your Match Profile</Typography>
+            <List sx={{ width: '200%', maxWidth: 960, bgcolor: 'transparent' }}>
+                {matches.map((data, index) => {
+                    const matchedUser = allUsers.find(user => user.id === data.matched_user);
+                    if (!matchedUser) return null;
+                    const matchedUserName = matchedUser ? matchedUser.full_name : 'Unknown User';
+                    const distanceInMiles = zipcodes.distance(currentUser.zip_code, matchedUser.zip_code)
+                    return (
+                        <React.Fragment key={data.id}>
+                            <Card sx={{ borderRadius: '10px', overflow: 'hidden', background: 'linear-gradient(to right, #fffbe7, #fffacb 50%)' }}>
+                                <ListItem alignItems="flex-start" onClick={() => openModal(matchedUser)} sx={{ borderRadius: 15, overflow: 'hidden' }}>
+                                    <ListItemAvatar>
+                                        <Avatar alt={matchedUserName} src={matchedUser.picture} onClick={() => openModal(matchedUser)} style={{ cursor: 'pointer', width: '100px', height: '100px', margin: '2px' }} />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={matchedUserName}
+                                        secondary={
+                                            <React.Fragment>
+                                                <Typography
+                                                    sx={{ display: 'inline' }}
+                                                    component="span"
+                                                    variant="body2"
+                                                    color="text.primary"
+                                                >
+                                                    Distance: {distanceInMiles} miles
+                                                </Typography>
+                                                {" — Matched on: " + new Date(data.matched_date).toLocaleDateString()}
+                                            </React.Fragment>
+                                        }
+                                    />
+                                    <Button color="primary">Delete</Button>
+                                    <Button variant="contained" color="secondary" onClick={() => navigate(`/chat/${matchedUser.id}`)}>Chat</Button>
+                                </ListItem>
+                            </Card>
+                            {index !== matches.length - 1 && <Divider variant="inset" component="li" />}
+                        </React.Fragment>
+                    );
+                })}
 
-                return (
-                    <React.Fragment key={data.id}>
-                        <ListItem alignItems="flex-start">
-                            <ListItemAvatar>
-                                <Avatar alt={matchedUserName} src={matchedUser.picture} />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={matchedUserName}
-                                secondary={
-                                    <React.Fragment>
-                                        <Typography
-                                            sx={{ display: 'inline' }}
-                                            component="span"
-                                            variant="body2"
-                                            color="text.primary"
-                                        >
-                                            {matchedUserName}
-                                        </Typography>
-                                        {" — I'll be in your neighborhood doing errands this…"}
-                                    </React.Fragment>
-                                }
-                            />
-                        </ListItem>
-                        {index !== matches.length - 1 && <Divider variant="inset" component="li" />}
-                    </React.Fragment>
-                );
-            })}
-        </List>
+                <Modal isOpen={modalOpen} onRequestClose={closeModal} contentLabel="User Detail" style={{
+                    content: {
+                        borderRadius: '30px',
+                        width: '50%',
+                        height: '50%',
+                        margin: 'auto'
+                    }
+                }}>
+                    {selectedUser && (
+                        <div>
+                            <img src={selectedUser.picture} alt={selectedUser.full_name} style={{ width: '300px', height: '300px', objectFit: 'cover' }} />
+                            <h2>{selectedUser.full_name}</h2>
+                            <p>{selectedUser.bio}</p>
+                            <p>Age: {selectedUser.age}</p>
+                            <button onClick={closeModal}>Close</button>
+                        </div>
+                    )}
+                </Modal>
+            </List>
+        </div >
     );
-}
+};
 
 export default MatchList;
