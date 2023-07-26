@@ -102,6 +102,17 @@ async def get_match(match_id: int, matches: MatchQueries = Depends()):
     return match
 
 
+@router.delete("/matches/{match_id}")
+async def delete_match(match_id: int, matches: MatchQueries = Depends()):
+    match = matches.delete_match(match_id)
+    if match is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Match couldn't be found.",
+        )
+    return match
+
+
 @router.get("/likes")
 async def get_all_likes(matches: MatchQueries = Depends()):
     all_likes = matches.get_all_likes()

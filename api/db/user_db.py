@@ -1,6 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
-from typing import List
+from typing import List, Optional
 from typing import ByteString
 from pydantic import BaseModel
 
@@ -52,7 +52,7 @@ class UserOut(BaseModel):
     zip_code: str
     interest: str
     picture: str
-    hashed_password: str
+    hashed_password: Optional[str]
 
 
 class UsersOut(BaseModel):
@@ -251,7 +251,7 @@ class UserQueries:
                 params = [
                     data.username,
                     data.email,
-                    data.hashed_password,
+                    # data.hashed_password,
                     data.full_name,
                     data.gender,
                     data.age,
@@ -268,7 +268,6 @@ class UserQueries:
                     UPDATE users
                     SET username = %s
                     , email = %s
-                    , hashed_password = %s
                     , full_name = %s
                     , gender = %s
                     , age = %s
@@ -278,7 +277,7 @@ class UserQueries:
                     , interest = %s
                     , picture = %s
                     WHERE id = %s
-                    RETURNING id, username, email, hashed_password, full_name, gender, age, mbti, bio, zip_code, interest, picture
+                    RETURNING id, username, email, full_name, gender, age, mbti, bio, zip_code, interest, picture
                     """,
                     params,
                 )

@@ -10,7 +10,7 @@ from fastapi import (
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-
+from passlib.context import CryptContext
 from pydantic import BaseModel
 
 from db.user_db import (
@@ -24,6 +24,8 @@ from db.user_db import (
 
 
 router = APIRouter()
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AccountForm(BaseModel):
@@ -203,3 +205,21 @@ def update_user(
         )
     updated_user = queries.update_user(user_id, user_in)
     return updated_user
+
+
+# @router.put("/{user_id}", response_model=User)
+# async def update_user(
+#     user_id: int,
+#     user_in: schemas.UserInUpdate,
+#     current_user: models.User = Depends(get_current_active_user),
+#     users: UserQueries = Depends()
+# ) -> Any:
+#     if user_in.password:
+#         user_in.password = pwd_context.hash(user_in.password)
+#     updated_user = users.update_user(user_id, user_in)
+#     if updated_user is None:
+#         raise HTTPException(
+#             status_code=404,
+#             detail="The user with this username does not exist in the system",
+#         )
+#     return updated_user

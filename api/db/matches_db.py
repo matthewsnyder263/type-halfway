@@ -253,14 +253,19 @@ class MatchQueries:
 
     def delete_match(self, match_id: int):
         with pool.connection() as conn:
-            with conn.cursor() as db:
-                db.execute(
+            with conn.cursor() as cur:
+                cur.execute(
                     """
                     DELETE FROM matches
-                    WHERE id = %s;
+                    WHERE id = %s
+                    RETURNING id
                     """,
                     [match_id],
                 )
+                result = cur.fetchone()
+                if result is None:
+                    return None
+                return {"id": result[0]}
 
     def get_likes(self, user_id: int) -> List[Match]:
         with pool.connection() as conn:

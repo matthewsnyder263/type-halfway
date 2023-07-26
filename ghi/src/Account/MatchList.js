@@ -18,6 +18,10 @@ Modal.setAppElement('#root');
 
 
 function MatchList() {
+    // b/c our list of mutual likes can get really long, we can split them into separate pages
+    // using pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(7);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const { token } = useToken();
@@ -26,6 +30,11 @@ function MatchList() {
     const [currentUser, setCurrentUser] = useState("");
     const [allUsers, setAllUsers] = useState([]);
     // const zipcodes = require('zipcodes');
+
+
+    // const handlePageChange = (pageNumber) => {
+    //     setCurrentPage(pageNumber);
+    // };
 
     useEffect(() => {
         if (!token) {
@@ -78,6 +87,8 @@ function MatchList() {
         }
     };
 
+
+
     useEffect(() => {
         if (token) {
             fetchCurrentUser();
@@ -92,6 +103,7 @@ function MatchList() {
         if (matchResponse.ok) {
             const matchData = await matchResponse.json();
             setMatches(matchData.matches);
+            console.log('Fetching Match Data', matchData)
         }
     }
 
@@ -111,6 +123,28 @@ function MatchList() {
     };
 
 
+
+    async function deleteMatch(matchId) {
+        const url = `http://localhost:8000/matches/${matchId}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            console.error('Error deleting match:', response.status, response.statusText);
+            return;
+        }
+
+        fetchMatches();
+    }
+    const sortedMatches = matches.sort((a, b) => new Date(b.match_timestamp) - new Date(a.match_timestamp));
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = sortedMatches.slice(indexOfFirstItem, indexOfLastItem)
+
     return (
         <div style={{
             display: 'flex',
@@ -122,11 +156,16 @@ function MatchList() {
         }}>
             <Typography variant="h2" color="white" align="center" style={{ marginBottom: '20px' }}>Your Match Profile</Typography>
             <List sx={{ width: '200%', maxWidth: 960, bgcolor: 'transparent' }}>
-                {matches.map((data, index) => {
-                    const matchedUser = allUsers.find(user => user.id === data.matched_user);
+                {currentItems.map((data, index) => {
+                    // matchedUserId & matchedUser stops you from seeing yourself in matches
+                    const matchedUserId = data.logged_in_user === currentUser.id ? data.matched_user : data.logged_in_user;
+                    const matchedUser = allUsers.find(user => user.id === matchedUserId);
                     if (!matchedUser) return null;
-                    const matchedUserName = matchedUser ? matchedUser.full_name : 'Unknown User';
+                    const matchedDate = new Date(data.match_timestamp);
+                    const matchedDateString = isNaN(matchedDate.getTime()) ? "Unknown date" : matchedDate.toLocaleDateString();
+                    const matchedUserName = matchedUser ? matchedUser.username : 'Unknown User';
                     const distanceInMiles = zipcodes.distance(currentUser.zip_code, matchedUser.zip_code)
+
                     return (
                         <React.Fragment key={data.id}>
                             <Card sx={{ borderRadius: '10px', overflow: 'hidden', background: 'linear-gradient(to right, #fffbe7, #fffacb 50%)' }}>
@@ -135,22 +174,32 @@ function MatchList() {
                                         <Avatar alt={matchedUserName} src={matchedUser.picture} onClick={() => openModal(matchedUser)} style={{ cursor: 'pointer', width: '100px', height: '100px', margin: '2px' }} />
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={matchedUserName}
-                                        secondary={
-                                            <React.Fragment>
-                                                <Typography
-                                                    sx={{ display: 'inline' }}
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                    Distance: {distanceInMiles} miles
-                                                </Typography>
-                                                {" — Matched on: " + new Date(data.matched_date).toLocaleDateString()}
-                                            </React.Fragment>
+                                        primary={
+                                            <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
+                                                {matchedUserName}
+                                            </Typography>
                                         }
                                     />
-                                    <Button color="primary">Delete</Button>
+                                    <Box sx={{ position: 'absolute', bottom: '35px', left: '130px' }}>***MBTI STRENGTH HERE***</Box>
+                                    <Box sx={{ position: 'absolute', bottom: '10px', left: '120px' }}>
+                                        <Typography
+                                            sx={{ display: 'inline' }}
+                                            component="span"
+                                            variant="body2"
+                                            color="text.primary"
+                                        >
+                                            Distance: {distanceInMiles} miles
+                                        </Typography>
+                                        <Typography
+                                            sx={{ display: 'inline' }}
+                                            component="span"
+                                            variant="body2"
+                                            color="text.primary"
+                                        >
+                                            {" — Matched on: " + matchedDateString}
+                                        </Typography>
+                                    </Box>
+                                    <Button color="primary" onClick={(event) => { event.stopPropagation(); deleteMatch(data.id); }}>Delete</Button>
                                     <Button variant="contained" color="secondary" onClick={() => navigate(`/chat/${matchedUser.id}`)}>Chat</Button>
                                 </ListItem>
                             </Card>
@@ -159,25 +208,63 @@ function MatchList() {
                     );
                 })}
 
-                <Modal isOpen={modalOpen} onRequestClose={closeModal} contentLabel="User Detail" style={{
-                    content: {
-                        borderRadius: '30px',
-                        width: '50%',
-                        height: '50%',
-                        margin: 'auto'
-                    }
-                }}>
+                <Modal
+                    isOpen={modalOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="User Detail"
+                    style={{
+                        overlay: {
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        },
+                        content: {
+                            borderRadius: '30px',
+                            width: '50%',
+                            height: '50%',
+                            margin: 'auto',
+                            background: 'linear-gradient(to right, #fffbe7, #fffacb 50%)',
+                            position: 'relative',
+                        }
+                    }}
+                >
                     {selectedUser && (
-                        <div>
+                        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                            <Button
+                                onClick={closeModal}
+                                style={{
+                                    position: 'absolute',
+                                    top: '10px',
+                                    right: '10px',
+                                }}
+                            >
+                                X
+                            </Button>
+
                             <img src={selectedUser.picture} alt={selectedUser.full_name} style={{ width: '300px', height: '300px', objectFit: 'cover' }} />
+
                             <h2>{selectedUser.full_name}</h2>
+
                             <p>{selectedUser.bio}</p>
-                            <p>Age: {selectedUser.age}</p>
-                            <button onClick={closeModal}>Close</button>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div>
+                                    <p><b>Age:</b> {selectedUser.age}</p>
+                                    <p><b>Gender:</b> {selectedUser.gender}</p>
+                                    <p><b>MBTI:</b> {selectedUser.mbti}</p>
+                                </div>
+
+                                <div>
+                                    <p><b>ZIP Code:</b> {selectedUser.zip_code}</p>
+                                    <p><b>Interests:</b> {selectedUser.interest}</p>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </Modal>
             </List>
+            <Button sx={{ fontSize: '15px', fontWeight: 'bold' }} onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === Math.ceil(matches.length / itemsPerPage)}>Next</Button>
+            <Button sx={{ fontSize: '15px', fontWeight: 'bold' }} onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Previous</Button>
         </div >
     );
 };
