@@ -64,12 +64,13 @@ class PotentialMatchQueries:
                     matched_user=row[3],
                     mbti_strength=row[4],
                     liked=row[5],
-                    created_on=row[6]
+                    created_on=row[6],
                 )
                 return potentialMatch
 
-
-    def get_potential_matches_by_user(self, logged_in_user: int) -> List[PotentialMatchOut]:
+    def get_potential_matches_by_user(
+        self, logged_in_user: int
+    ) -> List[PotentialMatchOut]:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
@@ -94,11 +95,10 @@ class PotentialMatchQueries:
                         matched_user=row[3],
                         mbti_strength=row[4],
                         liked=row[5],
-                        created_on=row[6]
+                        created_on=row[6],
                     )
                     potential_matches.append(potential_match)
                 return potential_matches
-
 
     def update_potential_match(
         self, match_id: int, liked: bool

@@ -1,5 +1,5 @@
 import os
-from fastapi import Depends  # , HTTPException
+from fastapi import Depends, HTTPException
 from jwtdown_fastapi.authentication import Authenticator
 from db.user_db import UserOut, User, UserQueries
 

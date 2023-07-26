@@ -1,42 +1,3 @@
-# from fastapi import APIRouter, HTTPException
-# from typing import List
-# from db.matches_db import MatchQueries, MatchIn, MatchOut
-# from db.user_db import UserOut, UserQueries
-
-# router = APIRouter()
-# match_queries = MatchQueries()
-# user_queries = UserQueries()
-
-# @router.post("/matches", response_model=MatchOut, status_code=201)
-# def create_match(match: MatchIn) -> MatchOut:
-#     loggedInUser = user_queries.get_user_by_id(match.logged_in_user)
-#     matchedUser = user_queries.get_user_by_id(match.matched_user)
-
-#     if not loggedInUser or not matchedUser:
-#         raise HTTPException(status_code=404, detail="User not found.")
-
-#     # Check if both users have liked each other
-#     if match.liked_user1 and match.liked_user2:
-#         new_match = match_queries.create_match(match)
-#         return new_match
-#     else:
-#         raise HTTPException(status_code=400,
-#               detail="Both users must like each other to create a match.")
-
-# @router.get("/matches/{logged_in_user}", response_model=List[MatchOut])
-# def get_matches(logged_in_user: int) -> List[MatchOut]:
-#     user = user_queries.get_user_by_id(logged_in_user)
-
-#     if not user:
-#         raise HTTPException(status_code=404, detail="User not found.")
-
-#     matches = match_queries.get_matches_by_user(logged_in_user)
-#     return matches
-
-
-# >>>>SNYDER CHANGES<<< COMMENTED OUT ABOVE AND  ADDED CODE BELOW<<<<<<<<<<<
-
-
 from fastapi import (
     # Body,
     Depends,
@@ -52,7 +13,10 @@ from db.matches_db import MatchQueries, MatchIn  # , Match
 router = APIRouter()
 
 
-@router.post("/matches/{logged_in_user}/{matched_user}")
+from fastapi import HTTPException, status
+
+
+@router.post("/matches/{match_id}")
 async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     existing_match = matches.get_match(
         logged_in_user=match.matched_user, matched_user=match.logged_in_user
@@ -67,7 +31,8 @@ async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     return {"message": "Match created.", "match": created_match}
 
 
-@router.get("/matches/{user_id}")
+# @router.get("/users/{logged_in_user}/matches")
+@router.get("/users/{user_id}/matches")
 async def get_matches_for_user(
     user_id: int, matches: MatchQueries = Depends()
 ):
@@ -75,12 +40,12 @@ async def get_matches_for_user(
     return {"matches": mutual_matches}
 
 
-@router.put("/matches/{logged_in_user}/{matched_user}")
+@router.put("/matches/{match_id}")
 async def update_match(
-    logged_in_user: int, matched_user: int, matches: MatchQueries = Depends()
+    match_id: int, match: MatchIn, matches: MatchQueries = Depends()
 ):
-    match = matches.get(logged_in_user, matched_user)
-    if match is None:
+    existing_match = matches.get_match_by_id(match_id)
+    if existing_match is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Match not found.",
@@ -118,6 +83,28 @@ async def create_like(like: MatchIn, likes: MatchQueries = Depends()):
 async def get_all_matches(matches: MatchQueries = Depends()):
     all_matches = matches.get_all_matches()
     return {"matches": all_matches}
+
+
+@router.get("/matches/{match_id}")
+async def get_match(match_id: int, matches: MatchQueries = Depends()):
+    match = matches.get_match_by_id(match_id)
+    if match is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Match not found.",
+        )
+    return match
+
+
+@router.delete("/matches/{match_id}")
+async def delete_match(match_id: int, matches: MatchQueries = Depends()):
+    match = matches.delete_match(match_id)
+    if match is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Match couldn't be found.",
+        )
+    return match
 
 
 @router.get("/likes")

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
 
 
 const PotentialMatches = () => {
@@ -34,10 +33,10 @@ const PotentialMatches = () => {
         });
         if (response.ok) {
             const data = await response.json();
+            console.log(data);
             setCurrentUser(data.account);
         }
     };
-
     useEffect(() => {
         fetchCurrentUser();
     }, [token]);
@@ -50,6 +49,7 @@ const PotentialMatches = () => {
         });
         if (response.ok) {
             const data = await response.json();
+            console.log(data)
             setAllUsers(data);
         }
     };
@@ -96,145 +96,107 @@ const PotentialMatches = () => {
     };
 
     useEffect(() => {
-        console.log("Current User:", currentUser);
-        console.log("All users:", allUsers)
+        // Display compatibility data when `compatibilityData` changes
+        if (compatibilityData.length > 0) {
+            console.log("Compatibility data:", compatibilityData);
+        }
+    }, [compatibilityData]);
 
-        if (currentUser && allUsers.users) {
-            const potentialDataList = [];
-            const compatData = allUsers.users
-                .filter((user) => user.id !== currentUser.id)
-                .map((user) => {
+    const handlePotentialMatchesRequest = async () => {
+        // ask about the ? below
+        if (currentUser && allUsers.length > 0) {
+            const compatData = [];
+            for (const user of allUsers) {
+                if (user.users.id !== currentUser.account.id) {
                     const compatibilityScore = calculateCompatibilityScore(
-                        currentUser.mbti,
-                        user.mbti
+                        currentUser.account.mbti,
+                        user.users.mbti
                     );
-                    const potentialData = {
-                        logged_in_user: currentUser.id,
+                    const potentialMatchData = {
+                        logged_in_user: currentUser.account.id,
                         match_id: null,
-                        matched_user: user.id,
+                        matched_user: user.users.id,
                         mbti_strength: compatibilityScore,
                         liked: false,
-                    }
-                    return potentialDataList.push(potentialData);
-                });
-            potentialDataList.sort((a, b) => b.mbti_strength - a.mbti_strength);
-            const topCompatibilityData = potentialDataList.slice(0, 5);
-            console.log("lookhere:", potentialDataList)
-            console.log("lookhere:", topCompatibilityData)
-            setCompatibilityData(topCompatibilityData);
+                    };
 
-            const postCompatibilityData = async (data) => {
-                const url = "http://localhost:8000/api/potential_matches";
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                    credentials: "include",
-                });
-            };
-            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+                    compatData.push(potentialMatchData);
+                }
+            }
+
+            const url = "http://localhost:8000/api/potential_matches";
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(compatData),
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                console.log("Potential matches created");
+                await fetchCompatibilityData(); // Fetch compatibility data after creating potential matches
+            } else {
+                console.error("Failed to create potential matches");
+            }
+        }
+    };
+
+    const fetchCompatibilityData = async (id) => {
+        const url = `http://localhost:8000/api/potential_matches/${currentUser.account.id}`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            setCompatibilityData(data);
+        } else {
+            console.error("Failed to fetch compatibility data");
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser && allUsers.length > 0) {
+            handlePotentialMatchesRequest();
         }
     }, [currentUser, allUsers]);
 
-    useEffect(() => {
-        const getPotentialMatches = async () => {
-            if (!currentUser || !currentUser.id) {
-                // currentUser is not set or does not have an id yet
-                return;
-            }
-            const url = `http://localhost:8000/api/potential_matches/${currentUser.id}`
-            const response = await fetch(url, {
-                method: "GET",
-                credentials: "include",
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setCompatibilityData(data);
-            } else {
-                console.error("was not able to get")
-            }
-        };
-        getPotentialMatches();
-        console.log("fetch get request", getPotentialMatches())
-    }, [currentUser]);
-
-    const handleLike = async (userId) => {
-        try {
-            const loggedInUserId = currentUser.id;
-
-            const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    logged_in_user: loggedInUserId,
-                    matched_user: userId,
-                    mutual: false
-                })
-            });
-
-            if (!response.ok) {
-                console.error(`Failed to like user: ${response.statusText}`);
-                return;
-            }
-
-            const data = await response.json();
-            console.log('User Has Been Liked.');
-            console.log(data.message);
-
-            if (data.message.includes("mutual")) {
-                window.alert("You've Matched!");
-            }
-        } catch (error) {
-            console.error('Error occurred while liking user:', error);
-        }
-    };
-
-    const recentCompatibilityData = compatibilityData
-        .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
-        .slice(0, 5);
-
-    const handleMatchClick = (matchedUser) => {
-        let matchedUserName = matchedUser.full_name;
-        console.log('Username', matchedUserName)
-        let userProfileUrl = `/profile/${matchedUser.id}`;
-        console.log('User Url', userProfileUrl)
-        localStorage.setItem('matchedUser', JSON.stringify(matchedUser));
-        // Redirect to a new page or perform any other action
-        navigate(userProfileUrl); // Replace '/new-page' with the desired path
-    };
 
     return (
         <div>
             <h2>Potential Matches of the Week</h2>
-            <div className="card" style={{ width: "18rem" }}>
-                {recentCompatibilityData.map((data) => {
-                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
-                    const matchedUserName = matchedUser.full_name;
-                    const userProfileUrl = `/profile/${matchedUser.id}`;
-                    return (
-                        <div key={data.match_id} className="card mb-4">
-                            <img className="card-img-top" src="..." alt="Card image cap" />
-                            <div className="card-body">
-                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
-                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
-                                </Link>
-                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
-                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
-                                    {data.liked ? "Liked" : "Like"}
-                                </button>
+            <button onClick={handlePotentialMatchesRequest}>
+                Request Potential Matches of the Week
+            </button>
+            {compatibilityData.length > 0 ? (
+                <div>
+                    <h3>Top 5 Potential Match Results:</h3>
+                    {compatibilityData
+                        .sort((a, b) => b.mbti_strength - a.mbti_strength)
+                        .slice(0, 5)
+                        .map((compatibility) => (
+                            <div key={compatibility.id}>
+                                <p>
+                                    Matched User: {compatibility.matched_user} - MBTI strength:{" "}
+                                    {compatibility.mbti_strength}
+                                </p>
+                                <p>
+                                    Compatibility Strength:{" "}
+                                    {getCompatibilityStrengthText(compatibility.mbti_strength)}
+                                </p>
                             </div>
-                        </div>
-                    );
-                })}
-            </div>
+                        ))}
+                </div>
+            ) : (
+                <p>No compatibility data available.</p>
+            )}
         </div>
     );
-
 };
 
 export default PotentialMatches;

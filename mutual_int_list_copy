@@ -1,0 +1,112 @@
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import Match from './Match';
+// import { useNavigate } from "react-router-dom";
+// // import { getCurrentUserId } from '../auth';
+// import useToken from '@galvanize-inc/jwtdown-for-react';
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Match from "./Match";
+import { useNavigate } from "react-router-dom";
+import useToken from "@galvanize-inc/jwtdown-for-react";
+
+function MatchList() {
+  const { token } = useToken();
+  const navigate = useNavigate();
+  const [matches, setMatches] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    if (!token) {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        navigate("/login");
+      }
+    }
+  }, [navigate, token]);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  }, [token]);
+
+  const fetchAllUsers = async () => {
+    const url = `http://localhost:8000/api/users`;
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (response.ok) {
+      console.log("Fetching All User Response", response);
+      const data = await response.json();
+      setAllUsers(data.users);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    const url = `http://localhost:8000/token`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setCurrentUser(data.account);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchCurrentUser();
+    }
+  }, [token]);
+
+  const fetchMatches = async () => {
+    if (!currentUser) return;
+
+    const matchUrl = `http://localhost:8000/users/${currentUser.id}/matches/`;
+    const matchResponse = await fetch(matchUrl);
+    if (matchResponse.ok) {
+      const matchData = await matchResponse.json();
+      setMatches(matchData.matches);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchMatches();
+    }
+  }, [currentUser]);
+
+  return (
+    <div>
+      {matches.map((data) => {
+        const matchedUser = allUsers.find(
+          (user) => user.id === data.matched_user
+        );
+        const matchedUserName = matchedUser
+          ? matchedUser.full_name
+          : "Unknown User";
+        const userProfileUrl = `/profile/${matchedUser.id}`;
+        return (
+          <div key={data.id}>
+            <h1>Matched User Name: {matchedUserName}</h1>
+            <a href={userProfileUrl}>View profile</a>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// export default MatchList;
