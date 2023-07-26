@@ -53,7 +53,7 @@ CHECK (logged_in_user <> matched_user);
 CREATE OR REPLACE FUNCTION update_match_timestamp() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.mutual THEN
-        NEW.match_timestamp = CURRENT_TIMESTAMP;
+        -- NEW.match_timestamp = CURRENT_TIMESTAMP;
     END IF;
     RETURN NEW;
 END;

@@ -64,10 +64,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
 import UserProfile from './Account/UserProfilePage';
 import Chat from './Account/chat';
-import Nav from './Nav.js';
+import Nav from './NavBar//Nav.js';
 import ProfilePage from "./Account/ProfilePage";
 import Match from './Account/Match';
 import MatchList from './Account/MatchList';
+import CompatibilityCalculator from './HomePage/CalculateCompat';
+import HomePage from './HomePage/HomePage';
 
 
 function App() {
@@ -91,6 +93,8 @@ function App() {
             <Route path="/matchlist" element={<MatchList />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/compatibilitycalculator" element={<CompatibilityCalculator />} />
+            <Route path="/homepage" element={<HomePage />} />
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
             {/* <InterestsForm user_id={userId} /> */}
             {/* <Construct info={launchInfo} /> */}
