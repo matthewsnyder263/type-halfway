@@ -21,7 +21,7 @@ router = APIRouter()
 from fastapi import HTTPException, status
 
 
-@router.post("/matches/{logged_in_user}/{matched_user}")
+@router.post("/matches/{match_id}")
 async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     existing_match = matches.get_match(
         logged_in_user=match.matched_user, matched_user=match.logged_in_user
@@ -36,7 +36,8 @@ async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     return {"message": "Match created.", "match": created_match}
 
 
-@router.get("/matches/{user_id}")
+# @router.get("/users/{logged_in_user}/matches")
+@router.get("/users/{user_id}/matches")
 async def get_matches_for_user(
     user_id: int, matches: MatchQueries = Depends()
 ):
@@ -44,12 +45,12 @@ async def get_matches_for_user(
     return {"matches": mutual_matches}
 
 
-@router.put("/matches/{logged_in_user}/{matched_user}")
+@router.put("/matches/{match_id}")
 async def update_match(
-    logged_in_user: int, matched_user: int, matches: MatchQueries = Depends()
+    match_id: int, match: MatchIn, matches: MatchQueries = Depends()
 ):
-    match = matches.get(logged_in_user, matched_user)
-    if match is None:
+    existing_match = matches.get_match_by_id(match_id)
+    if existing_match is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Match not found.",
@@ -88,6 +89,17 @@ async def create_like(like: MatchIn, likes: MatchQueries = Depends()):
 async def get_all_matches(matches: MatchQueries = Depends()):
     all_matches = matches.get_all_matches()
     return {"matches": all_matches}
+
+
+@router.get("/matches/{match_id}")
+async def get_match(match_id: int, matches: MatchQueries = Depends()):
+    match = matches.get_match_by_id(match_id)
+    if match is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Match not found.",
+        )
+    return match
 
 
 @router.get("/likes")

@@ -4,6 +4,7 @@ from psycopg_pool import ConnectionPool
 # from models import User, UserIn
 from pydantic import BaseModel
 from typing import List
+from datetime import datetime
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
@@ -13,12 +14,14 @@ class Match(BaseModel):
     logged_in_user: int
     matched_user: int
     mutual: bool
+    match_timestamp: datetime
 
 
 class MatchIn(BaseModel):
     logged_in_user: int
     matched_user: int
     mutual: bool = False
+    match_timestamp: datetime
 
 
 class MatchesOut(BaseModel):
@@ -59,6 +62,7 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE (logged_in_user = %s AND matched_user = %s)
                     OR (logged_in_user = %s AND matched_user = %s);
@@ -79,6 +83,7 @@ class MatchQueries:
                     logged_in_user=record[1],
                     matched_user=record[2],
                     mutual=record[3],
+                    match_timestamp=record[4],
                 )
                 return match
 
@@ -87,7 +92,7 @@ class MatchQueries:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, logged_in_user, matched_user, mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches;
                     """
                 )
@@ -98,6 +103,7 @@ class MatchQueries:
                         logged_in_user=record[1],
                         matched_user=record[2],
                         mutual=record[3],
+                        match_timestamp=record[4],
                     )
                     for record in records
                 ]
@@ -112,6 +118,7 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE (logged_in_user = %s OR matched_user = %s) AND mutual = True
                     """,
@@ -126,19 +133,45 @@ class MatchQueries:
                             logged_in_user=record[1],
                             matched_user=record[2],
                             mutual=record[3],
+                            match_timestamp=record[4],
                         )
                     )
                 return matches
+
+    # def get_match_by_id(self, match_id: int) -> Match:
+    #     with pool.connection() as conn:
+    #         with conn.cursor() as db:
+    #             db.execute(
+    #                 """
+    #                 SELECT id
+    #                     , logged_in_user
+    #                     , matched_user
+    #                     , mutual
+    #                     , match_timestamp
+    #                 FROM matches
+    #                 WHERE id = %s;
+    #                 """,
+    #                 [match_id],
+    #             )
+    #             record = db.fetchone()
+    #             if record is None:
+    #                 return None
+
+    #             match = Match(
+    #                 id=record[0],
+    #                 logged_in_user=record[1],
+    #                 matched_user=record[2],
+    #                 mutual=record[3],
+    #                 match_timestamp=record[4],
+    #             )
+    #             return match
 
     def get_match_by_id(self, match_id: int) -> Match:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id
-                        , logged_in_user
-                        , matched_user
-                        , mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches
                     WHERE id = %s;
                     """,
@@ -153,34 +186,39 @@ class MatchQueries:
                     logged_in_user=record[1],
                     matched_user=record[2],
                     mutual=record[3],
+                    match_timestamp=record[4],
                 )
                 return match
 
     def create_match(self, match: MatchIn):
         with pool.connection() as conn:
             with conn.cursor() as db:
+                now = datetime.now()
                 result = db.execute(
                     """
                     INSERT INTO matches (
                         logged_in_user,
                         matched_user,
-                        mutual
+                        mutual,
+                        match_timestamp
                         )
-                    VALUES (%s, %s, %s)
-                    RETURNING id;
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id, match_timestamp;
                     """,
                     [
                         match.logged_in_user,
                         match.matched_user,
                         match.mutual,
+                        now,
                     ],
                 )
-                id = result.fetchone()[0]
+                id, match_timestamp = result.fetchone()
                 return Match(
                     id=id,
                     logged_in_user=match.logged_in_user,
                     matched_user=match.matched_user,
                     mutual=match.mutual,
+                    match_timestamp=now,
                 )
 
     def update_match(self, match: Match):
@@ -190,7 +228,8 @@ class MatchQueries:
                     match.logged_in_user,
                     match.matched_user,
                     match.mutual,
-                    match.id,  # make sure match.id is available
+                    datetime.now(),
+                    match.id,
                 ]
                 cur.execute(
                     """
@@ -198,6 +237,7 @@ class MatchQueries:
                     SET logged_in_user = %s
                     , matched_user = %s
                     , mutual = %s
+                    , match_timestamp = %s
                     WHERE id = %s
                     RETURNING id, logged_in_user, matched_user, mutual
                     """,
@@ -231,6 +271,7 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE logged_in_user = %s
                     """,
@@ -245,6 +286,7 @@ class MatchQueries:
                             logged_in_user=record[1],
                             matched_user=record[2],
                             mutual=record[3],
+                            match_timestamp=record[4],
                         )
                     )
                 return likes
@@ -285,6 +327,7 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE logged_in_user = %s AND mutual = True
                     """,
@@ -299,6 +342,7 @@ class MatchQueries:
                             logged_in_user=record[1],
                             matched_user=record[2],
                             mutual=record[3],
+                            match_timestamp=record[4],
                         )
                     )
                 return likes
@@ -308,7 +352,7 @@ class MatchQueries:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, logged_in_user, matched_user, mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches
                     WHERE mutual = True
                     """
@@ -320,6 +364,7 @@ class MatchQueries:
                         logged_in_user=record[1],
                         matched_user=record[2],
                         mutual=record[3],
+                        match_timestamp=record[4],
                     )
                     for record in records
                 ]
@@ -330,7 +375,7 @@ class MatchQueries:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, logged_in_user, matched_user, mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches
                     """
                 )
@@ -341,6 +386,7 @@ class MatchQueries:
                         logged_in_user=record[1],
                         matched_user=record[2],
                         mutual=record[3],
+                        match_timestamp=record[4],
                     )
                     for record in records
                 ]

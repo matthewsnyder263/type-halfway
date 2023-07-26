@@ -21,8 +21,8 @@ class User(BaseModel):
     age: int
     mbti: str
     bio: str
-    zipcode: str
-    interest: List[str]
+    zip_code: str
+    interest: str
     picture: str
 
 
@@ -35,8 +35,8 @@ class UserIn(BaseModel):
     age: int
     mbti: str
     bio: str
-    zipcode: str
-    interest: List[str]
+    zip_code: str
+    interest: str
     picture: str
 
 
@@ -49,8 +49,8 @@ class UserOut(BaseModel):
     age: int
     mbti: str
     bio: str
-    zipcode: str
-    interest: List[str]
+    zip_code: str
+    interest: str
     picture: str
     hashed_password: str
 
@@ -74,7 +74,7 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
-                        , zipcode
+                        , zip_code
                         , interest
                         , picture
                     FROM users
@@ -95,8 +95,9 @@ class UserQueries:
                     age=record[6],
                     mbti=record[7],
                     bio=record[8],
-                    zipcode=record[9],
-                    interest=record[10].split(", "),
+                    zip_code=record[9],
+                    # interest=record[10].split(", "),
+                    interest=record[10],
                     picture=record[11],
                 )
 
@@ -114,7 +115,7 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
-                        , zipcode
+                        , zip_code
                         , interest
                         , picture
                     FROM users;
@@ -132,7 +133,7 @@ class UserQueries:
                         age=record[6],
                         mbti=record[7],
                         bio=record[8],
-                        zipcode=record[9],
+                        zip_code=record[9],
                         interest=record[10],
                         picture=record[11],
                     )
@@ -154,7 +155,7 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
-                        , zipcode
+                        , zip_code
                         , interest
                         , picture
                     FROM users
@@ -176,8 +177,8 @@ class UserQueries:
                     age=record[6],
                     mbti=record[7],
                     bio=record[8],
-                    zipcode=record[9],
-                    interest=record[10].split(", "),
+                    zip_code=record[9],
+                    interest=record[10],
                     picture=record[11],
                 )
                 return user
@@ -196,7 +197,7 @@ class UserQueries:
                         age,
                         mbti,
                         bio,
-                        zipcode,
+                        zip_code,
                         interest,
                         picture
                     )
@@ -212,7 +213,7 @@ class UserQueries:
                         info.age,
                         info.mbti,
                         info.bio,
-                        info.zipcode,
+                        info.zip_code,
                         info.interest,
                         info.picture,
                     ],
@@ -228,7 +229,7 @@ class UserQueries:
                     age=info.age,
                     mbti=info.mbti,
                     bio=info.bio,
-                    zipcode=info.zipcode,
+                    zip_code=info.zip_code,
                     interest=info.interest,
                     picture=info.picture,
                 )
@@ -256,8 +257,9 @@ class UserQueries:
                     data.age,
                     data.mbti,
                     data.bio,
-                    data.zipcode,
-                    ", ".join(data.interests),
+                    data.zip_code,
+                    # ", ".join(data.interest),
+                    data.interest,
                     data.picture,
                     user_id,
                 ]
@@ -272,7 +274,7 @@ class UserQueries:
                     , age = %s
                     , mbti = %s
                     , bio = %s
-                    , zipcode = %s
+                    , zip_code = %s
                     , interest = %s
                     , picture = %s
                     WHERE id = %s

@@ -60,6 +60,6 @@ services:
     ports:
       - 8082:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: jay@jay.com
-      PGADMIN_DEFAULT_PASSWORD: jay
+      PGADMIN_DEFAULT_EMAIL: email@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
       PGADMIN_DISABLE_POSTFIX: 1

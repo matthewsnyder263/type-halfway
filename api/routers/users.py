@@ -1,4 +1,5 @@
 # router.py
+from typing import List
 from fastapi import (
     Depends,
     HTTPException,
@@ -167,6 +168,17 @@ def get_user_by_id(
     user_id: int,
     queries: UserQueries = Depends(),
 ):
+    user = queries.get_user_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    return user
+
+
+@router.get("/users/{user_id}", response_model=UserOut, tags=["users"])
+async def get_user(user_id: int, queries: UserQueries = Depends()):
     user = queries.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(
