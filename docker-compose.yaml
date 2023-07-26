@@ -9,11 +9,11 @@ services:
     depends_on:
       - db
     environment:
-      SIGNING_KEY: ${SIGNING_KEY}
+      SIGNING_KEY: e9cc4b982bfcc8f60016000a8c5e5572b8288c7d4143eb008622832cc1b658f8
       WAIT_HOSTS: db:5432
       WAIT_BEFORE: 5
       WAIT_TIMEOUT: 60
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://user:password@db/data
       CORS_HOST: http://localhost:3000
     build:
       context: api
@@ -41,23 +41,26 @@ services:
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
 
   db:
-    image: postgres:14.2-bullseye
+    build:
+      context: data
+      dockerfile: Dockerfile.dev
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: user
       POSTGRES_DB: data
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - project-gamma-data:/var/lib/postgresql/data
 
-  pg-admin:
-    image: dpage/pgadmin4
-    volumes:
-      - pg-admin:/var/lib/pgadmin4
-    ports:
-      - 8082:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: jay@jay.com
-      PGADMIN_DEFAULT_PASSWORD: jay
-      PGADMIN_DISABLE_POSTFIX: 1
+
+  # pg-admin:
+  #   image: dpage/pgadmin4
+  #   volumes:
+  #     - pg-admin:/var/lib/pgadmin4
+  #   ports:
+  #     - 8082:80
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: jay@jay.com
+  #     PGADMIN_DEFAULT_PASSWORD: jay
+  #     PGADMIN_DISABLE_POSTFIX: 1

@@ -1,0 +1,38 @@
+/* const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+  },
+  form: {
+    backgroundColor: 'rgba(200, 65, 115, 8)',
+    padding: '5em',
+    borderRadius: '5em',
+    boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
+
+  },
+  label: {
+    fontWeight: 'bold',
+    marginRight: '12em'
+  }
+}; */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form {
+  background-color: rgba(200, 65, 115, 8);
+  padding: 5em;
+  border-radius: 5em;
+  box-shadow: 0 0 100em rgba(200, 75, 150, 102);
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 12em;
+}

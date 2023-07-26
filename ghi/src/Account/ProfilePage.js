@@ -6,10 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const ProfilePage = () => {
-    // SNYDER CODE ADDED BELOW<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    // const { id: userId } = useParams();
-    // const [userData, setUserData] = useState(null);
-    // SNYDER CODE ADDED ABOVE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     const [currentUser, setCurrentUser] = useState('');
     const navigate = useNavigate();
     const { token, logout } = useToken();
@@ -18,90 +14,14 @@ const ProfilePage = () => {
         if (token) {
             const storedUser = JSON.parse(localStorage.getItem("user"));
             setCurrentUser(storedUser);
-            // console.log("currentUser PROFILE", storedUser)
+            console.log("currentUser PROFILE", storedUser)
         } else {
             localStorage.removeItem("user");
             setCurrentUser(null);
             navigate('/login');
-
         }
     }, [token]);
 
-    // // >>>>>>SNYDER CODE ADDED BELOW FOR LIKE USER<<<<<<<<
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`
-    //             }
-    //         });
-    //         if (!response.ok) {
-    //             console.error(`HTTP error! status: ${response.status}`);
-    //             const text = await response.text();
-    //             console.error(`Response text: ${text}`);
-    //             return;
-    //         }
-    //         const data = await response.json();
-    //         setUserData(data);
-    //     };
-
-    //     const storedUser = localStorage.getItem('userData');
-    //     if (storedUser) {
-    //         try {
-    //             setCurrentUser(JSON.parse(storedUser));
-    //         } catch (error) {
-    //             console.error('Failed to parse user data from localStorage:', error);
-    //         }
-    //     }
-    //     fetchData();
-    // }, [userId, token]);
-
-    // if (!userData) {
-    //     return <div>Loading..</div>
-    // }
-
-    // const likeUser = async () => {
-    //     const loggedInUserId = currentUser.id;
-
-    //     const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
-    //         method: "POST",
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             logged_in_user: loggedInUserId,
-    //             matched_user: userId,
-    //             mutual: false
-    //         })
-    //     });
-
-
-
-    //     if (!response.ok) {
-    //         console.error(`Failed to like user: ${response.statusText}`);
-    //         return;
-    //     }
-
-    //     const data = await response.json();
-    //     console.log('User Has Been Liked.');
-    //     console.log(data.message);
-
-    //     if (data.message.includes("mutual")) {
-    //         showMatchedPopup();
-    //     }
-    // };
-
-    // const showMatchedPopup = () => {
-    //     window.alert("You've Matched!");
-    // }
-
-    // // >>>>>>>>>>>>>>>>>>>>>>>>>SNYDER CODE ADDED ABOVE<<<<<<<<<<<<<<<<<<<<<
-
-    // useEffect(() => {
-    //     console.log("currentUser", currentUser);
-    // }, [currentUser]);
 
 
     return (
@@ -134,13 +54,6 @@ const ProfilePage = () => {
                                         Logout
                                     </button>
                                 </div>
-                                {/* SNYDER CODE ADDED BELOW */}
-                                {/* <div className="profile-column">
-                                    <h1>{userData.mbti}</h1>
-                                    <p>***Gender Input Here*** | AGE: {userData.age}</p>
-                                    <button onClick={likeUser} disabled={!currentUser}>Like</button>
-                                </div> */}
-                                {/* SNYDER CODE ADDED ABOVE */}
 
                                 <div className="media-body mb-5 text-white">
                                     <h4 className="mt-0 mb-0">{currentUser.username}</h4>
@@ -169,7 +82,7 @@ const ProfilePage = () => {
                                 </Link>
                             </div>
                         </div>
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="col-lg-6 mb-2 pr-lg-1">
                                 <img
                                     src="https://images.unsplash.com/photo-1469594292607-7bd90f8d3ba4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
@@ -184,7 +97,7 @@ const ProfilePage = () => {
                                 alt=""
                                 className="img-fluid rounded shadow-sm"
                             />
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>

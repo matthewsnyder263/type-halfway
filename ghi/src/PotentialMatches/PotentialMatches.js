@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+
 
 const PotentialMatches = () => {
     const [currentUser, setCurrentUser] = useState("");
     const [allUsers, setAllUsers] = useState([]);
     const [compatibilityData, setCompatibilityData] = useState([]);
-    const [lastCalculationDate, setLastCalculationDate] = useState(null);
-    const [createdDate, setCreatedDate] = useState("");
     const navigate = useNavigate();
     const { token } = useToken();
-
 
     useEffect(() => {
         if (!token) {
@@ -27,7 +26,6 @@ const PotentialMatches = () => {
         }
     }, [token]);
 
-
     const fetchCurrentUser = async () => {
         const url = `http://localhost:8000/token`;
         const response = await fetch(url, {
@@ -39,10 +37,10 @@ const PotentialMatches = () => {
             setCurrentUser(data.account);
         }
     };
+
     useEffect(() => {
         fetchCurrentUser();
     }, [token]);
-
 
     const fetchAllUsers = async () => {
         const url = `http://localhost:8000/api/users`;
@@ -58,8 +56,6 @@ const PotentialMatches = () => {
     useEffect(() => {
         fetchAllUsers();
     }, []);
-
-
 
     const calculateCompatibilityScore = (mbti1, mbti2) => {
         const compatibilityChart = {
@@ -100,98 +96,135 @@ const PotentialMatches = () => {
     };
 
     useEffect(() => {
-        // Retrieve the createdDate from local storage on component mount
-        const storedCreatedDate = localStorage.getItem(`createdDate_${currentUser.id}`);
-        if (storedCreatedDate) {
-            setCreatedDate(storedCreatedDate);
-        }
-    }, [currentUser]);
+        console.log("Current User:", currentUser);
+        console.log("All users:", allUsers)
 
-    const handlePotentialMatchesRequest = async () => {
-        const storageKey = `createdDate_${currentUser.id}`;
-
-        if (!createdDate || isSevenDaysPassed(createdDate)) {
-            const currentDate = new Date().toISOString();
-            setCreatedDate(currentDate);
-
-            if (currentUser && allUsers?.users.length > 0) {
-                const compatData = [];
-
-                for (const user of allUsers) {
-                    if (user.id !== currentUser.id) {
-                        const compatibilityScore = calculateCompatibilityScore(
-                            currentUser.mbti,
-                            user.mbti
-                        );
-
-                        const potentialMatchData = {
-                            logged_in_user: currentUser.id,
-                            match_id: null,
-                            user_id: user.id,
-                            mbti_strength: compatibilityScore,
-                            liked: false,
-                        };
-
-                        compatData.push(potentialMatchData);
+        if (currentUser && allUsers.users) {
+            const potentialDataList = [];
+            const compatData = allUsers.users
+                .filter((user) => user.id !== currentUser.id)
+                .map((user) => {
+                    const compatibilityScore = calculateCompatibilityScore(
+                        currentUser.mbti,
+                        user.mbti
+                    );
+                    const potentialData = {
+                        logged_in_user: currentUser.id,
+                        match_id: null,
+                        matched_user: user.id,
+                        mbti_strength: compatibilityScore,
+                        liked: false,
                     }
-                }
+                    potentialDataList.push(potentialData);
+                });
+            potentialDataList.sort((a, b) => b.mbti_strength - a.mbti_strength);
+            const topCompatibilityData = potentialDataList.slice(0, 5);
+            console.log("lookhere:", potentialDataList)
+            console.log("lookhere:", topCompatibilityData)
+            setCompatibilityData(topCompatibilityData);
 
-                const url = 'http://localhost:8000/api/potential_matches';
+            const postCompatibilityData = async (data) => {
+                const url = "http://localhost:8000/api/potential_matches";
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "applpication/json",
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(compatData),
+                    body: JSON.stringify(data),
                     credentials: "include",
                 });
+            };
+            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+        }
+    }, [currentUser, allUsers]);
 
-                if (response.ok) {
-                    console.log("potential matches created");
-                } else {
-                    console.error("Failed to create potential match");
-                }
-                setCompatibilityData(compatData);
+    useEffect(() => {
+        const getPotentialMatches = async () => {
+            if (!currentUser || !currentUser.id) {
+                // currentUser is not set or does not have an id yet
+                return;
+            }
+            const url = `http://localhost:8000/api/potential_matches/${currentUser.id}`
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "include",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCompatibilityData(data);
+            } else {
+                console.error("was not able to get")
             }
         };
+        getPotentialMatches();
+        console.log("fetch get request", getPotentialMatches())
+    }, [currentUser]);
 
-        const isSevenDaysPassed = (createdDate) => {
-            const createdTime = new Date(createdDate).getTime();
-            const currentTime = new Date().getTime();
-            const timeDiffInDays = (currentTime - createdTime) / (1000 * 60 * 60 * 24);
-            return timeDiffInDays >= 7;
-        };
+    const handleLike = async (userId) => {
+        try {
+            const loggedInUserId = currentUser.id;
 
-        return (
-            <div>
-                <h2>Potential Matches of the Week</h2>
-                <button onClick={handlePotentialMatchesRequest}>
-                    Request Potential Matches of the Week
-                </button>
-                {createdDate && (
-                    <p>Created Date: {new Date(createdDate).toLocaleString()}</p>
-                )}
-                {compatibilityData.length > 0 ? (
-                    <div>
-                        <h3>Potential Match Results:</h3>
-                        {compatibilityData.map((compatibility) => (
-                            <div key={compatibility.user.id}>
-                                <p>
-                                    User: {compatibility.user.username} - MBTI:{" "}
-                                    {compatibility.user.mbti}
-                                </p>
-                                <p>
-                                    Compatibility Strength:{" "}
-                                    {getCompatibilityStrengthText(compatibility.strength)}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>No compatibility data available.</p>
-                )}
-            </div>
-        );
+            const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    logged_in_user: loggedInUserId,
+                    matched_user: userId,
+                    mutual: false
+                })
+            });
+
+            if (!response.ok) {
+                console.error(`Failed to like user: ${response.statusText}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('User Has Been Liked.');
+            console.log(data.message);
+
+            if (data.message.includes("mutual")) {
+                window.alert("You've Matched!");
+            }
+        } catch (error) {
+            console.error('Error occurred while liking user:', error);
+        }
     };
+
+    const recentCompatibilityData = compatibilityData
+        .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
+        .slice(0, 5);
+
+    return (
+        <div>
+            <h2>Potential Matches of the Week</h2>
+            <div className="card" style={{ width: "18rem" }}>
+                {recentCompatibilityData.map((data) => {
+                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                    const matchedUserName = matchedUser.full_name;
+                    const userProfileUrl = `/profile/${matchedUser.id}`;
+                    return (
+                        <div key={data.match_id} className="card mb-4">
+                            <img className="card-img-top" src="..." alt="Card image cap" />
+                            <div className="card-body">
+                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
+                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                </Link>
+                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                    {data.liked ? "Liked" : "Like"}
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+
 };
+
 export default PotentialMatches;

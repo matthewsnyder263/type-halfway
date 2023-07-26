@@ -1,10 +1,8 @@
-import BootstrapInput from "../BootstrapInput";
 import React, { useState, useEffect } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import useAuthContext from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "./Account.css";
 
 
 const LoginForm = () => {
@@ -13,7 +11,6 @@ const LoginForm = () => {
   const [invalid, setInvalid] = useState(false)
   const navigate = useNavigate()
   const { login, token } = useToken()
-  // console.log("token", token)
 
 
   const handleInvalid = () => {
@@ -32,16 +29,13 @@ const LoginForm = () => {
       method: "GET",
       credentials: "include",
     });
-    // console.log("response", response)
     if (response.ok) {
       const data = await response.json()
-      // console.log("account", data.account)
       if (data === null) {
         handleInvalid()
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
-        // console.log("data.account", data.account)
-        navigate("/profile")
+        navigate("/potentialmatch")
       }
     }
   };
@@ -57,13 +51,11 @@ const LoginForm = () => {
     }
   }
 
-
-
   return (
     <div className="row justify-content-center">
-      <div style={styles.container}>
-        <form style={styles.form} onSubmit={handleSubmit}>
-          <h5 style={styles.label} className='label form-floating mb-3 card-header' >Login</h5>
+      <div className="container">
+        <form className="form" onSubmit={handleSubmit}>
+          <h5 className="label form-floating mb-3 card-header">Login</h5>
           <div className="form-floating mb-3">
             <input
               name="username"
@@ -116,22 +108,22 @@ export default LoginForm
 
 
 
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-  },
-  form: {
-    backgroundColor: 'rgba(200, 65, 115, 8)',
-    padding: '5em',
-    borderRadius: '5em',
-    boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
+// const styles = {
+//   container: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     height: '100vh',
+//   },
+//   form: {
+//     backgroundColor: 'rgba(200, 65, 115, 8)',
+//     padding: '5em',
+//     borderRadius: '5em',
+//     boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
 
-  },
-  label: {
-    fontWeight: 'bold',
-    marginRight: '12em'
-  }
-};
+//   },
+//   label: {
+//     fontWeight: 'bold',
+//     marginRight: '12em'
+//   }
+// };
