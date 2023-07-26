@@ -35,6 +35,9 @@
     "setdestination",
     "uselist"
   ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
   "sqltools.connections": [
     {
       "previewLimit": 50,
@@ -47,30 +50,6 @@
       "username": "user"
     }
   ],
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  },
-  "sqltools.connections": [
-    {
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "users_table",
-      "database": "data",
-      "username": "user"
-    },
-    {
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "db",
-      "database": "data",
-      "username": "user",
-      "password": "password"
-    }
-  ]
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
   "dataworkspace.excludedProjects": ["db/db.sqlproj"]
