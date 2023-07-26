@@ -11,10 +11,7 @@ import PotentialMatches from './PotentialMatches/PotentialMatches';
 import ProfilePage from './Account/ProfilePage';
 // import Chat from './Account/chat';
 import Nav from './Nav.js';
-import useToken from '@galvanize-inc/jwtdown-for-react';
-import LoggedOutNav from './LoggedOutNav.js';
 import UserProfile from './Account/UserProfile.js';
-
 
 
 
@@ -30,11 +27,12 @@ function App() {
           <Nav />
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
+            {/* <Route path='/home' element={<Home />} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/potentialmatch" element={<PotentialMatches />} />
-            <Route path="/profile/:userId" element={<UserProfile />} />
+            <Route path="/userprofile/:userId" element={<UserProfile />} />
             {/* <Route path="/chat" element={<Chat />} /> */}
             <Route path="/profile" element={<ProfilePage />} />
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}

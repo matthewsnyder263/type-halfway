@@ -7,7 +7,7 @@ import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const UserProfile = () => {
     const [user, setUser] = useState("");
-    const { token, logout } = useToken();
+    const { token } = useToken();
 
 
     useEffect(() => {
@@ -26,17 +26,6 @@ const UserProfile = () => {
                         <div className="px-4 pt-0 pb-4 cover">
                             <div className="media align-items-end profile-head">
                                 <div className="profile mr-3">
-                                    <Link to="#" className="btn btn-outline-light btn-sm btn-block">
-                                        Edit profile
-                                    </Link>
-                                    <button
-                                        className="btn btn-outline-light btn-sm btn-block"
-                                        onClick={async () => {
-                                            localStorage.removeItem("token");
-                                            logout();
-                                        }}>
-                                        Logout
-                                    </button>
                                 </div>
                                 <div className="media-body mb-5 text-white">
                                     <h4 className="mt-0 mb-0">{user.username}</h4>

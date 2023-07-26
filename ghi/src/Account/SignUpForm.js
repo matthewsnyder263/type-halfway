@@ -292,6 +292,7 @@ import React, { useState, useEffect } from "react";
 import BootstrapInput from "../BootstrapInput";
 import { useNavigate } from "react-router-dom";
 import useToken from '@galvanize-inc/jwtdown-for-react';
+// import zipcodes from zipcodes
 
 const initialFormData = {
   username: "",
@@ -306,6 +307,8 @@ const initialFormData = {
   interest: "",
   picture: "",
 }
+// const ZipCodeData = require('zipcode-data');
+// console.log(city)
 
 const SignupForm = () => {
   const navigate = useNavigate();
