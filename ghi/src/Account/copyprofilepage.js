@@ -1,0 +1,82 @@
+// import React from 'react';
+// import { Link } from 'react-router-dom';
+// import './styling/ProfilePage.css';
+// import { useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import useToken from '@galvanize-inc/jwtdown-for-react';
+
+// const ProfilePage = () => {
+//     const [currentUser, setCurrentUser] = useState('');
+//     const navigate = useNavigate();
+//     const { token } = useToken();
+
+//     useEffect(() => {
+//         if (token) {
+//             const storedUser = JSON.parse(localStorage.getItem("user"));
+//             setCurrentUser(storedUser);
+//             console.log("currentUser PROFILE", storedUser)
+//         } else {
+//             localStorage.removeItem("user");
+//             setCurrentUser(null);
+//             navigate('/login');
+
+//         }
+//     }, [token]);
+
+//     return (
+//         !currentUser ? <div>Loading...</div> :
+//             <>
+//                 <div className="row py-5 px-4">
+//                     <div className="col-md-9 mx-auto">
+//                         <div className="profile-widget bg-white shadow rounded overflow-hidden">
+//                             <div className="px-4 pt-0 pb-4 cover">
+//                                 <div className="media align-items-end profile-head">
+//                                     <div className="profile mr-3">
+//                                         <img
+//                                             src={currentUser.picture}
+//                                             alt="..."
+//                                             // width="130"
+//                                             style={{
+//                                                 width: "auto",
+//                                                 height: "auto"
+//                                             }}
+//                                             className="rounded mb-2 img-thumbnail"
+//                                         />
+//                                         <Link to="#" className="btn btn-outline-light btn-sm btn-block">
+//                                             Edit profile
+//                                         </Link>
+//                                     </div>
+//                                     <div className="col-row mb-5 text-white">
+//                                         <h2 className="mt-0 mb-0">{currentUser.username}</h2>
+//                                         <h2 className="mt-0 mb-0">{currentUser.age}</h2>
+//                                         <h2 className="mt-0 mb-0">{currentUser.mbti}</h2>
+//                                         <p className="small mb-4">
+//                                             <div>
+//                                                 <h2 className="fas fa-map-marker-alt mr-2">
+//                                                     {currentUser.city}, {currentUser.state}
+//                                                 </h2>
+//                                             </div>
+//                                             <br />
+//                                         </p>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                             <div className="px-4 py-3" style={{ backgroundColor: '#dab7de9f' }}>
+//                                 <h5 className="mb-0">A little about me...</h5>
+//                                 <div className="p-4 rounded shadow-sm bg-light">
+//                                     <p className="font-italic mb-0">{currentUser.bio}</p>
+//                                 </div>
+//                             </div>
+
+//                             <div className="py-4 px-4" style={{ backgroundColor: '#dab7de9f' }}>
+//                                 <div className="d-flex align-items-center justify-content-between mb-6">
+//                                     <h5 className="mb-0">Recent photos</h5>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </>
+//     );
+// };
+// export default ProfilePage;

@@ -15,7 +15,7 @@ import Match from './PotentialMatches/Match';
 import MatchList from './PotentialMatches/MatchList';
 import CompatibilityCalculator from './HomePage/CalculateCompat';
 import HomePage from './HomePage/HomePage';
-import CompatibilityCalculator from './HomePage/CalculateCompat';
+
 
 
 function App() {
