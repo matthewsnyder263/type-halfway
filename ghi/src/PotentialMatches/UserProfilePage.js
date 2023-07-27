@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import './ProfilePage.css';
+import './styles/UserProfilePage.css';
 import { useEffect, useState } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 

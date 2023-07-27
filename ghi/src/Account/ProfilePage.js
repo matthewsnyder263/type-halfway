@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './ProfilePage.css';
+import './styling/ProfilePage.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useToken from '@galvanize-inc/jwtdown-for-react';
@@ -8,7 +8,7 @@ import useToken from '@galvanize-inc/jwtdown-for-react';
 const ProfilePage = () => {
     const [currentUser, setCurrentUser] = useState('');
     const navigate = useNavigate();
-    const { token, logout } = useToken();
+    const { token } = useToken();
 
     useEffect(() => {
         if (token) {
@@ -51,8 +51,9 @@ const ProfilePage = () => {
                                         <h4 className="mt-0 mb-0">{currentUser.age}</h4>
                                         <h4 className="mt-0 mb-0">{currentUser.mbti}</h4>
                                         <p className="small mb-4">
-                                            <i className="fas fa-map-marker-alt mr-2"></i>
-                                            {currentUser.city}, {currentUser.state}
+                                            <i className="fas fa-map-marker-alt mr-2">
+                                                {currentUser.city}, {currentUser.state}
+                                            </i>
                                         </p>
                                     </div>
                                 </div>
@@ -93,7 +94,6 @@ const ProfilePage = () => {
                                     className="img-fluid rounded shadow-sm"
                                 />
                             </div>
-
                         </div>
                     </div>
                 </div>

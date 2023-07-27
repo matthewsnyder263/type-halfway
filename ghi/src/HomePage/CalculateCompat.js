@@ -69,82 +69,82 @@ const CompatibilityCalculator = () => {
         <div className="container">
             <div className="row justify-content-center">
                 <div className="shadow p-4 mt-4">
-                <div className="col-md-8">
-                    <div>
-                        <h2 className="major">Calculate MBTI Compatibility</h2>
-                        <form onSubmit={handleSubmit}>
-                            <label htmlFor="type1">Input your MBTI Type:</label>
-                            <div className="form-floating mb-3">
-                                <select
-                                    id="mbti"
-                                    name="mbti"
-                                    className="form-control"
-                                    placeholder=""
-                                    type="text"
-                                >
-                                    <option value="" disabled selected>
-                                    </option>
-                                    <option value="INTJ">INTJ</option>
-                                    <option value="INTP">INTP</option>
-                                    <option value="ENTJ">ENTJ</option>
-                                    <option value="ENTP">ENTP</option>
-                                    <option value="INFJ">INFJ</option>
-                                    <option value="INFP">INFP</option>
-                                    <option value="ENFJ">ENFJ</option>
-                                    <option value="ENFP">ENFP</option>
-                                    <option value="ISTJ">ISTJ</option>
-                                    <option value="ISTP">ISTP</option>
-                                    <option value="ESTJ">ESTJ</option>
-                                    <option value="ESTP">ESTP</option>
-                                    <option value="ISFJ">ISFJ</option>
-                                    <option value="ISFP">ISFP</option>
-                                    <option value="ESFJ">ESFJ</option>
-                                    <option value="ESFP">ESFP</option>
-                                </select>
-                            </div>
-                            <label htmlFor="type2">Input the MBTI Type you want to test:</label>
-                            <div className="form-floating mb-3">
-                                <select
-                                    id="mbti"
-                                    name="mbti"
-                                    className="form-control"
-                                    placeholder=""
-                                    type="text"
-                                >
-                                    <option value="" disabled selected>
-                                    </option>
-                                    <option value="INTJ">INTJ</option>
-                                    <option value="INTP">INTP</option>
-                                    <option value="ENTJ">ENTJ</option>
-                                    <option value="ENTP">ENTP</option>
-                                    <option value="INFJ">INFJ</option>
-                                    <option value="INFP">INFP</option>
-                                    <option value="ENFJ">ENFJ</option>
-                                    <option value="ENFP">ENFP</option>
-                                    <option value="ISTJ">ISTJ</option>
-                                    <option value="ISTP">ISTP</option>
-                                    <option value="ESTJ">ESTJ</option>
-                                    <option value="ESTP">ESTP</option>
-                                    <option value="ISFJ">ISFJ</option>
-                                    <option value="ISFP">ISFP</option>
-                                    <option value="ESFJ">ESFJ</option>
-                                    <option value="ESFP">ESFP</option>
-                                </select>
-                            </div>
-                            <button type="submit">Calculate Compatibility</button>
-
-                            {compatibilityScore !== null && (
-                                <p>Compatibility Score for "{type1}" and "{type2}": {compatibilityScore}</p>
-                            )}
-
-                            {error && (
-                                <div className="error">
-                                    <p>{error}</p>
-                                    <p>Please input MBTI Type 1 and Type 2 to calculate compatibility.</p>
+                    <div className="col-md-8">
+                        <div>
+                            <h2 className="major">Calculate MBTI Compatibility</h2>
+                            <form onSubmit={handleSubmit}>
+                                <label htmlFor="type1">Input your MBTI Type:</label>
+                                <div className="form-floating mb-3">
+                                    <select
+                                        id="mbti"
+                                        name="mbti"
+                                        className="form-control"
+                                        placeholder=""
+                                        type="text"
+                                    >
+                                        <option value="" disabled selected>
+                                        </option>
+                                        <option value="INTJ">INTJ</option>
+                                        <option value="INTP">INTP</option>
+                                        <option value="ENTJ">ENTJ</option>
+                                        <option value="ENTP">ENTP</option>
+                                        <option value="INFJ">INFJ</option>
+                                        <option value="INFP">INFP</option>
+                                        <option value="ENFJ">ENFJ</option>
+                                        <option value="ENFP">ENFP</option>
+                                        <option value="ISTJ">ISTJ</option>
+                                        <option value="ISTP">ISTP</option>
+                                        <option value="ESTJ">ESTJ</option>
+                                        <option value="ESTP">ESTP</option>
+                                        <option value="ISFJ">ISFJ</option>
+                                        <option value="ISFP">ISFP</option>
+                                        <option value="ESFJ">ESFJ</option>
+                                        <option value="ESFP">ESFP</option>
+                                    </select>
                                 </div>
-                            )}
-                        </form>
-                    </div>
+                                <label htmlFor="type2">Input the MBTI Type you want to test:</label>
+                                <div className="form-floating mb-3">
+                                    <select
+                                        id="mbti"
+                                        name="mbti"
+                                        className="form-control"
+                                        placeholder=""
+                                        type="text"
+                                    >
+                                        <option value="" disabled selected>
+                                        </option>
+                                        <option value="INTJ">INTJ</option>
+                                        <option value="INTP">INTP</option>
+                                        <option value="ENTJ">ENTJ</option>
+                                        <option value="ENTP">ENTP</option>
+                                        <option value="INFJ">INFJ</option>
+                                        <option value="INFP">INFP</option>
+                                        <option value="ENFJ">ENFJ</option>
+                                        <option value="ENFP">ENFP</option>
+                                        <option value="ISTJ">ISTJ</option>
+                                        <option value="ISTP">ISTP</option>
+                                        <option value="ESTJ">ESTJ</option>
+                                        <option value="ESTP">ESTP</option>
+                                        <option value="ISFJ">ISFJ</option>
+                                        <option value="ISFP">ISFP</option>
+                                        <option value="ESFJ">ESFJ</option>
+                                        <option value="ESFP">ESFP</option>
+                                    </select>
+                                </div>
+                                <button type="submit">Calculate Compatibility</button>
+
+                                {compatibilityScore !== null && (
+                                    <p>Compatibility Score for "{type1}" and "{type2}": {compatibilityScore}</p>
+                                )}
+
+                                {error && (
+                                    <div className="error">
+                                        <p>{error}</p>
+                                        <p>Please input MBTI Type 1 and Type 2 to calculate compatibility.</p>
+                                    </div>
+                                )}
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -13,9 +13,6 @@ from db.matches_db import MatchQueries, MatchIn  # , Match
 router = APIRouter()
 
 
-from fastapi import HTTPException, status
-
-
 @router.post("/matches/{match_id}")
 async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     existing_match = matches.get_match(

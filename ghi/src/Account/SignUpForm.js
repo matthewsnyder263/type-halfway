@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import BootstrapInput from "./BootstrapInput";
 import { useNavigate } from "react-router-dom";
 import useToken from '@galvanize-inc/jwtdown-for-react';
-// import zipcodes from zipcodes
+import zipcodes from 'zipcodes'
 
 const initialFormData = {
   username: "",
@@ -15,20 +14,19 @@ const initialFormData = {
   password: "",
   bio: "",
   zip_code: "",
+  city: "",
+  state: "",
   interest: "",
   picture: "",
 }
-// const ZipCodeData = require('zipcode-data');
-// console.log(city)
 
 const SignupForm = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, token } = useToken();
-
-
   const [formData, setFormData] = useState(initialFormData);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,11 +35,11 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const zipInfo = zipcodes.lookup(formData.zip_code)
+    formData.city = zipInfo.city
+    formData.state = zipInfo.state
 
     const data = { ...formData }
-    // console.log("FORM data", data);
-    setUsername(data.username);
-    setPassword(data.password);
 
     try {
       const usersUrl = "http://localhost:8000/api/users";
@@ -55,11 +53,8 @@ const SignupForm = () => {
       const response = await fetch(usersUrl, fetchConfig);
 
       if (response.ok) {
-        const responseData = await response.json();
-        // console.log(responseData);
-
         setFormData(initialFormData);
-        login(data.username, data.password);
+        await login(data.username, data.password);
         navigate("/profile");
       } else {
         console.error("Server responded with status", response.status);
@@ -67,6 +62,8 @@ const SignupForm = () => {
       }
     } catch (error) {
       console.error("Error creating user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -223,9 +220,27 @@ const SignupForm = () => {
                 <option value="other">Other</option>
               </select>
             </div>
-            <div >
-              <button type="submit" className="btn btn-primary">
-                Sign Up!
+            <div className="flex flex-row items-center justify-between">
+              <button
+                className="d-flex btn btn-sm btn-outline-light mt-3 justify-content-center align-items-center" type="submit"
+                disabled={loading}
+                style={{
+                  backgroundColor: '#dab7de9f',
+                  color: 'white',
+                  border: '2px solid white',
+                  borderRadius: '5em',
+                  boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
+                  fontWeight: 'bold',
+                  fontFamily: 'ui-rounded',
+                  alignContent: 'center',
+                }}
+              >
+                <span style={{ margin: "5px 8px", fontSize: "large" }}>
+                  {loading ? "Signing up..." : "Sign Up!"}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="24" fill="currentColor" className="bi bi-heart-arrow" viewBox="0 0 16 16">
+                  <path d="M6.707 9h4.364c-.536 1.573 2.028 3.806 4.929-.5-2.9-4.306-5.465-2.073-4.929-.5H6.707L4.854 6.146a.5.5 0 1 0-.708.708L5.293 8h-.586L2.854 6.146a.5.5 0 1 0-.708.708L3.293 8h-.586L.854 6.146a.5.5 0 1 0-.708.708L1.793 8.5.146 10.146a.5.5 0 0 0 .708.708L2.707 9h.586l-1.147 1.146a.5.5 0 0 0 .708.708L4.707 9h.586l-1.147 1.146a.5.5 0 0 0 .708.708L6.707 9Z" />
+                </svg>
               </button>
             </div>
           </form>

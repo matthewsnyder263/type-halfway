@@ -103,7 +103,7 @@ const PotentialMatches = () => {
         if (currentUser && allUsers.users) {
             const potentialDataList = [];
             allUsers.users
-                .filter((user) => user.id !== currentUser.id)
+                .filter((user) => user.id !== currentUser.id && user.gender !== currentUser.gender)
                 .map((user) => {
                     const compatibilityScore = calculateCompatibilityScore(
                         currentUser.mbti,

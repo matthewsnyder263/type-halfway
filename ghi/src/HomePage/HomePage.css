@@ -2260,9 +2260,9 @@ form > .fields > .field.quarter {
 }
 
 label {
-  color: #ffffff;
+  color: #8d8d8fcb;
   display: block;
-  font-family: Raleway, Helvetica, sans-serif;
+  /* font-family: Raleway, Helvetica, sans-serif; */
   font-size: 0.8em;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2270,10 +2270,10 @@ label {
   text-transform: uppercase;
 }
 
-input[type="text"],
+/* input[type="text"],
 input[type="password"],
 input[type="email"],
-input[type="tel"],
+input[type="tel"], */
 select,
 textarea {
   -moz-appearance: none;

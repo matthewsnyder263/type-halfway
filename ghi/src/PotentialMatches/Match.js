@@ -15,46 +15,6 @@ function Match() {
 
     const matchIdNumber = Number(matchId);
 
-    // useEffect(() => {
-    //     axios.get(`/users/${matched_user}`, {
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`
-    //         }
-    //     })
-    //         .then(res => setMatchedUser(res.data))
-    //         .catch(err => console.error(err));
-
-    //     axios.get(`/matches/${matchIdNumber}`, {
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`
-    //         }
-    //     })
-    //         .then(res => setMatch(res.data))
-    //         .catch(err => console.error(err));
-
-    //     const currentUser = JSON.parse(localStorage.getItem('user'));
-    //     if (currentUser) {
-    //         axios.get(`/users/${currentUser.id}`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`
-    //             }
-    //         }).then(res => {
-    //             console.log('Current user details response:', res);
-    //             setCurrentUser(res.data);
-    //         })
-    //             .catch(err => {
-    //                 console.error('Error during fetching current user details:', err);
-    //                 console.error(err.response);
-    //             });
-    //     }
-    // }, [matched_user]);
-
-    // if (!match) {
-    //     return null;
-    // }
-
-
-    // ###################### USED ERROR HANDLING BELOW #################
     useEffect(() => {
         const fetchMatchAndUser = async () => {
             try {
