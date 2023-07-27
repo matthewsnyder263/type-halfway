@@ -16,10 +16,12 @@ COPY routers routers
 COPY authenticator.py authenticator.py
 
 RUN python -m pip install -r requirements.txt
+RUN pip install psycopg2-binary
+
+ENV PYTHONPATH=/app
 
 # !! PORT env var needs to match with exposed port in caprover dashboard
-CMD uvicorn main:app --host 0.0.0.0 --port 80
-
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port 80 & pytest api/tests"
 
 # If you're using a relational database and want migrations
 # to be run automatically, delete the previous CMD line and

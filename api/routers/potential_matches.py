@@ -1,13 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
-from db.potential_matches_db import (
+from ..db.potential_matches_db import (
     PotentialMatch,
     PotentialMatchIn,
     PotentialMatchOut,
     PotentialMatchQueries,
 )
-from db.user_db import UserOut, UserQueries
+from ..db.user_db import UserOut, UserQueries
 
 
 router = APIRouter()
@@ -37,7 +37,8 @@ def create_potential_match(
 
 
 @router.get(
-    "/api/potential_matches/{logged_in_user}", response_model=List[PotentialMatchOut]
+    "/api/potential_matches/{logged_in_user}",
+    response_model=List[PotentialMatchOut],
 )
 def get_potential_matches(logged_in_user: int) -> List[PotentialMatchOut]:
     user = user_queries.get_user_by_id(logged_in_user)
@@ -51,7 +52,9 @@ def get_potential_matches(logged_in_user: int) -> List[PotentialMatchOut]:
     return potential_matches
 
 
-@router.put("/api/potential-matches/{match_id}", response_model=PotentialMatchOut)
+@router.put(
+    "/api/potential-matches/{match_id}", response_model=PotentialMatchOut
+)
 async def update_potential_match(match_id: int, liked: bool):
     potential_match = potential_match_queries.get_potential_matches_by_user(
         match_id

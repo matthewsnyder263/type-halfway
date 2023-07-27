@@ -1,20 +1,31 @@
+# import sys
+# from pathlib import Path
+
+# sys.path.append(str(Path(__file__).resolve().parent.parent))
 from fastapi.testclient import TestClient
-from main import app
-from db.matches_db import MatchQueries
+from ..main import app
+from ..db.matches_db import MatchQueries
 
 client = TestClient(app)
+
+
 class MatchRepository:
     def get_all(self):
         return []
 
     def create(self, match):
-        return {"id": 100, "logged_in_user": 25, "matched_user": 30, "mutual": True}
+        return {
+            "id": 100,
+            "logged_in_user": 25,
+            "matched_user": 30,
+            "mutual": True,
+        }
 
     def delete(self, match_id):
         return True
 
-def test_get_matches():
 
+def test_get_matches():
     app.dependency_overrides[MatchQueries] = MatchRepository
 
     response = client.get("/matches")
@@ -24,8 +35,8 @@ def test_get_matches():
     assert response.status_code == 200
     assert response.json() == []
 
-def test_delete_match():
 
+def test_delete_match():
     app.dependency_overrides[MatchQueries] = MatchRepository
     json = {"logged_in_user": 25, "matched_user": 30, "mutual": True}
     expected = True

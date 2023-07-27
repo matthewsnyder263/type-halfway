@@ -245,8 +245,6 @@ class MatchQueries:
                     """,
                     [user_id],
                 )
-                # note i took out AND mutual = False, in
-                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:

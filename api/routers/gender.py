@@ -3,7 +3,7 @@ from fastapi import (
     Depends,
 )
 
-from db.gender_db import GenderOut, GenderQueries
+from ..db.gender_db import GenderOut, GenderQueries
 
 router = APIRouter()
 
