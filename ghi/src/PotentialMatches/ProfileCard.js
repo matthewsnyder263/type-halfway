@@ -15,7 +15,7 @@ const ProfileCard = (props) => (
     >
         <div className="card">
             <img
-                src={props.image}
+                src={props.picture}
                 className="card-img-top"
                 alt="Profile"
                 style={{
@@ -24,7 +24,7 @@ const ProfileCard = (props) => (
                 }}
             />
             <div style={{ padding: "10px 0 0 4px" }}>
-                <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>{props.name}</h2>
+                <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>{props.full_name}</h2>
             </div>
             <div
                 className="card-footer"
@@ -39,7 +39,7 @@ const ProfileCard = (props) => (
             >
                 <h5 className="text-muted">{props.age} - </h5>
                 <h5 className="text-muted">
-                    {props.city}, {props.state}
+                    {props.mbti}, {props.zip_code}
                 </h5>
             </div>
         </div>
@@ -50,8 +50,9 @@ const ProfileCard = (props) => (
 ProfileCard.propTypes = {
     name: PropTypes.string.isRequired,
     age: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    state: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+    mbti: PropTypes.string.isRequired,
+    zip_code: PropTypes.string.isRequired,
 };
 
 ProfileCard.defaultProps = {

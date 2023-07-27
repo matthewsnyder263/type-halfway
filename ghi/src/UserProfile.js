@@ -7,9 +7,7 @@ import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const UserProfile = () => {
     const [user, setUser] = useState("");
-    const navigate = useNavigate();
-    const { user_Id } = useParams();
-    const { token, logout } = useToken();
+    const { token } = useToken();
 
 
     useEffect(() => {
@@ -28,19 +26,7 @@ const UserProfile = () => {
                         <div className="px-4 pt-0 pb-4 cover">
                             <div className="media align-items-end profile-head">
                                 <div className="profile mr-3">
-                                    <Link to="#" className="btn btn-outline-light btn-sm btn-block">
-                                        Edit profile
-                                    </Link>
-                                    <button
-                                        className="btn btn-outline-light btn-sm btn-block"
-                                        onClick={async () => {
-                                            localStorage.removeItem("token");
-                                            logout();
-                                        }}>
-                                        Logout
-                                    </button>
                                 </div>
-
                                 <div className="media-body mb-5 text-white">
                                     <h4 className="mt-0 mb-0">{user.username}</h4>
                                     <h4 className="mt-0 mb-0">{user.age}</h4>
@@ -68,7 +54,7 @@ const UserProfile = () => {
                                 </Link>
                             </div>
                         </div>
-                        {/* <div className="row">
+                        <div className="row">
                             <div className="col-lg-6 mb-2 pr-lg-1">
                                 <img
                                     src="https://images.unsplash.com/photo-1469594292607-7bd90f8d3ba4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
@@ -83,7 +69,7 @@ const UserProfile = () => {
                                 alt=""
                                 className="img-fluid rounded shadow-sm"
                             />
-                        </div> */}
+                        </div>
 
                     </div>
                 </div>

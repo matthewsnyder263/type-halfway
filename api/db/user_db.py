@@ -1,7 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
-from typing import List
-from typing import ByteString
+from typing import List, Optional
 from pydantic import BaseModel
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
@@ -21,6 +20,8 @@ class User(BaseModel):
     age: int
     mbti: str
     bio: str
+    city: str
+    state: str
     zip_code: str
     interest: str
     picture: str
@@ -35,6 +36,8 @@ class UserIn(BaseModel):
     age: int
     mbti: str
     bio: str
+    city: str
+    state: str
     zip_code: str
     interest: str
     picture: str
@@ -49,10 +52,12 @@ class UserOut(BaseModel):
     age: int
     mbti: str
     bio: str
+    city: str
+    state: str
     zip_code: str
     interest: str
     picture: str
-    hashed_password: str
+    hashed_password: Optional[str]
 
 
 class UsersOut(BaseModel):
@@ -74,6 +79,8 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
+                        , city
+                        , state
                         , zip_code
                         , interest
                         , picture
@@ -95,9 +102,11 @@ class UserQueries:
                     age=record[6],
                     mbti=record[7],
                     bio=record[8],
-                    zip_code=record[9],
-                    interest=record[10],
-                    picture=record[11],
+                    city=record[9],
+                    state=record[10],
+                    zip_code=record[11],
+                    interest=record[12],
+                    picture=record[13],
                 )
 
     def get_users(self) -> UsersOut:
@@ -114,6 +123,8 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
+                        , city
+                        , state
                         , zip_code
                         , interest
                         , picture
@@ -132,9 +143,11 @@ class UserQueries:
                         age=record[6],
                         mbti=record[7],
                         bio=record[8],
-                        zip_code=record[9],
-                        interest=record[10],
-                        picture=record[11],
+                        city=record[9],
+                        state=record[10],
+                        zip_code=record[11],
+                        interest=record[12],
+                        picture=record[13],
                     )
                     for record in records
                 ]
@@ -154,6 +167,8 @@ class UserQueries:
                         , age
                         , mbti
                         , bio
+                        , city
+                        , state
                         , zip_code
                         , interest
                         , picture
@@ -176,9 +191,11 @@ class UserQueries:
                     age=record[6],
                     mbti=record[7],
                     bio=record[8],
-                    zip_code=record[9],
-                    interest=record[10],
-                    picture=record[11],
+                    city=record[9],
+                    state=record[10],
+                    zip_code=record[11],
+                    interest=record[12],
+                    picture=record[13],
                 )
                 return user
 
@@ -196,11 +213,13 @@ class UserQueries:
                         age,
                         mbti,
                         bio,
+                        city,
+                        state,
                         zip_code,
                         interest,
                         picture
                     )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING id;
                     """,
                     [
@@ -212,6 +231,8 @@ class UserQueries:
                         info.age,
                         info.mbti,
                         info.bio,
+                        info.city,
+                        info.state,
                         info.zip_code,
                         info.interest,
                         info.picture,
@@ -228,6 +249,8 @@ class UserQueries:
                     age=info.age,
                     mbti=info.mbti,
                     bio=info.bio,
+                    city=info.city,
+                    state=info.state,
                     zip_code=info.zip_code,
                     interest=info.interest,
                     picture=info.picture,
@@ -250,12 +273,13 @@ class UserQueries:
                 params = [
                     data.username,
                     data.email,
-                    data.hashed_password,
                     data.full_name,
                     data.gender,
                     data.age,
                     data.mbti,
                     data.bio,
+                    data.city,
+                    data.state,
                     data.zip_code,
                     data.interest,
                     data.picture,
@@ -266,17 +290,19 @@ class UserQueries:
                     UPDATE users
                     SET username = %s
                     , email = %s
-                    , hashed_password = %s
                     , full_name = %s
                     , gender = %s
                     , age = %s
                     , mbti = %s
                     , bio = %s
+                    , city = %s
+                    , state = %s
                     , zip_code = %s
                     , interest = %s
                     , picture = %s
                     WHERE id = %s
-                    RETURNING id, username, email, hashed_password, full_name, gender, age, mbti, bio, zip_code, interest, picture
+                    RETURNING id, username, email, full_name,
+                    gender, age, mbti, bio, zip_code, interest, picture
                     """,
                     params,
                 )

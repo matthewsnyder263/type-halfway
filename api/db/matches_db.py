@@ -1,29 +1,32 @@
-
-# SNYDER CHANGES >>> COMMENTED OUT ABOVE<<< ADDED BELOW CODE
-
 import os
 from psycopg_pool import ConnectionPool
 
 # from models import User, UserIn
 from pydantic import BaseModel
 from typing import List
+from datetime import datetime
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
 
 class Match(BaseModel):
     id: int
     logged_in_user: int
     matched_user: int
     mutual: bool
+    match_timestamp: datetime
+
 
 class MatchIn(BaseModel):
     logged_in_user: int
     matched_user: int
     mutual: bool = False
+    match_timestamp: datetime
 
 
 class MatchesOut(BaseModel):
     matches: List[Match]
+
 
 class MatchOut(BaseModel):
     id: int
@@ -65,6 +68,7 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE (logged_in_user = %s AND matched_user = %s)
                     OR (logged_in_user = %s AND matched_user = %s);
@@ -85,6 +89,7 @@ class MatchQueries:
                     logged_in_user=record[1],
                     matched_user=record[2],
                     mutual=record[3],
+                    match_timestamp=record[4],
                 )
                 return match
 
@@ -93,7 +98,7 @@ class MatchQueries:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id, logged_in_user, matched_user, mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches;
                     """
                 )
@@ -104,12 +109,11 @@ class MatchQueries:
                         logged_in_user=record[1],
                         matched_user=record[2],
                         mutual=record[3],
+                        match_timestamp=record[4],
                     )
                     for record in records
                 ]
                 return MatchesOut(matches=matches)
-
-
 
     def get_mutual_matches(self, user_id: int) -> List[Match]:
         with pool.connection() as conn:
@@ -120,8 +124,10 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
-                    WHERE (logged_in_user = %s OR matched_user = %s) AND mutual = True
+                    WHERE (logged_in_user = %s OR matched_user = %s)
+                    AND mutual = True
                     """,
                     [user_id, user_id],
                 )
@@ -134,20 +140,17 @@ class MatchQueries:
                             logged_in_user=record[1],
                             matched_user=record[2],
                             mutual=record[3],
+                            match_timestamp=record[4],
                         )
                     )
                 return matches
-
 
     def get_match_by_id(self, match_id: int) -> Match:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
                     """
-                    SELECT id
-                        , logged_in_user
-                        , matched_user
-                        , mutual
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
                     FROM matches
                     WHERE id = %s;
                     """,
@@ -162,35 +165,39 @@ class MatchQueries:
                     logged_in_user=record[1],
                     matched_user=record[2],
                     mutual=record[3],
+                    match_timestamp=record[4],
                 )
                 return match
-
 
     def create_match(self, match: MatchIn):
         with pool.connection() as conn:
             with conn.cursor() as db:
+                now = datetime.now()
                 result = db.execute(
                     """
                     INSERT INTO matches (
                         logged_in_user,
                         matched_user,
-                        mutual
+                        mutual,
+                        match_timestamp
                         )
-                    VALUES (%s, %s, %s)
-                    RETURNING id;
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id, match_timestamp;
                     """,
                     [
                         match.logged_in_user,
                         match.matched_user,
                         match.mutual,
+                        now,
                     ],
                 )
-                id = result.fetchone()[0]
+                id, match_timestamp = result.fetchone()
                 return Match(
                     id=id,
                     logged_in_user=match.logged_in_user,
                     matched_user=match.matched_user,
                     mutual=match.mutual,
+                    match_timestamp=now,
                 )
 
     def update_match(self, match: Match):
@@ -200,7 +207,8 @@ class MatchQueries:
                     match.logged_in_user,
                     match.matched_user,
                     match.mutual,
-                    match.id,  # make sure match.id is available
+                    datetime.now(),
+                    match.id,
                 ]
                 cur.execute(
                     """
@@ -208,6 +216,7 @@ class MatchQueries:
                     SET logged_in_user = %s
                     , matched_user = %s
                     , mutual = %s
+                    , match_timestamp = %s
                     WHERE id = %s
                     RETURNING id, logged_in_user, matched_user, mutual
                     """,
@@ -223,14 +232,19 @@ class MatchQueries:
 
     def delete_match(self, match_id: int):
         with pool.connection() as conn:
-            with conn.cursor() as db:
-                db.execute(
+            with conn.cursor() as cur:
+                cur.execute(
                     """
                     DELETE FROM matches
-                    WHERE id = %s;
+                    WHERE id = %s
+                    RETURNING id
                     """,
                     [match_id],
                 )
+                result = cur.fetchone()
+                if result is None:
+                    return None
+                return {"id": result[0]}
 
     def get_likes(self, user_id: int) -> List[Match]:
         with pool.connection() as conn:
@@ -241,11 +255,14 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE logged_in_user = %s
                     """,
                     [user_id],
-                )  # note i took out AND mutual = False, in 'WHERE logged_in_user = %S AND mutual = False'
+                )
+                # note i took out AND mutual = False, in
+                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:
@@ -255,6 +272,7 @@ class MatchQueries:
                             logged_in_user=record[1],
                             matched_user=record[2],
                             mutual=record[3],
+                            match_timestamp=record[4],
                         )
                     )
                 return likes
@@ -295,10 +313,67 @@ class MatchQueries:
                         , logged_in_user
                         , matched_user
                         , mutual
+                        , match_timestamp
                     FROM matches
                     WHERE logged_in_user = %s AND mutual = True
                     """,
                     [user_id],
                 )
-                rows = cur.fetchall()
-                return [MatchOut(*row) for row in rows]
+                records = result.fetchall()
+                likes = []
+                for record in records:
+                    likes.append(
+                        Match(
+                            id=record[0],
+                            logged_in_user=record[1],
+                            matched_user=record[2],
+                            mutual=record[3],
+                            match_timestamp=record[4],
+                        )
+                    )
+                return likes
+
+    def get_all_matches(self) -> List[Match]:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
+                    FROM matches
+                    WHERE mutual = True
+                    """
+                )
+                records = db.fetchall()
+                matches = [
+                    Match(
+                        id=record[0],
+                        logged_in_user=record[1],
+                        matched_user=record[2],
+                        mutual=record[3],
+                        match_timestamp=record[4],
+                    )
+                    for record in records
+                ]
+                return matches
+
+    def get_all_likes(self) -> List[Match]:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    SELECT id, logged_in_user, matched_user, mutual, match_timestamp
+                    FROM matches
+                    """
+                )
+                records = db.fetchall()
+                likes = [
+                    Match(
+                        id=record[0],
+                        logged_in_user=record[1],
+                        matched_user=record[2],
+                        mutual=record[3],
+                        match_timestamp=record[4],
+                    )
+                    for record in records
+                ]
+                return likes

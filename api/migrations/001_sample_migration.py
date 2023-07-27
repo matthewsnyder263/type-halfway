@@ -7,8 +7,7 @@
 #             first VARCHAR(100) NOT NULL,
 #             last VARCHAR(100) NOT NULL,
 #             mbti VARCHAR(4) NOT NULL,
-#             email VARCHAR(255) UNIQUE NOT NULL,
-#             username VARCHAR(255) UNIQUE NOT NULL
+#             email VARCHAR(255) UNIQUE NOT NULL
 #         );
 #         """,
 #         # "Down" SQL statement
