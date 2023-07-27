@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import ProfileCard from "./ProfileCard";
 
 
 const PotentialMatches = () => {
