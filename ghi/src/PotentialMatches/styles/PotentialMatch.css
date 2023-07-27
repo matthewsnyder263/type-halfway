@@ -5,9 +5,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  max-height: 200rem;
+  /* max-height: auto; */
   max-width: 500px;
-  margin-left: 690px;
+  margin-left: auto auto;
 }
 .carousel {
   overflow: hidden;

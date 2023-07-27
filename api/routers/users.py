@@ -1,5 +1,3 @@
-# router.py
-from typing import List
 from fastapi import (
     # Body,
     Depends,
@@ -61,67 +59,6 @@ async def get_token(
             "type": "Bearer",
             "account": account,
         }
-
-
-# implemented users:
-# return user data
-
-
-# @router.get("/token", response_model=AccountToken | None)
-# async def get_token(
-#     request: Request,
-#     account: UserOut = Depends(authenticator.try_get_current_account_data),
-#     users: UserQueries = Depends(),
-# ) -> AccountToken | None:
-#     if account and authenticator.cookie_name in request.cookies:
-#         user = users.get_user_by_id(account.id)
-#         if user is not None:
-#             return {
-#                 "access_token": request.cookies[authenticator.cookie_name],
-#                 "type": "Bearer",
-#                 "account": account,
-#                 "user": user,
-#             }
-#     return None
-
-# @router.post("/token", response_model=AccountToken | HttpError)
-# async def login(
-#     request: Request,
-#     response: Response,
-#     form: AccountForm = Body(...),
-#     users: UserQueries = Depends(),
-# ):
-#     # print(await request.body)
-#     print(form)
-#     account = users.get(form.username)
-#     if not account:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     token = await authenticator.login(response, request, form, users)
-#     return AccountToken(account=account, **token.dict())
-
-
-# @router.get("/token", response_model=AccountToken | None)
-# async def get_token(
-#     request: Request,
-#     account: UserOut = Depends(authenticator.try_get_current_account_data),
-#     users: UserQueries = Depends(),
-# ) -> AccountToken | None:
-#     if account and authenticator.cookie_name in request.cookies:
-#         user = users.get_user_by_id(account.id)
-#         if user is not None:
-#             token = await authenticator.login(
-#                 response, request, AccountForm(username=user.username, password=user.password), users
-#             )
-#             return {
-#                 "access_token": request.cookies[authenticator.cookie_name],
-#                 "type": "Bearer",
-#                 "account": account,
-#                 "user": user,
-#             }
-#     return None
 
 
 @router.post("/api/users", response_model=AccountToken | HttpError)
@@ -207,21 +144,3 @@ def update_user(
         )
     updated_user = queries.update_user(user_id, user_in)
     return updated_user
-
-
-# @router.put("/{user_id}", response_model=User)
-# async def update_user(
-#     user_id: int,
-#     user_in: schemas.UserInUpdate,
-#     current_user: models.User = Depends(get_current_active_user),
-#     users: UserQueries = Depends()
-# ) -> Any:
-#     if user_in.password:
-#         user_in.password = pwd_context.hash(user_in.password)
-#     updated_user = users.update_user(user_id, user_in)
-#     if updated_user is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail="The user with this username does not exist in the system",
-#         )
-#     return updated_user

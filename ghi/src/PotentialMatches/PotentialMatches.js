@@ -3,6 +3,7 @@ import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import './styles/PotentialMatch.css'
 
 
 const PotentialMatches = () => {
@@ -216,12 +217,12 @@ const PotentialMatches = () => {
                 <div className="carousel" >
                     <Carousel>
                         {recentCompatibilityData.map((data) => {
-                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user && data.matchedUser.gender != user.gender);
                             let matchedUserName = matchedUser.full_name;
                             return (
 
                                 <div key={data.match_id} className="card ">
-                                    <img src="https://picsum.photos/200/300" alt=" " />
+                                    <img src={matchedUser.picture} alt=" " />
                                     <div className="card-body" >
                                         <div key={data.match_id}>
                                             <h1>Name: {matchedUserName}</h1>

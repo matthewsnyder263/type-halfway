@@ -14,6 +14,7 @@ COPY main.py main.py
 COPY db db
 COPY routers routers
 COPY authenticator.py authenticator.py
+COPY tests tests
 
 RUN python -m pip install -r requirements.txt
 
