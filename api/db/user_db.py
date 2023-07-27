@@ -20,8 +20,8 @@ class User(BaseModel):
     age: int
     mbti: str
     bio: str
-    city: str
-    state: str
+    city: Optional[str]
+    state: Optional[str]
     zip_code: str
     interest: str
     picture: str
@@ -36,8 +36,8 @@ class UserIn(BaseModel):
     age: int
     mbti: str
     bio: str
-    city: str
-    state: str
+    city: Optional[str]
+    state: Optional[str]
     zip_code: str
     interest: str
     picture: str
@@ -52,8 +52,8 @@ class UserOut(BaseModel):
     age: int
     mbti: str
     bio: str
-    city: str
-    state: str
+    city: Optional[str]
+    state: Optional[str]
     zip_code: str
     interest: str
     picture: str

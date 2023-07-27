@@ -46,14 +46,17 @@ const ProfilePage = () => {
                                             Edit profile
                                         </Link>
                                     </div>
-                                    <div className="media-body mb-5 text-white">
-                                        <h4 className="mt-0 mb-0">{currentUser.username}</h4>
-                                        <h4 className="mt-0 mb-0">{currentUser.age}</h4>
-                                        <h4 className="mt-0 mb-0">{currentUser.mbti}</h4>
+                                    <div className="col-row mb-5 text-white">
+                                        <h2 className="mt-0 mb-0">{currentUser.username}</h2>
+                                        <h2 className="mt-0 mb-0">{currentUser.age}</h2>
+                                        <h2 className="mt-0 mb-0">{currentUser.mbti}</h2>
                                         <p className="small mb-4">
-                                            <i className="fas fa-map-marker-alt mr-2">
-                                                {currentUser.city}, {currentUser.state}
-                                            </i>
+                                            <div>
+                                                <h2 className="fas fa-map-marker-alt mr-2">
+                                                    {currentUser.city}, {currentUser.state}
+                                                </h2>
+                                            </div>
+                                            <br />
                                         </p>
                                     </div>
                                 </div>
