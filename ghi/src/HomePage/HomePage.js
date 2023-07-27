@@ -51,8 +51,8 @@ const One = () => {
                         Join our platform today and embark on a journey that transcends typical dating experiences. Discover the magic of scientific MBTI compatibility, and find your perfect match based on authentic connections, shared values, and genuine understanding. We are dedicated to making your search for love not only enjoyable but also accurate and deeply rewarding. Let's redefine dating together!
                         <div>Click the link below to check your compatibility</div>
                     </p>
-                    <a href="#" className="special">
-                        Check your compatibility level
+                    <a href="/compatibilitycalculator" className="special">
+                        Calculate your compatibility type
                     </a>
                 </div>
             </div>

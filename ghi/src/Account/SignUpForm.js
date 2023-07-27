@@ -35,10 +35,7 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = { ...formData }
-    console.log("FORM data", data);
-    setUsername(data.username);
-    setPassword(data.password);
+    const data = { ...formData };
 
     try {
       const usersUrl = "http://localhost:8000/api/users";
@@ -47,16 +44,17 @@ const SignupForm = () => {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
-        }
-      }
+        },
+      };
       const response = await fetch(usersUrl, fetchConfig);
 
       if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData);
-
         setFormData(initialFormData);
-        login(data.username, data.password);
+
+        // Since the user is already signed up, we can directly log in without using useState
+        await login(data.username, data.password);
+
+        // Now the user is logged in, redirect to the profile page
         navigate("/profile");
       } else {
         console.error("Server responded with status", response.status);

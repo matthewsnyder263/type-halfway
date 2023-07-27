@@ -13,6 +13,7 @@ import Chat from './Account/chat';
 import Nav from './NavBar/Nav.js';
 import ProfilePage from "./Account/ProfilePage";
 import HomePage from './HomePage/HomePage';
+import CompatibilityCalculator from './HomePage/CalculateCompat';
 
 
 
@@ -28,6 +29,7 @@ function App() {
           <Nav />
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
+            <Route path="/compatibilitycalculator" element={<CompatibilityCalculator />} />
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
