@@ -3,8 +3,8 @@ services:
 
 stages:
   - test
-  - build
-  - deploy
+  # - build
+  # - deploy
 
 services:
   - postgres:14-bullseye
@@ -13,6 +13,7 @@ variables:
   POSTGRES_DB: test_db
   POSTGRES_USER: test_user
   POSTGRES_PASSWORD: test_password
+  DATABASE_URL: ${DATABASE_URL}
   POSTGRES_HOST_AUTH_METHOD: trust
 # Run flake8 to check for code quality
 lint-test-job:
@@ -22,16 +23,16 @@ lint-test-job:
     - pip install flake8
     - flake8 api
 
-# # Run the unit tests
-# api-unit-tests-job:
-#   image: python:3-bullseye
-#   stage: test
-#   needs:
-#     - lint-test-job
-#   script:
-#     - cd api
-#     - pip install -r requirements.txt
-#     - python -m pytest
+# Run the unit tests
+api-unit-tests-job:
+  image: python:3.10-slim
+  stage: test
+  needs:
+    - lint-test-job
+  script:
+    - cd api
+    - pip install -r requirements.txt
+    - python -m pytest
 
 # # Build API Image:
 # build-api-image:

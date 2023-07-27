@@ -15,7 +15,7 @@ import Match from './PotentialMatches/Match';
 import MatchList from './PotentialMatches/MatchList';
 import CompatibilityCalculator from './HomePage/CalculateCompat';
 import HomePage from './HomePage/HomePage';
-
+// import EditProfileForm from './Account/EditProfileForm';
 
 
 function App() {
@@ -31,6 +31,7 @@ function App() {
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             {/* <Route path='/home' element={<Home />} /> */}
+            {/* <Route path="/editprofile" element={<EditProfileForm />} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile/:userId" element={<UserProfile />} />

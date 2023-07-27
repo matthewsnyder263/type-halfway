@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Link } from 'react-router-dom';
+import "./styles/PotentialMatch.css"
 
 
 const PotentialMatches = () => {
@@ -209,43 +209,105 @@ const PotentialMatches = () => {
         navigate(userProfileUrl); // Replace '/new-page' with the desired path
     };
 
-    return (
-        <div className="background">
-            <div className="carousel-container">
-                {/* <h2>Potential Matches of the Week</h2> */}
-                <div className="carousel" >
-                    <Carousel>
-                        {recentCompatibilityData.map((data) => {
-                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user);
-                            let matchedUserName = matchedUser.full_name;
-                            return (
+    const [activeSlide, setActiveSlide] = useState(0);
 
-                                <div key={data.match_id} className="card ">
-                                    <img src="https://picsum.photos/200/300" alt=" " />
-                                    <div className="card-body" >
-                                        <div key={data.match_id}>
-                                            <h1>Name: {matchedUserName}</h1>
-                                            <button onClick={() => handleMatchClick(matchedUser)}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
-                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z" />
-                                                </svg>
-                                            </button>
+    const handleSlideChange = (index) => {
+        setActiveSlide(index);
+    };
+
+    return (
+        <section>
+            <div className="container">
+                <div className="carousel">
+                    {/* Add radio inputs for slides */}
+                    {recentCompatibilityData.map((data, index) => (
+                        <input
+                            key={data.match_id}
+                            type="radio"
+                            name="slides"
+                            checked={activeSlide === index}
+                            onChange={() => handleSlideChange(index)}
+                            id={`slide-${index + 1}`}
+                        />
+                    ))}
+                    {/* Add carousel slides */}
+                    <ul className="carousel__slides">
+                        {recentCompatibilityData.map((data, index) => {
+                            const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                            const matchedUserName = matchedUser.full_name;
+                            const userProfileUrl = `/profile/${matchedUser.id}`;
+                            return (
+                                <li key={data.match_id} className="carousel__slide">
+                                    <figure>
+                                        <div>
+                                            {/* You can add the matched user's image here */}
+                                            <img src={matchedUser.picture} alt={`Slide ${index + 1}`} />
                                         </div>
-                                        <button onClick={() => handleLike(data.matched_user)} disabled={data.liked} className="like-button">
-                                            {data.liked ? "Liked" : "Like"}
-                                        </button>
-                                        <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
-                                    </div>
-                                </div>
+                                        <figcaption>
+                                            {/* You can customize the content displayed for each matched user */}
+                                            <h2>Matched User: {matchedUserName}</h2>
+                                            <p>Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
+                                            <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
+                                                {data.liked ? "Liked" : "Like"}
+                                            </button>
+                                            <Link to={userProfileUrl}>
+                                                <button>View Profile</button>
+                                            </Link>
+                                        </figcaption>
+                                    </figure>
+                                </li>
                             );
                         })}
-                    </Carousel>
+                    </ul>
+                    {/* Add carousel thumbnails */}
+                    <ul className="carousel__thumbnails">
+                        {recentCompatibilityData.map((data, index) => {
+                            const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                            return (
+                                <li key={data.match_id}>
+                                    <label htmlFor={`slide-${index + 1}`}>
+                                        {/* You can add the matched user's thumbnail image here */}
+                                        <img src={matchedUser.picture} alt={`Thumbnail ${index + 1}`} />
+                                    </label>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </div>
             </div>
-        </div>
+        </section>
     );
-
 };
+
+
+
+
+                        // {recentCompatibilityData.map((data) => {
+                        //     let matchedUser = allUsers.users.find(user => user.id === data.matched_user);
+                        //     let matchedUserName = matchedUser.full_name;
+                        //     return (
+                        //         <div key={data.match_id} className="card ">
+                        //             <img src="https://picsum.photos/200/300" alt=" " />
+                        //             <div className="card-body" >
+                        //                 <div key={data.match_id}>
+                        //                     <h1>Name: {matchedUserName}</h1>
+                        //                     <button onClick={() => handleMatchClick(matchedUser)}>
+                        //                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                        //                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                        //                             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z" />
+                        //                         </svg>
+                        //                     </button>
+                        //                 </div>
+                        //                 <button onClick={() => handleLike(data.matched_user)} disabled={data.liked} className="like-button">
+                        //                     {data.liked ? "Liked" : "Like"}
+                        //                 </button>
+                        //                 <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
+                        //             </div>
+                        //         </div>
+                        //     );
+                        // })}
+
+
+
 
 export default PotentialMatches;

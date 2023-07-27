@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styles from "./styling/Signup.module.css"; // You might want to rename this to Form.module.css
 import { Link } from "react-router-dom";
-import Logo from "./styling/Logo.png";
+
 
 const EditProfileForm = ({ userData = {
     username: "",
@@ -80,12 +79,12 @@ const EditProfileForm = ({ userData = {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className={styles["signup"]}>
-        <div className={styles["signup2"]}>
-          <div className={styles["signup-page"]}>
-            <div className={styles["rectangle-2"]}></div>
-            <div className={styles["rectangle-1"]}></div>
-            <div className={styles["already-have-an-account-login"]}>
+      <div className={["signup"]}>
+        <div className={["signup2"]}>
+          <div className={["signup-page"]}>
+            <div className={["rectangle-2"]}></div>
+            <div className={["rectangle-1"]}></div>
+            <div className={["already-have-an-account-login"]}>
               <span>
                 <span className={styles["already-have-an-account-login-span"]}>
                   Already have an account?{" "}
@@ -231,7 +230,7 @@ const EditProfileForm = ({ userData = {
           </span>
         </span>
       </div>
-      <img className={styles["logo-1"]} src={Logo} alt="Logo" />
+      {/* <img className={styles["logo-1"]} src={Logo} alt="Logo" /> */}
     </form>
   );
 };
