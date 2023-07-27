@@ -107,13 +107,13 @@ const PotentialMatches = () => {
         if (currentUser && allUsers.length > 0) {
             const compatData = [];
             for (const user of allUsers) {
-                if (user.users.id !== currentUser.account.id) {
+                if (user.users.id !== currentUser?.account?.id) {
                     const compatibilityScore = calculateCompatibilityScore(
                         currentUser.account.mbti,
                         user.users.mbti
                     );
                     const potentialMatchData = {
-                        logged_in_user: currentUser.account.id,
+                        logged_in_user: currentUser?.account?.id,
                         match_id: null,
                         matched_user: user.users.id,
                         mbti_strength: compatibilityScore,

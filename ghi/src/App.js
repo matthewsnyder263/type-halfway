@@ -94,7 +94,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/compatibilitycalculator" element={<CompatibilityCalculator />} />
-            <Route path="/homepage" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
             {/* {userId ? <Route path="/interests" element={<InterestsForm user_id={userId} />} /> : null} */}
             {/* <InterestsForm user_id={userId} /> */}
             {/* <Construct info={launchInfo} /> */}

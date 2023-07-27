@@ -79,8 +79,7 @@ const LoginForm = () => {
           </div>
           <div className="flex flex-row items-center justify-between">
             <button
-              className="d-flex btn btn-md btn-outline-light mt-3"
-              type="submit"
+              className="d-flex btn btn-sm btn-outline-light mt-3 justify-content-center align-items-center" type="submit"
               style={{
                 backgroundColor: '#dab7de9f',
                 color: 'white',
@@ -88,7 +87,8 @@ const LoginForm = () => {
                 borderRadius: '5em',
                 boxShadow: '0 0 100em rgba(200, 75, 150, 102)',
                 fontWeight: 'bold',
-                fontFamily: 'ui-rounded'
+                fontFamily: 'ui-rounded',
+                alignContent: 'center',
               }}
             >
               <svg
@@ -101,7 +101,7 @@ const LoginForm = () => {
               >
                 <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"></path>
               </svg>
-              <span style={{ marginLeft: "5px" }}>Login</span>
+              <span style={{ margin: "5px 8px", fontSize: "large" }}>Login</span>
             </button>
           </div>
           <div className="w-full text-center pt-4">
@@ -142,8 +142,8 @@ const styles = {
   },
   label: {
     fontWeight: 'bold',
-    marginRight: '10em',
-    marginBottom: '10em',
+    marginRight: '8em',
+    marginBottom: '8em',
     color: 'white',
   },
 };

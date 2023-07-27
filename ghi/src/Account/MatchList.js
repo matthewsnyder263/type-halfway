@@ -38,10 +38,8 @@ function MatchList() {
 
     useEffect(() => {
         if (!token) {
-            const storedToken = localStorage.getItem("token");
-            if (storedToken) {
-                // navigate("/login");
-            }
+            localStorage.getItem("token");
+
         }
     }, [navigate, token]);
 

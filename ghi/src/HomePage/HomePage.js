@@ -1,5 +1,6 @@
 import React from 'react';
 import "./HomePage.css";
+import { Link } from 'react-router-dom';
 import couple1 from "./images/couple1.jpg"
 import couple2 from "./images/couple2.jpg"
 import couple3 from "./images/couple3.jpg"
@@ -29,7 +30,7 @@ const Banner = () => {
                     Discover meaningful connections based on Myers-Briggs Type Indicator.{' '}
                     <p></p>
                     <div>
-                        Take the <a href="https://www.16personalities.com/free-personality-test">MBTI TEST</a>
+                        Take the <Link to="https://www.16personalities.com/free-personality-test">MBTI TEST</Link>
                     </div>
 
                 </p>
@@ -42,18 +43,18 @@ const One = () => {
     return (
         <section id="one" className="wrapper spotlight style1">
             <div className="inner">
-                <a href="#" className="image">
+                <Link to="#" className="image">
                     <img src="" alt="" />
-                </a>
+                </Link>
                 <div className="content">
                     <h2 className="major">Find Your Perfect Match</h2>
                     <p>
                         Join our platform today and embark on a journey that transcends typical dating experiences. Discover the magic of scientific MBTI compatibility, and find your perfect match based on authentic connections, shared values, and genuine understanding. We are dedicated to making your search for love not only enjoyable but also accurate and deeply rewarding. Let's redefine dating together!
                         <div>Click the link below to check your compatibility</div>
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Check your compatibility level
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -64,17 +65,17 @@ const Two = () => {
     return (
         <section id="two" className="wrapper alt spotlight style2">
             <div className="inner">
-                <a href="#" className="image">
+                <Link to="#" className="image">
                     <img src="images/pic02.jpg" alt="" />
-                </a>
+                </Link>
                 <div className="content">
                     <h2 className="major">Activity Finder</h2>
                     <p>
                         Enhance your dating journey by unlocking the potential of shared experiences. With our Activity Finder, you'll discover exciting new places and activities, all tailored to your preferences and conveniently located between you and your match. Get ready to create cherished memories together, strengthening the foundation of your connection. Love awaits with every shared moment—embrace the possibilities with the Activity Finder!
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Learn more about Google API
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -85,9 +86,9 @@ const Three = () => {
     return (
         <section id="three" className="wrapper spotlight style3">
             <div className="inner">
-                <a href="#" className="image">
+                <Link to="#" className="image">
                     <img src="images/pic03.jpg" alt="" />
-                </a>
+                </Link>
                 <div className="content">
                     <h2 className="major">Integrated Chat</h2>
                     <p>
@@ -98,9 +99,9 @@ const Three = () => {
                             <ul>Dedicated Support</ul>
                         </ul>
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Learn more
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -122,52 +123,52 @@ const Four = () => {
                 </p>
                 <section className="features">
                     <article>
-                        <a href="#" className="image">
+                        <Link to="#" className="image">
                             <img src={couple1} alt="testimony" />
-                        </a>
+                        </Link>
                         <h3 className="major">Dwight &hearts; Angela</h3>
                         <p>
                             "We were skeptical about online dating, but this platform exceeded our expectations! The matching algorithm brought us together based on our personalities and interests, and we hit it off instantly. Our first date was at one of the recommended dating spots, and we had an incredible time. Thanks to this website, we found our perfect match!"
                         </p>
-                        <a href="#" className="special">
+                        <Link to="#" className="special">
                             Learn more
-                        </a>
+                        </Link>
                     </article>
                     <article>
-                        <a href="#" className="image">
+                        <Link to="#" className="image">
                             <img src={couple2} alt="testimony" />
-                        </a>
+                        </Link>
                         <h3 className="major">Jim &hearts; Pam</h3>
                         <p>
                             "Finding someone who truly understands you can be challenging, but this platform made it happen for us. We share the same MBTI compatibility, and it's like we can read each other's minds! The activity finder feature has been a game-changer, giving us fantastic date ideas. We are grateful for this platform and excited for our future together!"
                         </p>
-                        <a href="#" className="special">
+                        <Link to="#" className="special">
                             Learn more
-                        </a>
+                        </Link>
                     </article>
                     <article>
-                        <a href="#" className="image">
+                        <Link to="#" className="image">
                             <img src={couple3} alt="testimony" />
-                        </a>
+                        </Link>
                         <h3 className="major">Michael &hearts; Holly</h3>
                         <p>
                             "After trying multiple dating apps, we were feeling discouraged. Then we discovered this website, and everything changed. The compatibility matching was spot on, and we connected on a deeper level from the start. The guarantee gave us confidence, and we are delighted to say that we've found our forever person. Thank you!"
                         </p>
-                        <a href="#" className="special">
+                        <Link to="#" className="special">
                             Learn more
-                        </a>
+                        </Link>
                     </article>
                     <article>
-                        <a href="#" className="image">
+                        <Link to="#" className="image">
                             <img src={couple4} alt="" />
-                        </a>
+                        </Link>
                         <h3 className="major">Pete &hearts; Erin</h3>
                         <p>
                             "This platform is unlike any other dating app out there. The emphasis on scientific compatibility and the activity finder feature set it apart. We enjoyed exploring new places and activities together, making our dates unforgettable. We've grown together as a couple and are thankful for this website for bringing us together."
                         </p>
-                        <a href="#" className="special">
+                        <Link to="#" className="special">
                             Learn more
-                        </a>
+                        </Link>
                     </article>
                 </section>
                 <ul className="actions">
@@ -208,52 +209,52 @@ const Footer = () => {
 
             <section className="features">
                 <article className="custom-article">
-                    <a href="#" className="image">
+                    <Link to="#" className="image">
                         <img src={matt} alt="testimony" />
-                    </a>
+                    </Link>
                     <h3 className="major">MAtthew</h3>
                     <p>
                         "ah fuckkkk this"
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Linkedin
-                    </a>
+                    </Link>
                 </article>
                 <article>
-                    <a href="#" className="image">
+                    <Link to="#" className="image">
                         <img src={couple2} alt="testimony" />
-                    </a>
+                    </Link>
                     <h3 className="major">Jim &hearts; Pam</h3>
                     <p>
                         "Finding someone who truly understands you can be challenging, but this platform made it happen for us. We share the same MBTI compatibility, and it's like we can read each other's minds! The activity finder feature has been a game-changer, giving us fantastic date ideas. We are grateful for this platform and excited for our future together!"
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Learn more
-                    </a>
+                    </Link>
                 </article>
                 <article>
-                    <a href="#" className="image">
+                    <Link to="#" className="image">
                         <img src={couple3} alt="testimony" />
-                    </a>
+                    </Link>
                     <h3 className="major">Michael &hearts; Holly</h3>
                     <p>
                         "After trying multiple dating apps, we were feeling discouraged. Then we discovered this website, and everything changed. The compatibility matching was spot on, and we connected on a deeper level from the start. The guarantee gave us confidence, and we are delighted to say that we've found our forever person. Thank you!"
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Learn more
-                    </a>
+                    </Link>
                 </article>
                 <article>
-                    <a href="#" className="image">
+                    <Link to="#" className="image">
                         <img src={couple4} alt="" />
-                    </a>
+                    </Link>
                     <h3 className="major">Pete &hearts; Erin</h3>
                     <p>
                         "This platform is unlike any other dating app out there. The emphasis on scientific compatibility and the activity finder feature set it apart. We enjoyed exploring new places and activities together, making our dates unforgettable. We've grown together as a couple and are thankful for this website for bringing us together."
                     </p>
-                    <a href="#" className="special">
+                    <Link to="#" className="special">
                         Learn more
-                    </a>
+                    </Link>
                 </article>
             </section>
             <ul className="actions">
