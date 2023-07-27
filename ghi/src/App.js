@@ -84,7 +84,7 @@ function App() {
           <Nav />
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
-            {/* <Route path="/homepage" element={<HomePage />} /> */}
+            {/* <Route path='/home' element={<Home />} /> */}
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile/:userId" element={<UserProfile />} />

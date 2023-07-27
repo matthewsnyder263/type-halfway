@@ -213,22 +213,27 @@ const PotentialMatches = () => {
             <h2>Potential Matches of the Week</h2>
             <div className="card" style={{ width: "18rem" }}>
                 {recentCompatibilityData.map((data) => {
-                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
-                    const matchedUserName = matchedUser.full_name;
-                    const userProfileUrl = `/profile/${matchedUser.id}`;
+                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user)
+                    const matchedUserName = matchedUser.full_name
+                    const userProfileUrl = `/userprofile/${matchedUser.id}`
                     return (
-                        <div key={data.match_id} className="card mb-4">
-                            <img className="card-img-top" src="..." alt="Card image cap" />
-                            <div className="card-body">
-                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
-                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
-                                </Link>
+                        <>
+                            {/* <div key={data.match_id} className="card mb-4">
+                                <img className="card-img-top" src="..." alt="Card image cap" />
+                                <div className="card-body"> */}
+                            <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
+                                <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
+                                <ProfileCard picture={matchedUser.picture} full_name={matchedUser.full_name} age={matchedUser.age} mbti={matchedUser.mbti} zip_code={matchedUser.zip_code} />
                                 <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
                                 <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
                                     {data.liked ? "Liked" : "Like"}
                                 </button>
-                            </div>
-                        </div>
+                                {/* <h5 className="card-title">Matched User Name: {matchedUserName}</h5> */}
+                            </Link>
+
+                            {/* </div>
+                            </div> */}
+                        </>
                     );
                 })}
             </div>

@@ -28,6 +28,12 @@ class MatchesOut(BaseModel):
     matches: List[Match]
 
 
+class MatchOut(BaseModel):
+    id: int
+    logged_in_user: int
+    user_id: int
+
+
 class MatchQueries:
     def get(self, match_id: int) -> Match:
         with pool.connection() as conn:
@@ -120,7 +126,8 @@ class MatchQueries:
                         , mutual
                         , match_timestamp
                     FROM matches
-                    WHERE (logged_in_user = %s OR matched_user = %s) AND mutual = True
+                    WHERE (logged_in_user = %s OR matched_user = %s)
+                    AND mutual = True
                     """,
                     [user_id, user_id],
                 )
@@ -137,34 +144,6 @@ class MatchQueries:
                         )
                     )
                 return matches
-
-    # def get_match_by_id(self, match_id: int) -> Match:
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as db:
-    #             db.execute(
-    #                 """
-    #                 SELECT id
-    #                     , logged_in_user
-    #                     , matched_user
-    #                     , mutual
-    #                     , match_timestamp
-    #                 FROM matches
-    #                 WHERE id = %s;
-    #                 """,
-    #                 [match_id],
-    #             )
-    #             record = db.fetchone()
-    #             if record is None:
-    #                 return None
-
-    #             match = Match(
-    #                 id=record[0],
-    #                 logged_in_user=record[1],
-    #                 matched_user=record[2],
-    #                 mutual=record[3],
-    #                 match_timestamp=record[4],
-    #             )
-    #             return match
 
     def get_match_by_id(self, match_id: int) -> Match:
         with pool.connection() as conn:
@@ -281,7 +260,9 @@ class MatchQueries:
                     WHERE logged_in_user = %s
                     """,
                     [user_id],
-                )  # note i took out AND mutual = False, in 'WHERE logged_in_user = %S AND mutual = False'
+                )
+                # note i took out AND mutual = False, in
+                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:

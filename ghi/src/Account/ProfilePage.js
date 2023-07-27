@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import useToken from '@galvanize-inc/jwtdown-for-react';
 
 const ProfilePage = () => {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState('');
     const navigate = useNavigate();
     const { token, logout } = useToken();
 
@@ -19,14 +19,13 @@ const ProfilePage = () => {
             localStorage.removeItem("user");
             setCurrentUser(null);
             navigate('/login');
+
         }
     }, [token]);
 
-
-
     return (
-        <>
-            {currentUser ? (
+        !currentUser ? <div>Loading...</div> :
+            <>
                 <div className="row py-5 px-4">
                     <div className="col-md-9 mx-auto">
                         <div className="profile-widget bg-white shadow rounded overflow-hidden">
@@ -47,14 +46,6 @@ const ProfilePage = () => {
                                             Edit profile
                                         </Link>
                                     </div>
-                                    {/* SNYDER CODE ADDED BELOW */}
-                                    {/* <div className="profile-column">
-                                    <h1>{userData.mbti}</h1>
-                                    <p>***Gender Input Here*** | AGE: {userData.age}</p>
-                                    <button onClick={likeUser} disabled={!currentUser}>Like</button>
-                                </div> */}
-                                    {/* SNYDER CODE ADDED ABOVE */}
-
                                     <div className="media-body mb-5 text-white">
                                         <h4 className="mt-0 mb-0">{currentUser.username}</h4>
                                         <h4 className="mt-0 mb-0">{currentUser.age}</h4>
@@ -106,10 +97,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-            ) : (
-                <p>Loading...</p>
-            )}
-        </>
-    )
+            </>
+    );
 };
 export default ProfilePage;

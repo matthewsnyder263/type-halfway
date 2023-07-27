@@ -23,6 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(authenticator.router)
+
 
 @app.get("/api/launch-details")
 def launch_details():
@@ -42,3 +44,4 @@ app.include_router(potential_matches.router)
 app.include_router(matches.router)
 # app.include_router(interests.router)
 # app.include_router(mbti.router)
+app.include_router(matches.router)
