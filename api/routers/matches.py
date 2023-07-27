@@ -8,7 +8,7 @@ from fastapi import (
     # Request,
     # logger,
 )
-from ..db.matches_db import MatchQueries, MatchIn  # , Match
+from db.matches_db import MatchQueries, MatchIn  # , Match
 
 router = APIRouter()
 

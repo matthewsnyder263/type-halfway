@@ -1,6 +1,6 @@
 from fastapi import FastAPI  # HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from .authenticator import authenticator
+from authenticator import authenticator
 from routers import users, potential_matches, matches
 import os
 
