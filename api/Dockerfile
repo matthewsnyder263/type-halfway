@@ -1,6 +1,9 @@
 FROM python:3.10-bullseye
 RUN python -m pip install --upgrade pip
 RUN pip install psycopg2-binary
+# 7-27 SNYDER CHANGES#####
+ENV PYTHONPATH=/app
+##########
 WORKDIR /app
 
 # Copy the top-level files in your service's directory

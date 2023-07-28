@@ -14,7 +14,7 @@ const PotentialMatches = () => {
         if (!token) {
             const storedToken = localStorage.getItem("token");
             if (storedToken) {
-                navigate("/login");
+                // navigate("/login");
             }
         }
     }, [navigate, token]);

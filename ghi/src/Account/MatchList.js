@@ -60,7 +60,7 @@ function MatchList() {
     }, [currentUser]);
 
     const fetchAllUsers = async () => {
-        const url = `http://localhost:8000/api/users`;
+        const url = `http://localhost:8000/api/users/`;
         const response = await fetch(url, {
             method: "GET",
             credentials: "include",
@@ -73,7 +73,7 @@ function MatchList() {
     };
 
     const fetchCurrentUser = async () => {
-        const url = `http://localhost:8000/token`;
+        const url = `http://localhost:8000/token/`;
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -125,7 +125,7 @@ function MatchList() {
 
 
     async function deleteMatch(matchId) {
-        const url = `http://localhost:8000/matches/${matchId}`;
+        const url = `http://localhost:8000/matches/${matchId}/`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {

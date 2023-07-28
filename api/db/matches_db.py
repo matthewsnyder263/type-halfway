@@ -218,7 +218,7 @@ class MatchQueries:
                     logged_in_user=match.logged_in_user,
                     matched_user=match.matched_user,
                     mutual=match.mutual,
-                    match_timestamp=now,
+                    match_timestamp=match_timestamp,
                 )
 
     def update_match(self, match: Match):
@@ -243,6 +243,7 @@ class MatchQueries:
                     """,
                     params,
                 )
+                conn.commit()
                 record = None
                 row = cur.fetchone()
                 if row is not None:

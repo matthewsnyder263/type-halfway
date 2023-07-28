@@ -42,22 +42,26 @@ class ConnectionManager:
         client_id: int,
         websocket: WebSocket,
     ):
-        payload = json.dumps({
-            "client_id": client_id,
-            "content": message,
-            "timestamp": timestamp(),
-            "message_id": self.next_message_id(),
-        })
+        payload = json.dumps(
+            {
+                "client_id": client_id,
+                "content": message,
+                "timestamp": timestamp(),
+                "message_id": self.next_message_id(),
+            }
+        )
         await websocket.send_text(payload)
 
     async def broadcast(self, message: str, client_id: int):
-        payload = json.dumps({
-            "client_id": client_id,
-            "content": message,
-            "timestamp": timestamp(),
-            "message_id": self.next_message_id(),
-        })
-        print('active connections:', len(self.active_connections))
+        payload = json.dumps(
+            {
+                "client_id": client_id,
+                "content": message,
+                "timestamp": timestamp(),
+                "message_id": self.next_message_id(),
+            }
+        )
+        print("active connections:", len(self.active_connections))
         for connection in self.active_connections:
             await connection.send_text(payload)
 

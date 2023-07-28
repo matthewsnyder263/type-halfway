@@ -1,9 +1,11 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS user_interests;
-DROP TABLE IF EXISTS interests;
-DROP TABLE IF EXISTS matches;
-DROP TABLE IF EXISTS potential_matches;
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS compatibility;
+DROP TABLE IF EXISTS potential_matches;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS user_interests;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS interests;
+
 
 
 CREATE TABLE interests (
@@ -98,6 +100,16 @@ CREATE TABLE potential_matches (
     CONSTRAINT fk_logged_in_user
         FOREIGN KEY (logged_in_user)
         REFERENCES users (id)
+);
+
+
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES users(id),
+    receiver_id INT REFERENCES users(id),
+    message TEXT,
+    timestamp TIMESTAMP DEFAULT NOW()
 );
 
 

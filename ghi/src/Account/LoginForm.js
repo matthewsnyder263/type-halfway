@@ -38,7 +38,7 @@ const LoginForm = () => {
         handleInvalid()
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
-        navigate("/matchlist")
+        // navigate("/matchlist")
       }
     }
   };
