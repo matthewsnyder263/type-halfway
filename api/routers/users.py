@@ -1,4 +1,3 @@
-# router.py
 from fastapi import (
     Depends,
     HTTPException,
@@ -9,18 +8,23 @@ from fastapi import (
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-
+from passlib.context import CryptContext
 from pydantic import BaseModel
 
 from db.user_db import (
     UserIn,
     UserOut,
     UsersOut,
+    User,
     DuplicateUserError,
-    UserQueries
+    UserQueries,
 )
 
+
 router = APIRouter()
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 class AccountForm(BaseModel):
     username: str
@@ -35,7 +39,6 @@ class HttpError(BaseModel):
     detail: str
 
 
-
 @router.get("/api/protected", response_model=bool)
 async def get_protected(
     account_data: dict = Depends(authenticator.get_current_account_data),
@@ -46,7 +49,7 @@ async def get_protected(
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
-    account: UserOut = Depends(authenticator.try_get_current_account_data),
+    account: User = Depends(authenticator.try_get_current_account_data),
 ) -> AccountToken | None:
     if account and authenticator.cookie_name in request.cookies:
         return {
@@ -71,7 +74,7 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot create an account with those credentials",
         )
-    form = AccountForm(username=info.email, password=info.password)
+    form = AccountForm(username=info.username, password=info.password)
     token = await authenticator.login(response, request, form, users)
     return AccountToken(account=account, **token.dict())
 
@@ -82,7 +85,7 @@ def delete_user(
     response: Response,
     queries: UserQueries = Depends(),
 ):
-    user = queries.get_user(user_id)
+    user = queries.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -92,26 +95,6 @@ def delete_user(
     queries.delete_user(user_id)
     return True
 
-
-# @router.get("/api/users", response_model=UserOut)
-# def get_user(queries: UserQueries = Depends()):
-#     return {
-#         "users": queries.get_user(),
-#     }
-
-
-# @router.get("/api/users/{user_id}", response_model=UserOut)
-# def get_user_by_id(
-#     user_id: int,
-#     queries: UserQueries = Depends(),
-# ):
-#     user = queries.get_user(user_id)
-#     if user is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User not found",
-#         )
-#     return user
 
 @router.get("/api/users", response_model=UsersOut)
 def get_users(queries: UserQueries = Depends()):
@@ -133,22 +116,15 @@ def get_user_by_id(
     return user
 
 
-@router.put("/api/users/{user_id}", response_model=UserOut)
-def update_user(
-    user_id: int,
-    user_in: UserIn,
-    response: Response,
-    queries: UserQueries = Depends(),
-):
-    user = queries.get_user(user_id)
+@router.get("/users/{user_id}", response_model=UserOut, tags=["users"])
+async def get_user(user_id: int, queries: UserQueries = Depends()):
+    user = queries.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-
-    queries.delete_user(user_id)
-    return True
+    return user
 
 
 @router.put("/api/users/{user_id}", response_model=UserOut)

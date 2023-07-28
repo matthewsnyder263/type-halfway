@@ -5,5 +5,54 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
-  }
+  },
+  "cSpell.words": [
+    "Automotives",
+    "conninfo",
+    "dotenv",
+    "ENFJ",
+    "ENFP",
+    "ENTJ",
+    "ENTP",
+    "ESFJ",
+    "ESFP",
+    "ESTJ",
+    "ESTP",
+    "fullname",
+    "INFJ",
+    "INFP",
+    "INTJ",
+    "INTP",
+    "ISFJ",
+    "ISFP",
+    "ISTJ",
+    "ISTP",
+    "jwtdown",
+    "lookhere",
+    "melo",
+    "potentialmatch",
+    "psycopg",
+    "pydantic",
+    "setdestination",
+    "Unmatch",
+    "uselist"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 15432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "db",
+      "database": "data",
+      "username": "user"
+    }
+  ],
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
+  "dataworkspace.excludedProjects": ["db/db.sqlproj"]
 }
