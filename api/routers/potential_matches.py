@@ -3,7 +3,6 @@ from typing import List
 
 # from pydantic import BaseModel
 from db.potential_matches_db import (
-    # PotentialMatch,
     PotentialMatchIn,
     PotentialMatchOut,
     PotentialMatchQueries,

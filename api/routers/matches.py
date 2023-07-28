@@ -1,14 +1,10 @@
 from fastapi import (
-    # Body,
     Depends,
     HTTPException,
     status,
-    # Response,
     APIRouter,
-    # Request,
-    # logger,
 )
-from db.matches_db import MatchQueries, MatchIn  # , Match
+from db.matches_db import MatchQueries, MatchIn
 
 router = APIRouter()
 
@@ -28,7 +24,6 @@ async def create_match(match: MatchIn, matches: MatchQueries = Depends()):
     return {"message": "Match created.", "match": created_match}
 
 
-# @router.get("/users/{logged_in_user}/matches")
 @router.get("/users/{user_id}/matches")
 async def get_matches_for_user(
     user_id: int, matches: MatchQueries = Depends()
@@ -71,7 +66,6 @@ async def create_like(like: MatchIn, likes: MatchQueries = Depends()):
         updated_like = likes.update_match(existing_like)
         return {"message": "Like updated to mutual.", "like": updated_like}
 
-    # If there's no existing like, create a new one (not mutual)
     created_like = likes.create_match(like)
     return {"message": "Like created.", "like": created_like}
 

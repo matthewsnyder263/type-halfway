@@ -20,7 +20,6 @@
 
 body {
   background: #7d6cab;
-  /* background: linear-gradient(to right, #dab7de9f, #904e95); */
   background: content-box radial-gradient(#e3cce6fc, #926995);
   min-height: 100vh;
   overflow-x: hidden;

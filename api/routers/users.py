@@ -1,12 +1,10 @@
 from fastapi import (
-    # Body,
     Depends,
     HTTPException,
     status,
     Response,
     APIRouter,
     Request,
-    # logger,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator

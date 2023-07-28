@@ -1,7 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
 
-# from models import User, UserIn
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
@@ -197,7 +196,7 @@ class MatchQueries:
                     logged_in_user=match.logged_in_user,
                     matched_user=match.matched_user,
                     mutual=match.mutual,
-                    match_timestamp=now,
+                    match_timestamp=match_timestamp,
                 )
 
     def update_match(self, match: Match):
@@ -222,6 +221,7 @@ class MatchQueries:
                     """,
                     params,
                 )
+                conn.commit()
                 record = None
                 row = cur.fetchone()
                 if row is not None:
@@ -261,8 +261,6 @@ class MatchQueries:
                     """,
                     [user_id],
                 )
-                # note i took out AND mutual = False, in
-                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:

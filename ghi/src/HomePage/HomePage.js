@@ -8,16 +8,6 @@ import couple4 from "./images/couple4.jpg"
 import matt from "./images/matt.png"
 
 
-// const Header = () => {
-//     return (
-//         <header id="header" className="alt">
-//             <h1>
-//                 Type Halfway
-//             </h1>
-//         </header>
-//     );
-// };
-
 const Banner = () => {
     return (
         <section id="banner">
@@ -52,7 +42,7 @@ const One = () => {
                         Join our platform today and embark on a journey that transcends typical dating experiences. Discover the magic of scientific MBTI compatibility, and find your perfect match based on authentic connections, shared values, and genuine understanding. We are dedicated to making your search for love not only enjoyable but also accurate and deeply rewarding. Let's redefine dating together!
                         <div>Click the link below to check your compatibility</div>
                     </p>
-                    <Link to="#" className="special">
+                    <Link to="/compatibilitycalculator" className="special">
                         Check your compatibility level
                     </Link>
                 </div>

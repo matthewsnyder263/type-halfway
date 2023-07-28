@@ -31,7 +31,6 @@ class Chat extends React.Component {
             return;
         }
         this.loading = true;
-        // Should be an environment variable in the future
         const url = `ws://localhost:8000/chat/${this.state.clientId}`;
         this.socket = new WebSocket(url);
         this.socket.addEventListener('open', () => {

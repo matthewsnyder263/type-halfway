@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS interests;
-DROP TABLE IF EXISTS potential_matches;
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS compatibility;
+DROP TABLE IF EXISTS potential_matches;
 DROP TABLE IF EXISTS matches;
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_interests;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS interests;
 
 
 
@@ -29,9 +30,6 @@ CREATE TABLE users (
     interest TEXT,
     picture TEXT,
     matches_id INT
-    -- CONSTRAINT fk_matches
-    --     FOREIGN KEY (matches_id)
-    --     REFERENCES matches (id)
 );
 
 
@@ -51,25 +49,6 @@ CHECK (logged_in_user <> matched_user);
 
 
 
--- added match_timestamp, will timestamp when mutual = true
-
--- CREATE OR REPLACE FUNCTION update_match_timestamp() RETURNS TRIGGER AS $$
--- BEGIN
---     IF NEW.mutual THEN
---         -- NEW.match_timestamp = CURRENT_TIMESTAMP;
---     END IF;
---     RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER update_match_timestamp_trigger
--- BEFORE UPDATE ON matches
--- FOR EACH ROW
--- EXECUTE PROCEDURE update_match_timestamp();
-
-
-
-
 
 CREATE TABLE compatibility (
     id SERIAL PRIMARY KEY,
@@ -78,10 +57,6 @@ CREATE TABLE compatibility (
     strength FLOAT NOT NULL
 );
 
--- ALTER TABLE users
---     ADD CONSTRAINT fk_matches
---         FOREIGN KEY (matches_id)
---         REFERENCES matches (id);
 
 
 CREATE TABLE potential_matches (
@@ -105,8 +80,17 @@ CREATE TABLE potential_matches (
 
 
 
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    sender_id INT REFERENCES users(id),
+    receiver_id INT REFERENCES users(id),
+    message TEXT,
+    timestamp TIMESTAMP DEFAULT NOW()
+);
 
--- Populate interests
+
+
+
 INSERT INTO interests (interest_name) VALUES
     ('Skiing'),
     ('Photography'),
@@ -120,7 +104,6 @@ INSERT INTO interests (interest_name) VALUES
     ('Writing');
 
 
--- Populate users
 INSERT INTO users (username, full_name, email, gender, age, mbti, hashed_password, bio, zip_code, interest, picture) VALUES
     ('Darla', 'Sara Kareen', 'Darla1@gmail.com', 'Female', '22', 'INTJ', 'password', 'World Traveler and Tech Guru: After taking a break from the hustle of Silicon Valley to travel the world Ive returned and am ready to share new experiences with a partner in crime. Fond of coding sundown cocktails and hidden bookstores. If you can make me laugh consider yourself a winner.', '37042', 'Skiing', 'https://newprofilepic.com/assets/images/article/28_img.png'),
     ('Kim', 'Kimela Kardie', 'Kim2@gmail.com', 'Female', '23', 'ENTP', 'password', 'Foodie and Fitness Enthusiast: Constantly on the hunt for the best avocado toast and cold brew in town. When Im not chasing culinary adventures you can find me on a mountain trail or training for my next half marathon. Looking for someone to keep up with me on and off the track.', '73099', 'Photography', 'https://i.guim.co.uk/img/media/3fd9298d169911455a23b5d84567266e0c5a4d83/0_0_3400_2370/master/3400.jpg?width=1140&dpr=1&s=none'),
@@ -135,22 +118,21 @@ INSERT INTO users (username, full_name, email, gender, age, mbti, hashed_passwor
 
 
 
--- Populate matches with some mutual matches and some non-mutual match
 INSERT INTO matches (logged_in_user, matched_user, mutual) VALUES
-    (1, 2, true),  -- Mutual match between user1 and user2
-    (2, 3, true),  -- Mutual match between user2 and user3
-    (3, 4, true),  -- Mutual match between user3 and user4
-    (4, 5, true),  -- Mutual match between user4 and user5
-    (5, 6, true),  -- Mutual match between user5 and user6
-    (6, 7, true),  -- Mutual match between user6 and user7
-    (7, 8, true),  -- Mutual match between user7 and user8
-    (8, 9, true),  -- Mutual match between user8 and user9
-    (9, 10, true), -- Mutual match between user9 and user10
-    (1, 3, false), -- Non-mutual match (only user1 liked user3)
-    (2, 4, false), -- Non-mutual match (only user2 liked user4)
-    (3, 5, false); -- Non-mutual match (only user3 liked user5)
+    (1, 2, true),
+    (2, 3, true),
+    (3, 4, true),
+    (4, 5, true),
+    (5, 6, true),
+    (6, 7, true),
+    (7, 8, true),
+    (8, 9, true),
+    (9, 10, true),
+    (1, 3, false),
+    (2, 4, false),
+    (3, 5, false);
 
--- Populate potential_matches with similar data as matches
+
 INSERT INTO potential_matches (logged_in_user, match_id, matched_user, mbti_strength, liked) VALUES
     (1, 1, 2, 90, true),
     (2, 1, 1, 90, true),
@@ -174,7 +156,7 @@ INSERT INTO potential_matches (logged_in_user, match_id, matched_user, mbti_stre
     (2, 11, 4, 90, true),
     (3, 12, 5, 85, true);
 
--- Populate compatibility table with random data
+
 INSERT INTO compatibility (user_id_1, user_id_2, strength) VALUES
     (1, 2, 0.9),
     (2, 3, 0.85),
@@ -218,85 +200,3 @@ INSERT INTO compatibility (user_id_1, user_id_2, strength) VALUES
     (1, 8, 0.95),
     (2, 9, 0.90),
     (3, 10, 0.85);
-
-
-
-
-
--- CREATE TABLE matches (
---     id SERIAL PRIMARY KEY,
---     logged_in_user INT NOT NULL,
---     matched_user INT NOT NULL,
---     mutual BOOLEAN NOT NULL DEFAULT FALSE,
---     CONSTRAINT fk_matched_user
---         FOREIGN KEY (matched_user)
---         REFERENCES users (id),
---     CONSTRAINT fk_logged_in_user
---         FOREIGN KEY (logged_in_user)
---         REFERENCES users (id)
--- );
-
-
--- SNYDER NOTE>>>I DON'T HAVE CONSTRAINT FOR LIKE FUNCTIONALITY<<<
--- CREATE TABLE matches (
--- id SERIAL PRIMARY KEY,
--- logged_in_user INT REFERENCES users(id),
--- matched_user INT REFERENCES users(id),
--- mutual BOOLEAN NOT NULL DEFAULT FALSE
--- );
-
-
-
--- CREATE TABLE users (
---     id SERIAL PRIMARY KEY,
---     gender TEXT NOT NULL,
---     username TEXT UNIQUE NOT NULL,
---     full_name TEXT NOT NULL,
---     mbti TEXT NOT NULL,
---     email TEXT UNIQUE NOT NULL,
---     age VARCHAR(3) NOT NULL,
---     hashed_password TEXT NOT NULL,
---     bio TEXT,
---     interests TEXT[],
---     picture TEXT,
---     zip_code VARCHAR(5) NOT NULL
--- );
-
-
-
-
--- CREATE TABLE users (
---     id SERIAL PRIMARY KEY,
---     gender TEXT NOT NULL,
---     username TEXT UNIQUE NOT NULL,
---     full_name TEXT NOT NULL,
---     mbti TEXT NOT NULL,
---     -- mbti_id INT REFERENCES mbtis(id),
---     email TEXT UNIQUE NOT NULL,
---     gender TEXT NOT NULL,
---     age VARCHAR(3) NOT NULL,
---     mbti TEXT NOT NULL,
---     hashed_password TEXT NOT NULL,
---     bio TEXT,
---     interests TEXT[],
---     picture TEXT,
---     zip_code VARCHAR(5) NOT NULL,
---     -- interest TEXT,
---     picture TEXT
---     -- matches_id INT
---     -- CONSTRAINT fk_matches
---     --     FOREIGN KEY (matches_id)
---     --     REFERENCES matches (id)
--- );
-
-
--- CREATE TABLE interests (
---     id SERIAL PRIMARY KEY,
---     interest_name TEXT NOT NULL
--- );
-
--- CREATE TABLE user_interest (
---     user_id INT REFERENCES users(id) ON DELETE CASCADE,
---     interest_id INT REFERENCES interests(id) ON DELETE CASCADE,
---     PRIMARY KEY (user_id, interest_id)
--- );
