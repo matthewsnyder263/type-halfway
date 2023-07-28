@@ -1,349 +1,240 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import useToken from '@galvanize-inc/jwtdown-for-react';
+import { useNavigate } from 'react-router-dom';
+import BootstrapInput from "./BootstrapInput";
 
-
-const EditProfileForm = ({ userData = {
-    username: "",
-    email: "",
-    password: "",
-    full_name: "",
-    mbti_id: "",
-    // city: "",
-    // state: "",
-    gender: "",
-    bio: "",
-    interests: [],
-    picture: "",
-    zipcode: "",
-    age: "",
-  }}) => {
+const EditProfileForm = () => {
+  const [currentUser, setCurrentUser] = useState("");
+  const navigate = useNavigate();
+  const { token } = useToken();
   const [formData, setFormData] = useState({
-    ...userData,
-    interests: userData.interests.join(',')
+    username: '',
+    email: '',
+    password: '',
+    full_name: '',
+    mbti: '',
+    city: '',
+    state: '',
+    gender: '',
+    bio: '',
+    interests: [],
+    picture: '',
+    zip_code: '',
+    age: '',
   });
 
-  const [mbtiOptions, setMbtiOptions] = useState([]);
-
-  const fetchMbtiOptions = async () => {
-    const mbtiUrl = 'http://localhost:8000/api/mbti-options';
-    const mbtiResponse = await fetch(mbtiUrl);
-
-    if (mbtiResponse.ok) {
-      const mbtiData = await mbtiResponse.json();
-      console.log('Type of mbtiData:', typeof mbtiData);
-      console.log('Value of mbtiData:', mbtiData);
-      setMbtiOptions(mbtiData.mbtis);
-    } else {
-      console.error('Server responded with status', mbtiResponse.status);
-      try {
-        const errorData = await mbtiResponse.json();
-        console.error('Server response:', errorData);
-      } catch (err) {
-        console.error('Could not parse server response');
+  useEffect(() => {
+    if (!token) {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        navigate("/login");
       }
     }
-  }
+  }, [navigate, token]);
 
   useEffect(() => {
-    fetchMbtiOptions();
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  }, [token]);
+
+
+  const fetchCurrentUser = async () => {
+    const url = 'http://localhost:8000/token';
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setCurrentUser(data.account);
+      // Set the form data to the received user data
+      setFormData({
+        username: data.account.username,
+        email: data.account.email,
+        full_name: data.account.full_name,
+        gender: data.account.gender,
+        age: data.account.age,
+        mbti: data.account.mbti,
+        city: data.account.city,
+        state: data.account.state,
+        gender: data.account.gender,
+        bio: data.account.bio,
+        interests: data.account.interest,
+        picture: data.account.picture,
+        zip_code: data.account.zip_code,
+        age: data.account.age
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentUser();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const data = {
-      ...formData,
-      interests: formData.interests.split(',')
-    };
-    console.log(data)
-
-    const usersUrl = `http://localhost:8000/api/users/${data.id}/`;
-    const fetchConfig = {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await fetch(usersUrl, fetchConfig);
-    if (response.ok) {
-      const responseData = await response.json();
-      console.log(responseData);
+    try {
+      const url = `http://localhost:8000/api/users/${currentUser.id}`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const updatedUserData = await response.json();
+        console.log('User data updated:', updatedUserData);
+        // After successful update, navigate back to the profile page
+        navigate('/profile');
+      } else {
+        console.log('Update failed:', response.statusText);
+        // Handle the update failure here, show error message, etc.
+      }
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      // Handle any errors that occurred during the update
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={["signup"]}>
-        <div className={["signup2"]}>
-          <div className={["signup-page"]}>
-            <div className={["rectangle-2"]}></div>
-            <div className={["rectangle-1"]}></div>
-            <div className={["already-have-an-account-login"]}>
-              <span>
-                <span className={styles["already-have-an-account-login-span"]}>
-                  Already have an account?{" "}
-                </span>
-                <Link
-                  className={styles["already-have-an-account-login-span2"]}
-                  to="/login"
-                >
-                  Login
-                </Link>
-              </span>
-            </div>
-            <div className={styles["create-an-account"]}>Edit Profile</div>
-            <div className={styles["input-name"]}>
-              <input
-                id="full_name"
-                name="full_name"
-                className={styles["full-name"]}
-                type="text"
-                placeholder="Full Name"
-                onChange={handleInputChange}
-                value={formData.full_name}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="username"
-                name="username"
-                className={styles["username"]}
-                type="text"
-                placeholder="Username"
-                onChange={handleInputChange}
-                value={formData.username}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="email"
-                name="email"
-                className={styles["email"]}
-                type="text"
-                placeholder="Email"
-                onChange={handleInputChange}
-                value={formData.email}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="gender"
-                name="gender"
-                className={styles["gender"]}
-                type="text"
-                placeholder="Gender"
-                onChange={handleInputChange}
-                value={formData.gender}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="bio"
-                name="bio"
-                className={styles["bio"]}
-                type="text"
-                placeholder="Bio"
-                onChange={handleInputChange}
-                value={formData.bio}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                  id="interests"
-                  name="interests"
-                  className={styles["interests"]}
+    <div className="container">
+      <div className="offset-3 col-6">
+        <div className="shadow p-4 mt-4">
+        <div>
+          <h1>Edit Profile</h1>
+          {currentUser ? (
+            <form onSubmit={handleSubmit}>
+              <div className="form-floating mb-3">
+                <label htmlFor="username">fff</label>
+                <BootstrapInput
                   type="text"
-                  placeholder="Interests"
-                  onChange={e => {
-                      setFormData({ ...formData, interests: e.target.value.split(',') });
-                  }}
-                  value={formData.interests}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="picture"
-                name="picture"
-                className={styles["picture"]}
-                type="text"
-                placeholder="Picture"
-                onChange={handleInputChange}
-                value={formData.picture}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="zipcode"
-                name="zipcode"
-                className={styles["zipcode"]}
-                type="text"
-                placeholder="Zipcode"
-                onChange={handleInputChange}
-                value={formData.zipcode}
-              />
-            </div>
-            <div className={styles["input-name"]}>
-              <input
-                id="age"
-                name="age"
-                className={styles["age"]}
-                type="number"
-                placeholder="Age"
-                onChange={handleInputChange}
-                value={formData.age}
-              />
-            </div>
-            <select
-              id="mbti_id"
-              className={styles["mbti"]}
-              name="mbti_id"
-              value={formData.mbti_id}
-              onChange={handleInputChange}
-            >
-              {mbtiOptions.map((option) => {
-                return (
-                  <option key={option.id} value={option.id}>
-                    {option.score}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="email">email</label>
+                <BootstrapInput
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="password">password</label>
+                <BootstrapInput
+                  type="text"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="full_name">full_name</label>
+                <BootstrapInput
+                  type="text"
+                  id="full_name"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="age">age</label>
+                <BootstrapInput
+                  type="text"
+                  id="age"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="mbti">mbti</label>
+                <BootstrapInput
+                  type="text"
+                  id="mbti"
+                  name="mbti"
+                  value={formData.mbti}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="gender">gender</label>
+                <BootstrapInput
+                  type="text"
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="bio">bio</label>
+                <BootstrapInput
+                  type="text"
+                  id="bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="interest">interest</label>
+                <BootstrapInput
+                  type="text"
+                  id="interest"
+                  name="interest"
+                  value={formData.interest}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="picture">picture</label>
+                <BootstrapInput
+                  type="text"
+                  id="picture"
+                  name="picture"
+                  value={formData.picture}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="zip_code">Zip Code</label>
+                <BootstrapInput
+                  type="text"
+                  id="zip_code"
+                  name="zip_code"
+                  value={formData.zip_code}
+                  onChange={handleChange}
+                />
+              </div>
+              <button type="submit">Update Profile</button>
+            </form>
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </div>
-      <button type="submit" className={styles["rectangle-7"]}>
-        Save Changes
-      </button>
-      <div className={styles["find-match-and-meet-halfway"]}>
-        <span>
-          <span className={styles["find-match-and-meet-halfway-span"]}>
-            FIND, MATCH, AND MEET{" "}
-          </span>
-          <span className={styles["find-match-and-meet-halfway-span2"]}>
-            HALFWAY
-          </span>
-        </span>
-      </div>
-      {/* <img className={styles["logo-1"]} src={Logo} alt="Logo" /> */}
-    </form>
+    </div >
+    </div>
+
   );
 };
 
 export default EditProfileForm;
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import styles from "./styling/Signup.module.css"; // You may need to change this to ./styling/Edit.module.css
-// import { Link } from "react-router-dom";
-// import Logo from "./styling/Logo.png";
-
-// const EditForm = () => {
-//   const [formData, setFormData] = useState({
-//     username: "",
-//     email: "",
-//     password: "",
-//     full_name: "",
-//     mbti_id: "",
-//     gender: "",
-//     bio: "",
-//     interests: [],
-//     picture: "",
-//     zipcode: "",
-//     age: "",
-//   });
-//   const [mbtiOptions, setMbtiOptions] = useState([]);
-
-//   const fetchMbtiOptions = async () => {
-//     const mbtiUrl = 'http://localhost:8000/api/mbti-options';
-//     const mbtiResponse = await fetch(mbtiUrl);
-//     if (mbtiResponse.ok) {
-//       const mbtiData = await mbtiResponse.json();
-//       setMbtiOptions(mbtiData.mbtis);
-//     } else {
-//       console.error('Server responded with status', mbtiResponse.status);
-//     }
-//   }
-
-//   useEffect(() => {
-//     fetchMbtiOptions();
-//     // Replace fetchUserData() with your function to fetch current user data
-//     const currentUserData = fetchUserData();
-//     setFormData(currentUserData);
-//   }, []);
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const data = { ...formData };
-//     // Change the API endpoint to update the user data
-//     const usersUrl = `http://localhost:8000/api/users/${formData.id}`;
-//     const fetchConfig = {
-//       method: "PUT", // Change method to PUT to update the user data
-//       body: JSON.stringify(data),
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     };
-//     const response = await fetch(usersUrl, fetchConfig);
-//     if (response.ok) {
-//       const responseData = await response.json();
-//       console.log(responseData);
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div className={styles["signup"]}>
-//         <div className={styles["signup2"]}>
-//           <div className={styles["signup-page"]}>
-//             <div className={styles["rectangle-2"]}></div>
-//             <div className={styles["rectangle-1"]}></div>
-//             <div className={styles["already-have-an-account-login"]}>
-//               <span>
-//                 <span className={styles["already-have-an-account-login-span"]}>
-//                   Already have an account?{" "}
-//                 </span>
-//                 <Link
-//                   className={styles["already-have-an-account-login-span2"]}
-//                   to="/login"
-//                 >
-//                   Login
-//                 </Link>
-//               </span>
-//             </div>
-//             <div className={styles["create-an-account"]}>Edit Profile</div>
-//             {/* All your input fields go here with the same structure */}
-//             {/* ... */}
-//           </div>
-//         </div>
-//       </div>
-//       <button type="submit" className={styles["rectangle-7"]}>
-//         Save Changes
-//       </button>
-//       <div className={styles["find-match-and-meet-halfway"]}>
-//         <span>
-//           <span className={styles["find-match-and-meet-halfway-span"]}>
-//             FIND, MATCH, AND MEET{" "}
-//           </span>
-//           <span className={styles["find-match-and-meet-halfway-span2"]}>
-//             HALFWAY
-//           </span>
-//         </span>
-//       </div>
-//       <img className={styles["logo-1"]} src={Logo} alt="Logo" />
-//     </form>
-//   );
-// };
-
-// export default EditForm;

@@ -7,7 +7,7 @@ import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PotentialMatches from './PotentialMatches/PotentialMatches';
-import UserProfile from './PotentialMatches/UserProfilePage';
+import UserProfile from './Account/UserProfile';
 import Chat from './Account/chat';
 import Nav from './NavBar//Nav.js';
 import ProfilePage from "./Account/ProfilePage";
@@ -15,7 +15,7 @@ import Match from './PotentialMatches/Match';
 import MatchList from './PotentialMatches/MatchList';
 import CompatibilityCalculator from './HomePage/CalculateCompat';
 import HomePage from './HomePage/HomePage';
-// import EditProfileForm from './Account/EditProfileForm';
+import EditProfileForm from './Account/EditProfileForm';
 
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
           <Routes path='/'>
             {/* <ErrorNotification error={error} /> */}
             {/* <Route path='/home' element={<Home />} /> */}
-            {/* <Route path="/editprofile" element={<EditProfileForm />} /> */}
+            <Route path="/editprofile" element={<EditProfileForm />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile/:userId" element={<UserProfile />} />

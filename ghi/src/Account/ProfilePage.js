@@ -34,12 +34,12 @@ const ProfilePage = () => {
                                 <div className="hero-content">
                                     <div className="hero-text">
                                         <h1>{currentUser.full_name}</h1>
-                                        <h2></h2>
                                         <div className="typed-text">Web Designer, Web Developer, Front End Developer, Apps Designer, Apps Developer</div>
                                     </div>
                                     <div className="hero-btn">
                                         <a className="btn" href="#">{currentUser.mbti}</a>
                                         <a className="btn" href="#">{currentUser.age}</a>
+
                                         <div>
                                             <a className="btn" href="#">{currentUser.state}</a>
                                             <a className="btn" href="#">{currentUser.city}</a>
@@ -51,6 +51,9 @@ const ProfilePage = () => {
                                 <div className="hero-image">
                                     <img src={currentUser.picture} alt="Profile Image" />
                                 </div>
+                            </div>
+                            <div className="hero-btn">
+                                <a className="btn" href="/editprofile">Edit Profile</a>
                             </div>
                         </div>
                     </div>

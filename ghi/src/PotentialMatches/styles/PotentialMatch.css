@@ -1,7 +1,7 @@
-/* .background {
-  background: linear-gradient(to right, #f1f1f1, #904e95);
+.background {
+  background: content-box radial-gradient(#e3cce6fc, #926995);
 }
-.carousel-container {
+/* .carousel-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,7 +26,6 @@ li.dot {
   color: red;
 } */
 
-
 @mixin aspect-ratio($width, $height) {
   position: relative;
 
@@ -38,160 +37,207 @@ li.dot {
   }
 
   > img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 50%;
-        height: 50%;
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; */
+
   }
 }
 
 // Styling
 
 section {
-    background: #F4F4F4;
-    padding: 50px 0;
+  background: #f4f4f4;
+  padding: 50px 0;
+  max-height: calc(100vh - 100px); /* Adjust the value to limit the height of the carousel section */
+  overflow: hidden;
 }
 
-.container {
-    max-width: 1044px;
-    margin: 0 auto;
-    padding: 0 20px;
+
+.containers {
+  background: pink;
+  max-width: 1044px;
+  margin: 0 auto;
+  padding: 50px 50px;
 }
 
 .carousel {
-    display: block;
-    text-align: left;
-    position: relative;
-    margin-bottom: 22px;
+  background: pink;
+  display: block;
+  text-align: left;
+  position: relative;
+  margin-bottom: 5px;
 
-    > input {
-        clip: rect(1px, 1px, 1px, 1px);
-        clip-path: inset(50%);
-        height: 1px;
-        width: 1px;
-        margin: -1px;
-        overflow: hidden;
-        padding: 0;
-        position: absolute;
 
-        &:nth-of-type(6):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: -500%; }
-        &:nth-of-type(5):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: -400%; }
-        &:nth-of-type(4):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: -300%; }
-        &:nth-of-type(3):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: -200%; }
-        &:nth-of-type(2):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: -100%; }
-        &:nth-of-type(1):checked ~ .carousel__slides .carousel__slide:first-of-type { margin-left: 0%; }
+  > input {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
 
-        &:nth-of-type(1):checked ~ .carousel__thumbnails li:nth-of-type(1) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-        &:nth-of-type(2):checked ~ .carousel__thumbnails li:nth-of-type(2) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-        &:nth-of-type(3):checked ~ .carousel__thumbnails li:nth-of-type(3) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-        &:nth-of-type(4):checked ~ .carousel__thumbnails li:nth-of-type(4) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-        &:nth-of-type(5):checked ~ .carousel__thumbnails li:nth-of-type(5) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
-        &:nth-of-type(6):checked ~ .carousel__thumbnails li:nth-of-type(6) { box-shadow: 0px 0px 0px 5px rgba(0,0,255,0.5); }
+    &:nth-of-type(6):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: -500%;
     }
+    &:nth-of-type(5):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: -400%;
+    }
+    &:nth-of-type(4):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: -300%;
+    }
+    &:nth-of-type(3):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: -200%;
+    }
+    &:nth-of-type(2):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: -100%;
+    }
+    &:nth-of-type(1):checked
+      ~ .carousel__slides
+      .carousel__slide:first-of-type {
+      margin-left: 0%;
+    }
+
+    &:nth-of-type(1):checked ~ .carousel__thumbnails li:nth-of-type(1) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(2):checked ~ .carousel__thumbnails li:nth-of-type(2) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(3):checked ~ .carousel__thumbnails li:nth-of-type(3) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(4):checked ~ .carousel__thumbnails li:nth-of-type(4) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(5):checked ~ .carousel__thumbnails li:nth-of-type(5) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+    &:nth-of-type(6):checked ~ .carousel__thumbnails li:nth-of-type(6) {
+      box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.5);
+    }
+  }
+}
+
+.carousel__wrapper {
+  height: calc(100% - 40px); /* Adjust the value to set a fixed height for the carousel slides */
+  overflow: hidden;
 }
 
 .carousel__slides {
-    position: relative;
-    z-index: 1;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    box-sizing: border-box;
-    display: flex;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+
 }
 
 .carousel__slide {
-    position: relative;
+  position: relative;
+  display: block;
+  flex: 1 0 100%;
+  width: 10%;
+  height: 10%;
+  overflow: hidden;
+  /* transition: all 300ms ease-out; */
+  vertical-align: top;
+  box-sizing: border-box;
+  white-space: hidden;
+  height: 100%;
+
+  figure {
+    display: flex;
+    margin: 0;
+  }
+
+  div {
+    @include aspect-ratio(3, 2);
+    width: 100%;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
     display: block;
-    flex: 1 0 100%;
-    width: 10%;
-    height: 10%;
-    overflow: hidden;
-    transition: all 300ms ease-out;
-    vertical-align: top;
-    box-sizing: border-box;
-    white-space: normal;
+    flex: 1 1 auto;
+    object-fit: cover;
+  }
 
-    figure {
-        display: flex;
-        margin: 0;
-    }
+  figcaption {
+    align-self: flex-end;
+    padding: 20px 20px 0 20px;
+    flex: 0 0 auto;
+    width: 25%;
+    min-width: 150px;
+  }
 
-    div {
-        @include aspect-ratio(3, 2);
-        width: 100%;
-    }
+  .credit {
+    margin-top: 1rem;
+    color: rgba(0, 0, 0, 0.5);
+    display: block;
+  }
 
-    img {
-        width: 270px;
-        height: 150px;
-        display: block;
-        flex: 1 1 auto;
-        object-fit: cover;
-    }
-
-    figcaption {
-        align-self: flex-end;
-        padding: 20px 20px 0 20px;
-        flex: 0 0 auto;
-        width: 25%;
-        min-width: 150px;
-    }
-
-    .credit {
-        margin-top: 1rem;
-        color: rgba(0, 0, 0, 0.5);
-        display: block;
-    }
-
-    &.scrollable {
-        overflow-y: scroll;
-    }
+  &.scrollable {
+    overflow-y: scroll;
+  }
 }
 
 .carousel__thumbnails {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
 
-    margin: 0 -10px;
+  margin: 0 -10px;
 
-    .carousel__slides + & {
-        margin-top: 20px;
-    }
+  .carousel__slides + & {
+    margin-top: 20px;
+  }
 
-    li {
-        flex: 1 1 auto;
-        max-width: calc((100% / 6) - 20px);
-        margin: 0 10px;
+  li {
+    flex: 1 1 auto;
+    max-width: calc((100% / 6) - 20px);
+    margin: 0 10px;
+    transition: all 300ms ease-in-out;
+  }
+
+  label {
+    display: block;
+    @include aspect-ratio(1, 1);
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+
+      img {
+        box-shadow: 0px 0px 0px 1px rgba(227, 57, 201, 0.25);
         transition: all 300ms ease-in-out;
+      }
     }
+  }
 
-    label {
-        display: block;
-        @include aspect-ratio(1,1);
-
-
-        &:hover,
-        &:focus {
-            cursor: pointer;
-
-            img {
-                box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25);
-                transition: all 300ms ease-in-out;
-            }
-        }
-    }
-
-    img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    display: block;
+    width: 270px;
+    height: 270px;
+    object-fit: cover;
+  }
 }
