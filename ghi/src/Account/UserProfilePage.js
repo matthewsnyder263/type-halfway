@@ -16,7 +16,6 @@ const UserProfile = () => {
     const [currentUser, setCurrentUser] = useState("");
     const navigate = useNavigate();
     const { token } = useToken();
-    // const userId = Number(useParams().id);
 
     let currentUserId = null;
     useEffect(() => {
@@ -34,7 +33,7 @@ const UserProfile = () => {
                     const data = await response.json();
                     if (data && data.account) {
                         setCurrentUser(data.account);
-                        return data.account.id; // return the currentUserId
+                        return data.account.id;
                     } else {
                         console.error("Received unexpected data:", data);
                     }
@@ -46,7 +45,7 @@ const UserProfile = () => {
             }
         };
 
-        const fetchData = async (currentUserId) => { // add currentUserId as a parameter
+        const fetchData = async (currentUserId) => {
             const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -60,11 +59,10 @@ const UserProfile = () => {
             }
             const data = await response.json();
             setUserData(data);
-            // now you can use currentUserId here if needed
         };
 
         if (token) {
-            fetchCurrentUser().then(currentUserId => fetchData(currentUserId)); // pass currentUserId to fetchData
+            fetchCurrentUser().then(currentUserId => fetchData(currentUserId))
         }
     }, [token, userId]);
 
@@ -84,23 +82,6 @@ const UserProfile = () => {
         return <div>Loading..</div>
     }
 
-    // const likeUser = async () => {
-    //     const loggedInUserId = currentUser.id;
-
-    //     const response = await fetch(`http://localhost:8000/likes/${loggedInUserId}/${userId}`, {
-    //         method: "POST",
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             logged_in_user: loggedInUserId,
-    //             matched_user: userId,
-    //             mutual: false
-    //         })
-    //     });
-
-
     const likeUser = async () => {
         const loggedInUserId = currentUser.id;
 
@@ -117,7 +98,6 @@ const UserProfile = () => {
                 match_timestamp: new Date().toISOString()
             })
         });
-
 
 
         if (!response.ok) {

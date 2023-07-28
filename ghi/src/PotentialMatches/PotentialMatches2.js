@@ -142,88 +142,12 @@ const PotentialMatches = () => {
                 await postCompatibilityData(data);
             });
         }
-    }, [currentUser, allUsers]);
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    }, [currentUser, allUsers])
 
-
-    // const getCompatibilityStrengthText = (strength) => {
-    //     const strengthTextMap = {
-    //         1: "POOR",
-    //         2: "BAD",
-    //         3: "AVERAGE",
-    //         4: "GOOD",
-    //         5: "PERFECT",
-    //     };
-    //     return strengthTextMap[strength] || "";
-    // };
-
-    // useEffect(() => {
-    //     console.log("Current User:", currentUser);
-    //     console.log("All users:", allUsers)
-
-    //     if (currentUser && allUsers.users) {
-    //         const potentialDataList = [];
-    //         allUsers.users
-    //             .filter((user) => user.id !== currentUser.id && user.gender !== currentUser.gender)
-    //             .map((user) => {
-    //                 const compatibilityScore = calculateCompatibilityScore(
-    //                     currentUser.mbti,
-    //                     user.mbti
-    //                 );
-    //                 const potentialData = {
-    //                     logged_in_user: currentUser.id,
-    //                     match_id: null,
-    //                     matched_user: user.id,
-    //                     mbti_strength: compatibilityScore,
-    //                     liked: false,
-    //                 }
-    //                 potentialDataList.push(potentialData);
-    //             });
-    //         potentialDataList.sort((a, b) => b.mbti_strength - a.mbti_strength);
-    //         const topCompatibilityData = potentialDataList.slice(0, 5);
-    //         console.log("lookhere:", potentialDataList)
-    //         console.log("lookhere:", topCompatibilityData)
-    //         setCompatibilityData(topCompatibilityData);
-
-
-    //         const postCompatibilityData = async (data) => {
-    //             const url = "http://localhost:8000/api/potential_matches";
-    //             await fetch(url, {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(data),
-    //                 credentials: "include",
-    //             });
-    //         };
-
-    //         useEffect(() => {
-    //             const topCompatibilityData = compatibilityAlgorithm(currentUser, allUsers);
-
-    //             Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
-    //                 .then(() => console.log("All data posted successfully"))
-    //                 .catch((err) => console.error(err));
-
-    //             setCompatibilityData(topCompatibilityData);
-    //         }, [currentUser, allUsers]);
-
-
-    //         const postCompatibilityData = async (data) => {
-    //             const url = "http://localhost:8000/api/potential_matches";
-    //             await fetch(url, {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(data),
-    //                 credentials: "include",
-    //             });
-    //         };
-    //         Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
-    //     }
-    // }, [currentUser, allUsers]);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     useEffect(() => {
         const getPotentialMatches = async () => {
