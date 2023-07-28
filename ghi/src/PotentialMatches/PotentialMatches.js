@@ -217,13 +217,13 @@ const PotentialMatches = () => {
                 <div className="carousel" >
                     <Carousel>
                         {recentCompatibilityData.map((data) => {
-                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user && data.matchedUser.gender != user.gender);
+                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user && currentUser.gender != user.gender);
                             let matchedUserName = matchedUser.full_name;
                             return (
 
                                 <div key={data.match_id} className="card ">
                                     <img src={matchedUser.picture} alt=" " />
-                                    <div className="card-body" >
+                                    <div className="card-bodyy" >
                                         <div key={data.match_id}>
                                             <h1>Name: {matchedUserName}</h1>
                                             <button onClick={() => handleMatchClick(matchedUser)}>
@@ -239,7 +239,7 @@ const PotentialMatches = () => {
                                         <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
                                     </div>
                                 </div>
-                            );
+                            )
                         })}
                     </Carousel>
                 </div>

@@ -15,6 +15,7 @@ import Match from './PotentialMatches/Match';
 import MatchList from './PotentialMatches/MatchList';
 import CompatibilityCalculator from './HomePage/CalculateCompat';
 import HomePage from './HomePage/HomePage';
+import Error from './Error/Error';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <AuthProvider baseUrl={baseURL}>
           <Nav />
           <Routes path='/'>
+            <Route path="/error" element={<Error />} />
             {/* <ErrorNotification error={error} /> */}
             {/* <Route path='/home' element={<Home />} /> */}
             <Route path="/signup" element={<SignupForm />} />

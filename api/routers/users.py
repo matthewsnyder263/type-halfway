@@ -10,7 +10,6 @@ from fastapi import (
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
-from passlib.context import CryptContext
 from pydantic import BaseModel
 
 from db.user_db import (
@@ -24,8 +23,6 @@ from db.user_db import (
 
 
 router = APIRouter()
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AccountForm(BaseModel):

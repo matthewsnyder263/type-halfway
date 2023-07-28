@@ -1,10 +1,10 @@
-import BootstrapInput from "./BootstrapInput";
 import React, { useState, useEffect } from 'react';
 import useToken from '@galvanize-inc/jwtdown-for-react';
-import useAuthContext from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Error from '../Error/Error';
+import '../Error/Error.css'
 
 
 const LoginForm = () => {
@@ -13,8 +13,15 @@ const LoginForm = () => {
   const [invalid, setInvalid] = useState(false)
   const navigate = useNavigate()
   const { login, token } = useToken()
-  // console.log("token", token)
+  const [openError, setOpenError] = useState(false)
 
+  const handleOpenError = () => {
+    setOpenError(true);
+  }
+
+  const handleCloseError = () => {
+    setOpenError(false);
+  }
 
   const handleInvalid = () => {
     setInvalid(true);
@@ -26,25 +33,6 @@ const LoginForm = () => {
     }
   }, [token]);
 
-  // const fetchUser = async () => {
-  //   const url = 'http://localhost:8000/token'
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   });
-  //   // console.log("response", response)
-  //   if (response.ok) {
-  //     const data = await response.json()
-  //     // console.log("account", data.account)
-  //     if (data === null) {
-  //       handleInvalid()
-  //     } else {
-  //       localStorage.setItem('user', JSON.stringify(data.account));
-  //       // console.log("data.account", data.account)
-  //       navigate("/profile")
-  //     }
-  //   }
-  // };
   const fetchUser = async () => {
     const url = 'http://localhost:8000/token'
     const response = await fetch(url, {
@@ -53,8 +41,8 @@ const LoginForm = () => {
     });
     if (response.ok) {
       const data = await response.json()
-      if (!data.account) {
-        throw new Error("Invalid username or password.");
+      if (!data) {
+        handleOpenError();
       } else {
         localStorage.setItem('user', JSON.stringify(data.account));
         navigate("/profile")
@@ -65,22 +53,11 @@ const LoginForm = () => {
   };
 
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     await login(username, password)
-  //     fetchUser()
-  //   } catch (error) {
-  //     console.error("Login failed with exception:", error)
-  //     handleInvalid()
-  //   }
-  // }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await login(username, password);
-      // Add a slight delay before calling fetchUser()
       setTimeout(() => {
         fetchUser();
       }, 1000);
@@ -144,6 +121,7 @@ const LoginForm = () => {
               </svg>
             </button>
           </div>
+          {openError && <Error isOpen={openError} onClose={handleCloseError} />}
           <div className="w-full text-center pt-4">
             {invalid ? (
               <div className="w-full bg-[#ffa3a9] rounded-md border border-gray-500 p-4 inline-block">

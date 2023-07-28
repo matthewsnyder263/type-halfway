@@ -1,13 +1,20 @@
 .background {
-  background: linear-gradient(to right, #f1f1f1, #904e95);
+  background: transparent;
+  height: 200%;
 }
 .carousel-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  /* max-height: auto; */
-  max-width: 500px;
-  margin-left: auto auto;
+  /* align-items: center; */
+  max-height: auto;
+  max-width: auto;
+  margin-left: auto;
+  background: transparent;
+  padding-top: 100px;
+  padding-left: 100px;
+  padding-right: 100px;
+  box-shadow: inset 5px 5px 15px #6aafe6;
+  height: auto;
 }
 .carousel {
   overflow: hidden;
@@ -24,4 +31,8 @@ li.dot {
 }
 .heart-eyes {
   color: red;
+}
+
+.card-bodyy {
+  background: transparent;
 }

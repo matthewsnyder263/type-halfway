@@ -40,7 +40,7 @@ const SignupForm = () => {
     formData.state = zipInfo.state
 
     const data = { ...formData }
-
+    console.log("data", data)
     try {
       const usersUrl = "http://localhost:8000/api/users";
       const fetchConfig = {
@@ -55,7 +55,7 @@ const SignupForm = () => {
       if (response.ok) {
         setFormData(initialFormData);
         await login(data.username, data.password);
-        navigate("/profile");
+        navigate("/profile")
       } else {
         console.error("Server responded with status", response.status);
         console.error("Server response:", response.error);
@@ -212,7 +212,7 @@ const SignupForm = () => {
                 onChange={handleInputChange}
                 type="text"
               >
-                <option value="" disabled>
+                <option value="" placeholder="wa" disabled>
                   Select your gender
                 </option>
                 <option value="male">Male</option>

@@ -4,20 +4,20 @@ import { Link } from "react-router-dom";
 import Logo from "./styling/Logo.png";
 
 const EditProfileForm = ({ userData = {
-    username: "",
-    email: "",
-    password: "",
-    full_name: "",
-    mbti_id: "",
-    // city: "",
-    // state: "",
-    gender: "",
-    bio: "",
-    interests: [],
-    picture: "",
-    zipcode: "",
-    age: "",
-  }}) => {
+  username: "",
+  email: "",
+  password: "",
+  full_name: "",
+  mbti_id: "",
+  city: "",
+  state: "",
+  gender: "",
+  bio: "",
+  interests: [],
+  picture: "",
+  zipcode: "",
+  age: "",
+} }) => {
   const [formData, setFormData] = useState({
     ...userData,
     interests: userData.interests.join(',')
@@ -156,15 +156,15 @@ const EditProfileForm = ({ userData = {
             </div>
             <div className={styles["input-name"]}>
               <input
-                  id="interests"
-                  name="interests"
-                  className={styles["interests"]}
-                  type="text"
-                  placeholder="Interests"
-                  onChange={e => {
-                      setFormData({ ...formData, interests: e.target.value.split(',') });
-                  }}
-                  value={formData.interests}
+                id="interests"
+                name="interests"
+                className={styles["interests"]}
+                type="text"
+                placeholder="Interests"
+                onChange={e => {
+                  setFormData({ ...formData, interests: e.target.value.split(',') });
+                }}
+                value={formData.interests}
               />
             </div>
             <div className={styles["input-name"]}>
