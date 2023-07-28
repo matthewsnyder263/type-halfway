@@ -179,7 +179,7 @@ html {
 }
 
 body {
-  background-color: #2e3141;
+  background: content-box radial-gradient(#e3cce6fc, #926995);
   /* background-image: linear-gradient(to top, rgba(46, 49, 65, 0.8), rgba(46, 49, 65, 0.8)), url("./pngtree-cartoon-pink-love-520-romantic-dating-background-image_222413.jpg"); */
   background-size: auto, cover;
   background-attachment: fixed, fixed;
