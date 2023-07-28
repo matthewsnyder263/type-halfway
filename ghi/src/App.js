@@ -3,7 +3,7 @@ import SignupForm from "./Account/SignUpForm";
 import LoginForm from "./Account/LoginForm";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PotentialMatches from './PotentialMatches/bizzare';
+import PotentialMatches from './PotentialMatches/PotentialMatches';
 import UserProfile from './Account/UserProfilePage';
 import Chat from './Account/chat';
 import Nav from './NavBar//Nav.js';
