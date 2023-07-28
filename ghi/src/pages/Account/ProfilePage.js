@@ -45,8 +45,8 @@ const ProfilePage = () => {
                                     </Link>
                                 </div>
                                 <div className="media-body mb-5 text-white">
-                                    <h4 className="mt-0 mb-0"> Name: {currentUser.username}</h4>
-                                    <h4 className="mt-0 mb-0"> Age: {currentUser.age}</h4>
+                                    <h4 className="mt-0 mb-0">Name: {currentUser.username}</h4>
+                                    <h4 className="mt-0 mb-0">Age: {currentUser.age}</h4>
                                     <h4 className="mt-0 mb-0">MBTI: {currentUser.mbti}</h4>
                                     <h4 className="mt-0 mb-0">Gender: {currentUser.gender}</h4>
                                     <h4 className="mt-0 mb-0">Interests: {currentUser.interest}</h4>

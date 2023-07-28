@@ -1,14 +1,18 @@
 .background {
   background: linear-gradient(to right, #f1f1f1, #904e95);
 }
-.carousel-container {
+
+.page-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+}
+.carousel-container {
   max-height: 200rem;
   max-width: 500px;
-  margin-left: 690px;
 }
+
 .carousel {
   overflow: hidden;
 }

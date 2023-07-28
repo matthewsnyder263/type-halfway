@@ -211,9 +211,9 @@ const PotentialMatches = () => {
 
     return (
         <div className="background">
-            <div className="carousel-container">
+            <div className="page-container">
                 {/* <h2>Potential Matches of the Week</h2> */}
-                <div className="carousel" >
+                <div className="carousel-container" >
                     <Carousel>
                         {recentCompatibilityData.map((data) => {
                             let matchedUser = allUsers.users.find(user => user.id === data.matched_user);

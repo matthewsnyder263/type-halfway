@@ -3,17 +3,30 @@
 
 # sys.path.append(str(Path(__file__).resolve().parent.parent))
 from fastapi.testclient import TestClient
-from ..main import app
-from ..db.matches_db import MatchQueries
+from main import app
+from db.matches_db import MatchQueries
 
 client = TestClient(app)
 
 
-class MatchRepository:
-    def get_all(self):
+class EmptyMatchesQueries:
+    def get_all_likes(self):
         return []
 
-    def create(self, match):
+
+def test_get_all_likes():
+    app.dependency_overrides[MatchQueries] = EmptyMatchesQueries
+    response = client.get("/likes")
+    app.dependency_overrides = {}
+    assert response.status_code == 200
+    assert response.json() == {"likes": []}
+
+
+class MatchRepository:
+    def get_all_matches(self):
+        return []
+
+    def create_match(self, match):
         return {
             "id": 100,
             "logged_in_user": 25,
@@ -21,7 +34,7 @@ class MatchRepository:
             "mutual": True,
         }
 
-    def delete(self, match_id):
+    def delete_match(self, match_id):
         return True
 
 
@@ -33,7 +46,7 @@ def test_get_matches():
     app.dependency_overrides = {}
 
     assert response.status_code == 200
-    assert response.json() == []
+    assert response.json() == {"matches": []}
 
 
 def test_delete_match():
@@ -50,3 +63,8 @@ def test_delete_match():
 
     assert delete_response.status_code == 200
     assert delete_response.json() == expected
+
+
+
+
+
