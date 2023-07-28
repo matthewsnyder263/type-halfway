@@ -1,0 +1,70 @@
+{
+  "username": "Steph",
+  "email": "a@a.com",
+  "password": "aa",
+  "full_name": "Steph",
+  "gender": "Female",
+  "age": 30,
+  "mbti": "ENFJ",
+  "bio": "Sojasf;oja asfkoja;dfj; aosjfao ;sjdfo;asjasdf [sidfasjf ;as ;osjf a;s",
+  "zip_code": "10033",
+  "interest": "Some Thangs",
+  "picture": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
+}
+
+{
+  "username": "Rick",
+  "email": "e@e.com",
+  "password": "ee",
+  "full_name": "Ricky",
+  "gender": "Male",
+  "age": 30,
+  "mbti": "INTP",
+  "bio": "Sojasf;oja asfkoja;dfj; aosjfao ;sjdfo;asjasdf [sidfasjf ;as ;osjf a;s",
+  "zip_code": "10530",
+  "interest": "Some Thangs",
+  "picture": "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+
+}
+
+{
+  "username": "Bobby",
+  "email": "b@b.com",
+  "password": "bb",
+  "full_name": "Bobby",
+  "gender": "Female",
+  "age": 30,
+  "mbti": "INTP",
+  "bio": "Sojasf;oja asfkoja;dfj; aosjfao ;sjdfo;asjasdf [sidfasjf ;as ;osjf a;s",
+  "zip_code": "10033",
+  "interest": "Some Thangs",
+  "picture": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
+}
+
+{
+  "username": "Scarlet",
+  "email": "c@c.com",
+  "password": "cc",
+  "full_name": "Scarlet",
+  "gender": "Female",
+  "age": 30,
+  "mbti": "ENFJ",
+  "bio": "Sojasf;oja asfkoja;dfj; aosjfao ;sjdfo;asjasdf [sidfasjf ;as ;osjf a;s",
+  "zip_code": "07950",
+  "interest": "Some Thangs",
+  "picture": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
+}
+
+{
+  "username": "Ryan",
+  "email": "d@d.com",
+  "password": "dd",
+  "full_name": "Steph",
+  "gender": "Male",
+  "age": 30,
+  "mbti": "ENFJ",
+  "bio": "Sojasf;oja asfkoja;dfj; aosjfao ;sjdfo;asjasdf [sidfasjf ;as ;osjf a;s",
+  "zip_code": "07860",
+  "interest": "Some Thangs",
+  "picture": "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+}

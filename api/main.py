@@ -3,19 +3,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from authenticator import authenticator
 from routers import (
     users,
-    interests,
     potential_matches,
     matches,
     chat,
     messages,
-)
+)  # , interests
 import os
-import logging
-import sys
+
+# import logging
+# import sys
 
 
 app = FastAPI(debug=True)
-app.include_router(authenticator.router)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -51,3 +51,4 @@ app.include_router(chat.router)
 app.include_router(messages.router)
 # app.include_router(interests.router)
 # app.include_router(mbti.router)
+app.include_router(authenticator.router)

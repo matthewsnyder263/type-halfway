@@ -1,24 +1,16 @@
 from fastapi import (
-    Body,
+    # Body,
     Depends,
     HTTPException,
     status,
-    Response,
+    # Response,
     APIRouter,
-    Request,
-    logger,
+    # Request,
+    # logger,
 )
-from jwtdown_fastapi.authentication import Token
-from authenticator import authenticator
-
-from pydantic import BaseModel
-
-from db.matches_db import MatchQueries, Match, MatchIn
+from db.matches_db import MatchQueries, MatchIn  # , Match
 
 router = APIRouter()
-
-
-from fastapi import HTTPException, status
 
 
 @router.post("/matches/{match_id}")
@@ -74,7 +66,6 @@ async def create_like(like: MatchIn, likes: MatchQueries = Depends()):
         logged_in_user=like.matched_user, matched_user=like.logged_in_user
     )
 
-    # If there's an existing like from matched_user to logged_in_user, make it mutual
     if existing_like:
         existing_like.mutual = True
         updated_like = likes.update_match(existing_like)

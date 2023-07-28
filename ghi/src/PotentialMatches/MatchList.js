@@ -21,7 +21,7 @@ function MatchList() {
     // b/c our list of mutual likes can get really long, we can split them into separate pages
     // using pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(7);
+    const [itemsPerPage] = useState(5);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const { token } = useToken();
@@ -38,10 +38,8 @@ function MatchList() {
 
     useEffect(() => {
         if (!token) {
-            const storedToken = localStorage.getItem("token");
-            if (storedToken) {
-                // navigate("/login");
-            }
+            localStorage.getItem("token");
+
         }
     }, [navigate, token]);
 
@@ -199,7 +197,15 @@ function MatchList() {
                                             {" — Matched on: " + matchedDateString}
                                         </Typography>
                                     </Box>
-                                    <Button color="primary" onClick={(event) => { event.stopPropagation(); deleteMatch(data.id); }}>Delete</Button>
+                                    <Button onClick={(event) => { event.stopPropagation(); deleteMatch(data.id); }} style={{
+                                        backgroundColor: 'rgba(225, 75, 180, 0.62',
+                                        color: 'rgba(255, 0, 0, 0.87)',
+                                        border: '2px solid white',
+                                        borderRadius: '5em',
+                                        boxShadow: '100em 100em 100em rgba(200, 75, 150, 0.5)',
+                                        fontWeight: 'bold',
+                                        fontFamily: 'ui-rounded'
+                                    }}>Unmatch</Button>
                                     <Button variant="contained" color="secondary" onClick={() => navigate(`/chat/${matchedUser.id}`)}>Chat</Button>
                                 </ListItem>
                             </Card>

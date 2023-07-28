@@ -1,0 +1,27 @@
+.background {
+  background: linear-gradient(to right, #f1f1f1, #904e95);
+}
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* max-height: auto; */
+  max-width: 500px;
+  margin-left: auto auto;
+}
+.carousel {
+  overflow: hidden;
+}
+
+li.dot {
+  content: hidden;
+}
+.like-button {
+  width: 150px;
+  background-color: #904e95;
+  color: #ffffff;
+  border-radius: 10px;
+}
+.heart-eyes {
+  color: red;
+}

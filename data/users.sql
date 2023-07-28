@@ -24,10 +24,12 @@ CREATE TABLE users (
     mbti TEXT NOT NULL,
     hashed_password TEXT NOT NULL,
     bio TEXT,
+    city TEXT,
+    state TEXT,
     zip_code VARCHAR(5) NOT NULL,
     interest TEXT,
-    picture TEXT
-    -- matches_id INT
+    picture TEXT,
+    matches_id INT
     -- CONSTRAINT fk_matches
     --     FOREIGN KEY (matches_id)
     --     REFERENCES matches (id)
@@ -52,19 +54,19 @@ CHECK (logged_in_user <> matched_user);
 
 -- added match_timestamp, will timestamp when mutual = true
 
-CREATE OR REPLACE FUNCTION update_match_timestamp() RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.mutual THEN
-        NEW.match_timestamp = CURRENT_TIMESTAMP;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION update_match_timestamp() RETURNS TRIGGER AS $$
+-- BEGIN
+--     IF NEW.mutual THEN
+--         -- NEW.match_timestamp = CURRENT_TIMESTAMP;
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_match_timestamp_trigger
-BEFORE UPDATE ON matches
-FOR EACH ROW
-EXECUTE PROCEDURE update_match_timestamp();
+-- CREATE TRIGGER update_match_timestamp_trigger
+-- BEFORE UPDATE ON matches
+-- FOR EACH ROW
+-- EXECUTE PROCEDURE update_match_timestamp();
 
 
 

@@ -28,24 +28,14 @@
     "ISTJ",
     "ISTP",
     "jwtdown",
+    "lookhere",
     "melo",
     "potentialmatch",
     "psycopg",
     "pydantic",
     "setdestination",
+    "Unmatch",
     "uselist"
-  ],
-  "sqltools.connections": [
-    {
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 5432,
-      "askForPassword": true,
-      "driver": "PostgreSQL",
-      "name": "db",
-      "database": "data",
-      "username": "user"
-    }
   ],
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -54,23 +44,14 @@
     {
       "previewLimit": 50,
       "server": "localhost",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "users_table",
-      "database": "data",
-      "username": "user"
-    },
-    {
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 5432,
+      "port": 15432,
+      "askForPassword": true,
       "driver": "PostgreSQL",
       "name": "db",
       "database": "data",
-      "username": "user",
-      "password": "password"
+      "username": "user"
     }
-  ]
+  ],
   "search.useGlobalIgnoreFiles": true,
   "search.useParentIgnoreFiles": true,
   "dataworkspace.excludedProjects": ["db/db.sqlproj"]

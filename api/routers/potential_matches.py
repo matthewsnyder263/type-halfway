@@ -1,13 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from pydantic import BaseModel
+
+# from pydantic import BaseModel
 from db.potential_matches_db import (
-    PotentialMatch,
+    # PotentialMatch,
     PotentialMatchIn,
     PotentialMatchOut,
     PotentialMatchQueries,
 )
-from db.user_db import UserOut, UserQueries
+from db.user_db import UserQueries
 
 
 router = APIRouter()

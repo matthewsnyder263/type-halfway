@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import useToken from '@galvanize-inc/jwtdown-for-react';
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import './styles/PotentialMatch.css'
 
 
 const PotentialMatches = () => {
@@ -101,8 +103,8 @@ const PotentialMatches = () => {
 
         if (currentUser && allUsers.users) {
             const potentialDataList = [];
-            const compatData = allUsers.users
-                .filter((user) => user.id !== currentUser.id)
+            allUsers.users
+                .filter((user) => user.id !== currentUser.id && user.gender !== currentUser.gender)
                 .map((user) => {
                     const compatibilityScore = calculateCompatibilityScore(
                         currentUser.mbti,
@@ -125,7 +127,7 @@ const PotentialMatches = () => {
 
             const postCompatibilityData = async (data) => {
                 const url = "http://localhost:8000/api/potential_matches";
-                const response = await fetch(url, {
+                await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -134,7 +136,7 @@ const PotentialMatches = () => {
                     credentials: "include",
                 });
             };
-            const postData = Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
+            Promise.all(topCompatibilityData.map((cData) => postCompatibilityData(cData)))
         }
     }, [currentUser, allUsers]);
 
@@ -198,29 +200,49 @@ const PotentialMatches = () => {
         .sort((a, b) => new Date(b.created_on) - new Date(a.created_on))
         .slice(0, 5);
 
+    const handleMatchClick = (matchedUser) => {
+        let matchedUserName = matchedUser.full_name;
+        console.log('Username', matchedUserName)
+        let userProfileUrl = `/profile/${matchedUser.id}`;
+        console.log('User Url', userProfileUrl)
+        localStorage.setItem('matchedUser', JSON.stringify(matchedUser));
+        // Redirect to a new page or perform any other action
+        navigate(userProfileUrl); // Replace '/new-page' with the desired path
+    };
+
     return (
-        <div>
-            <h2>Potential Matches of the Week</h2>
-            <div className="card" style={{ width: "18rem" }}>
-                {recentCompatibilityData.map((data) => {
-                    const matchedUser = allUsers.users.find(user => user.id === data.matched_user);
-                    const matchedUserName = matchedUser.full_name;
-                    const userProfileUrl = `/profile/${matchedUser.id}`;
-                    return (
-                        <div key={data.match_id} className="card mb-4">
-                            <img className="card-img-top" src="..." alt="Card image cap" />
-                            <div className="card-body">
-                                <Link onClick={localStorage.setItem('matchedUser', JSON.stringify(matchedUser))} to={userProfileUrl}>
-                                    <h5 className="card-title">Matched User Name: {matchedUserName}</h5>
-                                </Link>
-                                <p className="card-text">Compatibility Strength: {getCompatibilityStrengthText(data.mbti_strength)}</p>
-                                <button onClick={() => handleLike(data.matched_user)} disabled={data.liked}>
-                                    {data.liked ? "Liked" : "Like"}
-                                </button>
-                            </div>
-                        </div>
-                    );
-                })}
+        <div className="background">
+            <div className="carousel-container">
+                {/* <h2>Potential Matches of the Week</h2> */}
+                <div className="carousel" >
+                    <Carousel>
+                        {recentCompatibilityData.map((data) => {
+                            let matchedUser = allUsers.users.find(user => user.id === data.matched_user && data.matchedUser.gender != user.gender);
+                            let matchedUserName = matchedUser.full_name;
+                            return (
+
+                                <div key={data.match_id} className="card ">
+                                    <img src={matchedUser.picture} alt=" " />
+                                    <div className="card-body" >
+                                        <div key={data.match_id}>
+                                            <h1>Name: {matchedUserName}</h1>
+                                            <button onClick={() => handleMatchClick(matchedUser)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <button onClick={() => handleLike(data.matched_user)} disabled={data.liked} className="like-button">
+                                            {data.liked ? "Liked" : "Like"}
+                                        </button>
+                                        <p className="card-text">Compatibility Strength: <strong>{getCompatibilityStrengthText(data.mbti_strength)}</strong></p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </Carousel>
+                </div>
             </div>
         </div>
     );
