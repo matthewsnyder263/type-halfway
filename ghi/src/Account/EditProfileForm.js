@@ -48,7 +48,6 @@ const EditProfileForm = () => {
     if (response.ok) {
       const data = await response.json();
       setCurrentUser(data.account);
-      // Set the form data to the received user data
       setFormData({
         username: data.account.username,
         email: data.account.email,
@@ -94,15 +93,12 @@ const EditProfileForm = () => {
       if (response.ok) {
         const updatedUserData = await response.json();
         console.log('User data updated:', updatedUserData);
-        // After successful update, navigate back to the profile page
         navigate('/profile');
       } else {
         console.log('Update failed:', response.statusText);
-        // Handle the update failure here, show error message, etc.
       }
     } catch (error) {
       console.error('Error updating user data:', error);
-      // Handle any errors that occurred during the update
     }
   };
 

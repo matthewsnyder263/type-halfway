@@ -58,26 +58,6 @@ class MessageQueries:
                 ]
                 return MessagesOut(messages=messages)
 
-    # def send_message(self, message: MessageIn) -> MessageOut:
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as db:
-    #             db.execute(
-    #                 """
-    #                 INSERT INTO messages(sender_id, receiver_id, message)
-    #                 VALUES(%s, %s, %s)
-    #                 RETURNING id, sender_id, receiver_id, message, timestamp;
-    #                 """,
-    #                 (message.sender_id, message.receiver_id, message.message),
-    #             )
-    #             record = db.fetchone()
-    #             return MessageOut(
-    #                 id=record[0],
-    #                 sender_id=record[1],
-    #                 receiver_id=record[2],
-    #                 message=record[3],
-    #                 timestamp=record[4],
-    #             )
-
     def send_message(self, message: MessageIn) -> MessageOut:
         with pool.connection() as conn:
             with conn.cursor() as db:

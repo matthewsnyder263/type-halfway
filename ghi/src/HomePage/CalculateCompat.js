@@ -67,7 +67,7 @@ const CompatibilityCalculator = () => {
                 const score = calculateCompatibilityScore(type1, type2);
                 setCompatibilityScore(score);
                 setIsCalculating(false);
-            }, 1000); // Simulating calculation time with setTimeout
+            }, 1000);
         }
     };
 

@@ -8,16 +8,6 @@ import couple4 from "./images/couple4.jpg"
 import matt from "./images/matt.png"
 
 
-// const Header = () => {
-//     return (
-//         <header id="header" className="alt">
-//             <h1>
-//                 Type Halfway
-//             </h1>
-//         </header>
-//     );
-// };
-
 const Banner = () => {
     return (
         <section id="banner">

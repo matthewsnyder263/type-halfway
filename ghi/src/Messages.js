@@ -24,7 +24,6 @@ function Messages() {
             const data = await response.json();
             console.log("Data:", data);
             setMatchedUser(data);
-            // setMatchedUser(data.user);
             console.log('After fetching matchedUser:', matchedUser);
             console.log('Matched User:', data);
             if (data && currentUser) {

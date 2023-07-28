@@ -15,7 +15,6 @@ function BootstrapInput(props) {
         className="form-control"
         id={id}
         name={name}
-      // placeholder={placeholder}
       />
       <label htmlFor={id} className="form-label">
         {labelText}

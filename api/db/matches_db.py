@@ -1,7 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
 
-# from models import User, UserIn
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
@@ -262,8 +261,6 @@ class MatchQueries:
                     """,
                     [user_id],
                 )
-                # note i took out AND mutual = False, in
-                # 'WHERE logged_in_user = %S AND mutual = False'
                 records = result.fetchall()
                 likes = []
                 for record in records:

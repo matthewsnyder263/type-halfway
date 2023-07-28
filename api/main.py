@@ -1,4 +1,4 @@
-from fastapi import FastAPI  # HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from authenticator import authenticator
 from routers import (
@@ -7,11 +7,8 @@ from routers import (
     matches,
     chat,
     messages,
-)  # , interests
+)
 import os
-
-# import logging
-# import sys
 
 
 app = FastAPI(debug=True)
@@ -49,6 +46,4 @@ app.include_router(potential_matches.router)
 app.include_router(matches.router)
 app.include_router(chat.router)
 app.include_router(messages.router)
-# app.include_router(interests.router)
-# app.include_router(mbti.router)
 app.include_router(authenticator.router)
